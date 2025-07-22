@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reuben Mulholland – Cloud Resume Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header with image + name/title/links -->
+    <div class="intro-flex">
+      <img src="profile.jpg" alt="Reuben Mulholland" class="intro-image" />
+      <div class="intro-text">
+        <h2>💼 Reuben Mulholland</h2>
+        <h2>Product Leader & Cloud Technologist</h2>
+        <p>
+          Visitors: <span id="replaceme"></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation menu -->
+    <div class="nav-wrapper">
+      <nav>
+        <a href="index.html">👤 About</a>
+        <a href="resume.html">📄 My Resume</a>
+        <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
+      </nav>
+    </div>
+
+
+    <!-- Site content -->
+    <div class="section">
+      <h3>🎓 Background & Experience</h3>
+      <p>
+      I’m an AWS Certified Solutions Architect – Associate with a BE and MS in Computer Engineering. My master’s included an advanced certification in Networking & Wireless Communication, fueling my interest in cloud infrastructure. After several years developing and supporting mission-critical hardware, I transitioned into agile product leadership roles. I’ve led scrum teams, owned roadmaps, and driven growth in cybersecurity and aerospace — and now, I’m bringing that experience into the cloud.
+      </p>
+    </div>
+
+    <div class="section">
+      <h3>🔧 Why This Site Exists</h3>
+      <p>
+      This site is part of the <strong>Cloud Resume Challenge</strong>, a full-stack cloud project designed to showcase real-world skills in <strong>AWS</strong>, <strong>DevOps</strong>, and <strong>Infrastructure as Code (IaC)</strong>. It’s more than a resume, it’s an evolving technical portfolio demonstrating how I approach architecture, automation, and secure cloud deployment.
+      </p>
+    </div>
+    
+    <div class="section">
+      <h3>✅ What I’ve Built So Far</h3>
+      <ol>
+        <li>Configured the <strong>AWS CLI</strong> and secured access with <strong>AWS Vault</strong> to use temporary credentials backed by <strong>MFA</strong></li>
+        <li>Set up <strong>least privilege IAM</strong> practices by creating a separate scoped-down user account (ReubenDev) for development and deployment</li>
+        <li>Purchased a domain from a registrar and configured <strong>DNS routing</strong> to AWS by pointing the domain to my CloudFront distribution using <strong>Route 53</strong></li>
+        <li>Provisioned and validated an SSL certificate using <strong>AWS Certificate Manager</strong> to enable HTTPS for the custom domain</li>
+        <li>Used <strong>AWS SAM</strong> and <strong>CloudFormation</strong> to define and deploy infrastructure-as-code, including S3, Route 53, and Certificate Manager resources</li>
+        <li>Deployed the site on <strong>Amazon S3</strong> for static hosting and integrated it with <strong>CloudFront</strong> for global delivery</li>
+        <li>Customized and styled the site using a modern <strong>HTML + CSS template</strong> to present content cleanly and professionally</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h3>📈 What’s Next</h3>
+      <ol>
+        <li>Implement a visitor counter using <strong>JavaScript</strong> on the frontend, backed by a <strong>Lambda function</strong>, <strong>DynamoDB</strong>, and <strong>API Gateway</strong></li>
+        <li>Write backend logic in <strong>Python</strong> using the <strong>boto3</strong> SDK and add unit tests to ensure reliability</li>
+        <li>Set up <strong>CI/CD pipelines</strong> using <strong>GitHub Actions</strong> to automate deployment of both frontend and backend code</li>
+        <li>Enhance <strong>monitoring and logging</strong> with <strong>CloudWatch</strong> to track API usage and detect issues</li>
+        <li>Refine <strong>IAM policies</strong> for the Lambda role to ensure least-privilege execution</li>
+        <li>Simulate a basic <strong>AWS Organizations</strong> setup to explore multi-account structure, billing separation, and cost control best practices</li>
+      </ol>
+    </div>
+
+
+    <div class="section">
+      <h3>🎯 Career Focus</h3>
+      <p>
+        I'm looking to join a forward-thinking team where I can apply my blend of product strategy and technical depth. I'm especially interested in roles in <strong>cloud-native product management</strong>, <strong>cloud engineering</strong>, <strong>DevOps</strong>, or <strong>solutions architecture</strong>, particularly in industries like <strong>SaaS</strong>, <strong>cybersecurity</strong>, or <strong>cloud infrastructure</strong>.
+      </p>
+      <p>
+        I'm also open to opportunities at well-funded <strong>startups</strong> and smaller technical teams where I can contribute broadly, grow alongside the organization, and help build systems that scale.
+      </p>
+    </div>
+
+
+  </div>
+  <script src="visitorCount.js"></script>
+</body>
+</html>
+
