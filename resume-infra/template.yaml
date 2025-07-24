@@ -74,11 +74,6 @@ Resources:
                 Id: S3Origin
                 S3OriginConfig:
                     OriginAccessIdentity: ""
-            #
-            #  - DomainName: my-resume-landingpage.s3-website.us-east-2.amazonaws.com
-            #    Id: my-resume-landingpage.s3-website.us-east-2.amazonaws.com
-            #    CustomOriginConfig:
-            #        OriginProtocolPolicy: match-viewer
             Enabled: true
             DefaultRootObject: index.html
 
@@ -95,32 +90,114 @@ Resources:
             Action: s3:GetObject
             Resource: !Sub "${LandingPage.Arn}/*"
 
-  
-  HelloWorldFunction:
+  GetVisitorCountFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello_world/
-      Handler: app.lambda_handler
+      CodeUri: functions/get/
+      Handler: handler.handler
       Runtime: python3.11
       Timeout: 5
       Environment:
         Variables:
-          TABLE_NAME: !Ref DynamoDBTable  # dynamic name, no hardcoding
+          TABLE_NAME: !Ref DynamoDBTable
+          FORCE_DEPLOY: "1"
       Policies:
         - Version: "2012-10-17"
           Statement:
             - Effect: Allow
-              Action:
-                - dynamodb:GetItem
-                - dynamodb:UpdateItem
+              Action: dynamodb:GetItem
               Resource: !GetAtt DynamoDBTable.Arn
       Events:
-        HelloWorld:
+        GetVisitorCount:
           Type: Api
           Properties:
-            Path: /hello
+            Path: /visitor-count
             Method: GET
-  
+          Cors:
+            AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+            AllowOrigin: "'https://reubenmulholland.com'"
+
+  PostVisitorCountFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/post/
+      Handler: handler.handler
+      Runtime: python3.11
+      Timeout: 5
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTable
+          FORCE_DEPLOY: "1"
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: dynamodb:UpdateItem
+              Resource: !GetAtt DynamoDBTable.Arn
+      Events:
+        PostVisitorCount:
+          Type: Api
+          Properties:
+            Path: /visitor-count
+            Method: ANY
+          Cors:
+            AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+            AllowOrigin: "'https://reubenmulholland.com'"
+
+  PutVisitorCountFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/put/
+      Handler: handler.handler
+      Runtime: python3.11
+      Timeout: 5
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTable
+          FORCE_DEPLOY: "1"
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: dynamodb:PutItem
+              Resource: !GetAtt DynamoDBTable.Arn
+      Events:
+        PutVisitorCount:
+          Type: Api
+          Properties:
+            Path: /visitor-count
+            Method: PUT
+          Cors:
+            AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+            AllowOrigin: "'https://reubenmulholland.com'"
+
+  DeleteVisitorCountFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/delete/
+      Handler: handler.handler
+      Runtime: python3.11
+      Timeout: 5
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTable
+          FORCE_DEPLOY: "1"
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: dynamodb:DeleteItem
+              Resource: !GetAtt DynamoDBTable.Arn
+      Events:
+        DeleteVisitorCount:
+          Type: Api
+          Properties:
+            Path: /visitor-count
+            Method: DELETE
+          Cors:
+            AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
+            AllowOrigin: "'https://reubenmulholland.com'"
+
   WwwRedirectBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -165,17 +242,15 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  VisitorApiBaseUrl:
+    Description: "Base URL for visitor-count GET endpoint"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/visitor-count"
   LandingPage:
     Description: "S3 bucket name for resume site"
     Value: !Ref LandingPage
     Export:
       Name: LandingPageBucketName
+  CloudFrontDistributionId:
+    Description: "ID of the CloudFront distribution"
+    Value: !Ref MyDistribution
+

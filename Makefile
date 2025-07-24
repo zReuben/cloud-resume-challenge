@@ -32,32 +32,15 @@ deploy-cert-guided:
 	aws-vault exec my-user --no-session -- \
 	sam deploy --guided --config-env cert
 
+# Invalidate CloudFront Cache
+invalidate-cache:
+	aws-vault exec my-user --no-session -- bash -c '\
+	DISTRIBUTION_ID=$$(aws cloudformation describe-stacks \
+	  --stack-name cloud-resume-infra \
+	  --query '\''Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue'\'' \
+	  --output text --region us-east-1); \
+	echo "Invalidating CloudFront distribution $$DISTRIBUTION_ID..."; \
+	aws cloudfront create-invalidation \
+	  --distribution-id $$DISTRIBUTION_ID \
+	  --paths "/*"'
 
-
-
-
-
-
-#.PHONY: build deploy-infra deploy-site deploy-cert deploy-cert-guided
-
-# Build the SAM application
-#build:
-#	sam build
-
-# Deploy the infrastructure using AWS SAM, knows to reference template.yaml + samconfig.toml
-#deploy-infra:
-#	sam build && aws-vault exec my-user --no-session -- sam deploy --debug
-	#added debug temporarily
-	#sam build && aws-vault exec my-user --no-session -- sam deploy
-
-# Sync static website files to the S3 bucket
-#deploy-site:
-#	aws-vault exec my-user --no-session -- aws s3 sync ./resume-site s3://my-resume-landingpage
-
-# Deploy the certificate stack (ACM in us-east-1 for CloudFront usage)
-#deploy-cert:
-#	aws-vault exec my-user --no-session -- sam deploy --template-file cert.yaml
-
-# Redeploy certificate stack interactively with guided prompts (if parameters change)
-#deploy-cert-guided:
-#	aws-vault exec my-user --no-session -- sam deploy --guided --template-file cert.yaml
