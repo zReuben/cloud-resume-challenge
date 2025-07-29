@@ -1,0 +1,6 @@
+pytest
+moto[dynamodb]==4.2.13
+boto3
+black
+ruff
+requests

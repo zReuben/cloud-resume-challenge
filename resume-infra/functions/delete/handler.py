@@ -2,9 +2,6 @@ import os, json, boto3
 
 # This is the DELETE handler
 
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ['TABLE_NAME'])
-
 cors_headers = {
     'Access-Control-Allow-Origin': 'https://reubenmulholland.com',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -13,7 +10,8 @@ cors_headers = {
 
 def handler(event, context):
     
-
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    table = dynamodb.Table(os.environ['TABLE_NAME'])
     try:
         table.delete_item(Key={'ID': 'visitorCount'})
         return {

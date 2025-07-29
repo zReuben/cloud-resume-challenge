@@ -1,45 +1,44 @@
 import os
-
 import boto3
 import pytest
 import requests
-
-"""
-Make sure env variable AWS_SAM_STACK_NAME exists with the name of the stack we are going to test. 
-"""
-
 
 class TestApiGateway:
 
     @pytest.fixture()
     def api_gateway_url(self):
-        """ Get the API Gateway URL from Cloudformation Stack outputs """
+        """ Get the API Gateway URL from CloudFormation Stack outputs """
         stack_name = os.environ.get("AWS_SAM_STACK_NAME")
 
         if stack_name is None:
             raise ValueError('Please set the AWS_SAM_STACK_NAME environment variable to the name of your stack')
 
-        client = boto3.client("cloudformation")
+        client = boto3.client("cloudformation", region_name=os.environ.get("AWS_REGION", "us-east-1"))
 
         try:
             response = client.describe_stacks(StackName=stack_name)
         except Exception as e:
             raise Exception(
-                f"Cannot find stack {stack_name} \n" f'Please make sure a stack with the name "{stack_name}" exists'
+                f"Cannot find stack {stack_name} \n"
+                f'Please make sure a stack with the name "{stack_name}" exists'
             ) from e
 
-        stacks = response["Stacks"]
-        stack_outputs = stacks[0]["Outputs"]
-        api_outputs = [output for output in stack_outputs if output["OutputKey"] == "HelloWorldApi"]
+        outputs = response["Stacks"][0]["Outputs"]
 
-        if not api_outputs:
-            raise KeyError(f"HelloWorldAPI not found in stack {stack_name}")
+        # ✅ Make sure this matches your template.yaml OutputKey
+        api_url_output = next((o for o in outputs if o["OutputKey"] == "VisitorApiBaseUrl"), None)
 
-        return api_outputs[0]["OutputValue"]  # Extract url from stack outputs
+        if api_url_output is None:
+            raise KeyError(f"VisitorApiBaseUrl not found in stack {stack_name}")
 
-    def test_api_gateway(self, api_gateway_url):
-        """ Call the API Gateway endpoint and check the response """
-        response = requests.get(api_gateway_url)
+        return api_url_output["OutputValue"]  # base URL, e.g., https://xyz.execute-api.us-east-1.amazonaws.com/Prod
+
+    def test_visitor_count_get(self, api_gateway_url):
+        """ Call the /visitor-count GET endpoint and verify response """
+        url = api_gateway_url
+        response = requests.get(url)
 
         assert response.status_code == 200
-        assert response.json() == {"message": "hello world"}
+        json_data = response.json()
+        assert "count" in json_data
+        assert isinstance(json_data["count"], int)

@@ -4,8 +4,6 @@ import boto3
 
 # This is the POST handler
 
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table(os.environ['TABLE_NAME'])
 
 cors_headers = {
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -14,6 +12,8 @@ cors_headers = {
 }
 
 def handler(event, context):
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    table = dynamodb.Table(os.environ['TABLE_NAME'])
     if event['httpMethod'] == 'OPTIONS':
         return {
             'statusCode': 200,
