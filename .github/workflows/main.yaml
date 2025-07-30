@@ -96,6 +96,7 @@ jobs:
   deploy-frontend:
     name: Deploy Frontend
     runs-on: ubuntu-latest
+    needs: test
 
     steps:
       - name: Checkout repo
@@ -128,7 +129,7 @@ jobs:
 
       - name: Deploy static site to S3
         run: |
-          aws s3 sync cloud-resume-challenge/resume-site/ s3://${{ steps.get_bucket.outputs.bucket }} --delete
+          aws s3 sync resume-site/ s3://${{ steps.get_bucket.outputs.bucket }} --delete
 
       - name: Invalidate CloudFront Cache
         run: |
