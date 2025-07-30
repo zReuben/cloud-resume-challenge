@@ -10,7 +10,7 @@ const puppeteer = require('puppeteer');
     await page.goto(url, { waitUntil: 'networkidle2' });
 
     // Wait for the #visitor-count element to be available
-    await page.waitForSelector('#visitor-count', { timeout: 5000 });
+    await page.waitForSelector('#visitor-count', { timeout: 10000 });
 
     // Extract the text content
     const countText = await page.$eval('#visitor-count', el => el.textContent.trim());
