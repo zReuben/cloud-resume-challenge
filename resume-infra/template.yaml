@@ -64,9 +64,9 @@ Resources:
             DefaultCacheBehavior:
                 ViewerProtocolPolicy: redirect-to-https
                 TargetOriginId: S3Origin
-                DefaultTTL: 0
-                MinTTL: 0
-                MaxTTL: 0
+                DefaultTTL: 84600 # 1 day
+                MinTTL: 0 # Kept at 0 to allow cache bursting when needed
+                MaxTTL: 31536000 # 1 year (for long-lived assets like images/CSS
                 ForwardedValues:
                     QueryString: false
             Origins:
