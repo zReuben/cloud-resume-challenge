@@ -48,7 +48,7 @@ jobs:
           source .venv/bin/activate
           python -m pytest resume-infra/tests/integration/
 
-  deploy:
+  deploy-backend:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
     needs: test
@@ -93,3 +93,45 @@ jobs:
             --no-fail-on-empty-changeset \
             --resolve-s3
 
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Get S3 bucket name from CloudFormation output
+        id: get_bucket
+        run: |
+          BUCKET_NAME=$(aws cloudformation describe-stacks \
+            --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='LandingPage'].OutputValue" \
+            --output text)
+          echo "bucket=$BUCKET_NAME" >> $GITHUB_OUTPUT
+
+      - name: Get CloudFront Distribution ID from CloudFormation output
+        id: get_distribution
+        run: |
+          DIST_ID=$(aws cloudformation describe-stacks \
+            --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" \
+            --output text)
+          echo "distribution_id=$DIST_ID" >> $GITHUB_OUTPUT
+
+      - name: Deploy static site to S3
+        run: |
+          aws s3 sync cloud-resume-challenge/resume-site/ s3://${{ steps.get_bucket.outputs.bucket }} --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ steps.get_distribution.outputs.distribution_id }} \
+            --paths "/*"
