@@ -11,12 +11,12 @@ const puppeteer = require('puppeteer');
 
     // Wait for the #visitor-count element to be available
     await page.waitForFunction(() => {
-      const el = document.querySelector('#visitor-count');
+      const el = document.querySelector('#replaceme');
       return el && /^\d+$/.test(el.textContent.trim());
     }, { timeout: 10000 });
     
     // Extract the text content
-    const countText = await page.$eval('#visitor-count', el => el.textContent.trim());
+    const countText = await page.$eval('#replaceme', el => el.textContent.trim());
 
     if (countText && /^\d+$/.test(countText)) {
       console.log(`Visitor count: ${countText}`);
