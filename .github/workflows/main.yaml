@@ -158,4 +158,4 @@ jobs:
       - name: Run Puppeteer E2E test
         working-directory: resume-site
         run: |
-          npx node tests/e2e/test-visitor-count.js https://${{ steps.get_domain.outputs.domain }}
+          npx node tests/e2e/test-visitor-count.js https://reubenmulholland.com
