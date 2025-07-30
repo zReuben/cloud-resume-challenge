@@ -136,3 +136,26 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id ${{ steps.get_distribution.outputs.distribution_id }} \
             --paths "/*"
+
+      - name: Get CloudFront domain name
+        id: get_domain
+        run: |
+          DOMAIN=$(aws cloudfront get-distribution \
+            --id ${{ steps.get_distribution.outputs.distribution_id }} \
+            --query "Distribution.DomainName" \
+            --output text)
+          echo "domain=$DOMAIN" >> $GITHUB_OUTPUT
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Puppeteer dependencies
+        working-directory: resume-site
+        run: npm ci
+
+      - name: Run Puppeteer E2E test
+        working-directory: resume-site
+        run: |
+          npx node tests/e2e/test-visitor-count.js https://${{ steps.get_domain.outputs.domain }}

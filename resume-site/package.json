@@ -1,0 +1,19 @@
+{
+  "name": "resume-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test-visitor-count.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "puppeteer": "^24.15.0"
+  }
+}
