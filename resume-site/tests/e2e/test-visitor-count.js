@@ -1,30 +1,26 @@
 const puppeteer = require('puppeteer');
 
-const url = process.argv[2]; // URL passed in from GitHub Actions
-
 (async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-
-  try {
-    console.log(`Navigating to ${url}`);
-    await page.goto(url, { waitUntil: 'networkidle2' });
-
-    await page.waitForSelector('#visitor-count', { timeout: 5000 });
-
-    const visitorCount = await page.$eval('#visitor-count', el => el.textContent.trim());
-    const asNumber = parseInt(visitorCount, 10);
-
-    if (isNaN(asNumber)) {
-      throw new Error(`Visitor count is not a number: "${visitorCount}"`);
-    }
-
-    console.log(`✅ Visitor count loaded and is a number: ${asNumber}`);
-  } catch (err) {
-    console.error(`❌ Test failed: ${err.message}`);
+  const url = process.argv[2];
+  if (!url) {
+    console.error('Usage: node test-visitor-count.js <url>');
     process.exit(1);
-  } finally {
-    await browser.close();
   }
-})();
 
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: 'networkidle0' });
+
+  const visitorCount = await page.$eval('#visitor-count', el => el.textContent);
+  console.log(`Visitor count displayed: ${visitorCount}`);
+
+  if (!/^\d+$/.test(visitorCount.trim())) {
+    console.error('Visitor count is not a number!');
+    process.exit(1);
+  }
+
+  await browser.close();
+})();
