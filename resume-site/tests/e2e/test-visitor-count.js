@@ -12,15 +12,24 @@ const puppeteer = require('puppeteer');
   });
 
   const page = await browser.newPage();
-  await page.goto(url, { waitUntil: 'networkidle0' });
+  await page.goto(url, { waitUntil: 'networkidle2' });
 
-  const visitorCount = await page.$eval('#visitor-count', el => el.textContent);
-  console.log(`Visitor count displayed: ${visitorCount}`);
+  try {
+    // Wait for the #visitor-count element to show up in the DOM
+    await page.waitForSelector('#visitor-count', { timeout: 5000 });
 
-  if (!/^\d+$/.test(visitorCount.trim())) {
-    console.error('Visitor count is not a number!');
+    const visitorCount = await page.$eval('#visitor-count', el => el.textContent);
+    console.log(`Visitor count displayed: ${visitorCount}`);
+
+    // Check if it's actually a number
+    if (!/^\d+$/.test(visitorCount.trim())) {
+      console.error('Visitor count is not a valid number');
+      process.exit(1);
+    }
+  } catch (err) {
+    console.error('Error in E2E test:', err.message);
     process.exit(1);
+  } finally {
+    await browser.close();
   }
-
-  await browser.close();
 })();
