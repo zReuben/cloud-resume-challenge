@@ -1,3 +1,10 @@
+const spinner = document.getElementById("spinner");
+const countSpan = document.getElementById("replaceme");
+
+if (spinner) {
+  spinner.style.display = "inline-block";
+}
+
 fetch('/config.json', { cache: 'no-store' })
   .then(res => res.json())
   .then(cfg => {
@@ -11,9 +18,15 @@ fetch('/config.json', { cache: 'no-store' })
       })
       .then(response => response.json())
       .then(data => {
-        document.getElementById('replaceme').innerText = data.count;
+        countSpan.innerText = data.count;
       });
   })
   .catch(error => {
     console.error('Error loading config or fetching visitor count:', error);
+    countSpan.innerText = "N/A";
+  })
+  .finally(() => {
+    if (spinner) {
+      spinner.style.display = "none";
+    }
   });
