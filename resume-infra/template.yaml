@@ -11,21 +11,45 @@ Globals:
     Timeout: 3
     MemorySize: 128
 
+Parameters:
+  EnvironmentName:
+    Type: String
+    Description: Environment name (e.g., prod, test, eng)
+    AllowedValues:
+      - prod
+      - test
+      - eng
+    Default: prod
+  RootDomainHostedZoneId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloud-resume/prod/hosted_zone_id
+  RootDomainName:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloud-resume/prod/root_domain
+  CertificateArn:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cloud-resume/prod/certificate_arn
+
+Conditions:
+  IsProd: !Equals [!Ref EnvironmentName, prod]
+
 Resources:
   LandingPage:
     Type: AWS::S3::Bucket
     Properties:
-        WebsiteConfiguration:
-            IndexDocument: index.html
-        PublicAccessBlockConfiguration:
-            BlockPublicAcls: true
-            IgnorePublicAcls: true
-            BlockPublicPolicy: false
-            RestrictPublicBuckets: false
+      BucketName: !Sub "cloud-resume-landingpage-${EnvironmentName}-${AWS::AccountId}"
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
+      TableName: !Sub "cloud-resume-table-${EnvironmentName}-${AWS::AccountId}"
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: ID
@@ -34,24 +58,6 @@ Resources:
         - AttributeName: ID
           KeyType: HASH
 
-
-  MyRoute53Record:
-    Type: "AWS::Route53::RecordSetGroup"
-    Properties:
-      HostedZoneId: Z01586713VI3GCIKLX3QW
-      RecordSets:
-        - Name: reubenmulholland.com
-          Type: A
-          AliasTarget:
-            HostedZoneId: Z2FDTNDATAQYW2
-            DNSName: !GetAtt MyDistribution.DomainName
-        - Name: www.reubenmulholland.com
-          Type: A
-          AliasTarget:
-            HostedZoneId: Z2FDTNDATAQYW2
-            DNSName: !GetAtt WwwRedirectDistribution.DomainName
-            #DNSName: !GetAtt MyDistribution.DomainName
-
   MyDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
@@ -59,7 +65,7 @@ Resources:
             Aliases:
               - reubenmulholland.com
             ViewerCertificate:
-                AcmCertificateArn: !ImportValue ReubenCertificateArn
+                AcmCertificateArn: !Ref CertificateArn
                 SslSupportMethod: sni-only
             DefaultCacheBehavior:
                 ViewerProtocolPolicy: redirect-to-https
@@ -200,11 +206,12 @@ Resources:
 
   WwwRedirectBucket:
     Type: AWS::S3::Bucket
+    Condition: IsProd
     Properties:
-      BucketName: www.reubenmulholland.com
+      BucketName: !Sub "www.${RootDomainName}"
       WebsiteConfiguration:
         RedirectAllRequestsTo:
-          HostName: reubenmulholland.com
+          HostName: !Ref RootDomainName
           Protocol: https
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
@@ -214,6 +221,7 @@ Resources:
 
   WwwRedirectDistribution:
     Type: AWS::CloudFront::Distribution
+    Condition: IsProd
     Properties:
       DistributionConfig:
         Enabled: true
@@ -227,7 +235,7 @@ Resources:
           ForwardedValues:
             QueryString: false
         ViewerCertificate:
-          AcmCertificateArn: !ImportValue ReubenCertificateArn
+          AcmCertificateArn: !Ref CertificateArn
           SslSupportMethod: sni-only
         Origins:
           - Id: WwwRedirectOrigin
@@ -237,11 +245,7 @@ Resources:
               HTTPSPort: 443
               OriginProtocolPolicy: http-only
 
-
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   VisitorApiBaseUrl:
     Description: "Base URL for visitor-count GET endpoint"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/visitor-count"
@@ -253,4 +257,15 @@ Outputs:
   CloudFrontDistributionId:
     Description: "ID of the CloudFront distribution"
     Value: !Ref MyDistribution
+  MyDistributionDomainName:
+    Description: "CloudFront DomainName for apex (reubenmulholland.com)"
+    Value: !GetAtt MyDistribution.DomainName
+    Export:
+      Name: MyDistributionDomainName
+  WwwRedirectDistributionDomainName:
+    Condition: IsProd
+    Description: "CloudFront DomainName for www redirect (www.reubenmulholland.com)"
+    Value: !GetAtt WwwRedirectDistribution.DomainName
+    Export:
+      Name: WwwRedirectDistributionDomainName
 

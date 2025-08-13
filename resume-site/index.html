@@ -47,17 +47,18 @@
       This site is part of the <strong>Cloud Resume Challenge</strong>, a full-stack cloud project designed to showcase real-world skills in <strong>AWS</strong>, <strong>DevOps</strong>, and <strong>Infrastructure as Code (IaC)</strong>. It’s more than a resume, it’s an evolving technical portfolio demonstrating how I approach architecture, automation, and secure cloud deployment.
       </p>
     </div>
-    
+
     <div class="section">
       <h3>✅ What I’ve Built So Far</h3>
       <ol>
-        <li>Configured the <strong>AWS CLI</strong> and secured access with <strong>AWS Vault</strong> to use temporary credentials backed by <strong>MFA</strong></li>
-        <li>Set up <strong>least privilege IAM</strong> practices by creating a separate scoped-down user account (ReubenDev) for development and deployment</li>
-        <li>Purchased a domain from a registrar and configured <strong>DNS routing</strong> to AWS by pointing the domain to my CloudFront distribution using <strong>Route 53</strong></li>
-        <li>Provisioned and validated an SSL certificate using <strong>AWS Certificate Manager</strong> to enable HTTPS for the custom domain</li>
-        <li>Used <strong>AWS SAM</strong> and <strong>CloudFormation</strong> to define and deploy infrastructure-as-code, including S3, Route 53, and Certificate Manager resources</li>
-        <li>Deployed the site on <strong>Amazon S3</strong> for static hosting and integrated it with <strong>CloudFront</strong> for global delivery</li>
-        <li>Customized and styled the site using a modern <strong>HTML + CSS template</strong> to present content cleanly and professionally</li>
+        <li>Set up <strong>AWS Organizations</strong> with separate accounts for management, development, test, and production environments</li>
+        <li>Secured administrative access using <strong>AWS Vault</strong> and <strong>MFA-protected temporary credentials</strong> across accounts with delegated roles and scoped permissions</li>
+        <li>Purchased a domain and configured <strong>Route 53</strong> DNS routing to a <strong>CloudFront</strong> distribution backed by a validated SSL certificate from <strong>AWS Certificate Manager</strong></li>
+        <li>Defined all infrastructure using <strong>AWS SAM</strong> and <strong>CloudFormation</strong>, including S3, CloudFront, Route 53, Certificate Manager, API Gateway, Lambda, and DynamoDB</li>
+        <li>Deployed a <strong>serverless visitor counter</strong> using Lambda functions triggered by API Gateway and persisting data to DynamoDB</li>
+        <li>Integrated <strong>GitHub Actions</strong> for CI/CD to automate testing and deployment of both frontend and backend across environments</li>
+        <li>Implemented <strong>AWS Budgets</strong>, <strong>SNS alerts</strong>, and a <strong>Lambda-powered kill switch</strong> to prevent runaway costs in case of misconfiguration or malicious traffic</li>
+        <li>Hosted the site statically on <strong>Amazon S3</strong>, served globally via <strong>CloudFront</strong>, and styled with a responsive <strong>HTML + CSS layout</strong></li>
       </ol>
     </div>
 

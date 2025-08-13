@@ -1,5 +1,9 @@
 version = 0.1
-[resume.deploy.parameters]
+
+[prod.deploy]
+profile = "default"
+
+[prod.deploy.parameters]
 stack_name = "cloud-resume-infra"
 resolve_s3 = true
 s3_prefix = "cloud-resume-infra"
@@ -7,3 +11,6 @@ region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
+
+[eng.deploy.parameters]
+[test.deploy.parameters]

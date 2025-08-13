@@ -10,7 +10,10 @@ jobs:
   test:
     name: Run Unit and Integration Tests
     runs-on: ubuntu-latest
-
+    permissions:
+      id-token: write   # needed for OIDC
+      contents: read
+    
     env:
       AWS_REGION: us-east-1
       AWS_SAM_STACK_NAME: cloud-resume-infra
@@ -30,13 +33,13 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements-dev.txt
-
-      - name: Configure AWS credentials
+      
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::354076468099:role/GitHubActionsDeployer
+          aws-region: us-east-1
+          role-session-name: gha-test-${{ github.run_id }}
 
       - name: Run unit tests
         run: |
@@ -52,7 +55,10 @@ jobs:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
     needs: test
-
+    permissions:
+      id-token: write   # needed for OIDC
+      contents: read
+    
     env:
       AWS_REGION: us-east-1
       AWS_SAM_STACK_NAME: cloud-resume-infra
@@ -69,12 +75,12 @@ jobs:
       - name: Install AWS SAM CLI
         uses: aws-actions/setup-sam@v2
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::354076468099:role/GitHubActionsDeployer
+          aws-region: us-east-1
+          role-session-name: gha-deploy-backend-${{ github.run_id }}
 
       - name: Validate SAM Template
         run: sam validate --template resume-infra/template.yaml
@@ -97,17 +103,20 @@ jobs:
     name: Deploy Frontend
     runs-on: ubuntu-latest
     needs: test
+    permissions:
+      id-token: write   # needed for OIDC
+      contents: read
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::354076468099:role/GitHubActionsDeployer
           aws-region: us-east-1
+          role-session-name: gha-deploy-frontend-${{ github.run_id }}
 
       - name: Get S3 bucket name from CloudFormation output
         id: get_bucket

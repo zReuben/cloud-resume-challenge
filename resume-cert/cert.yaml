@@ -1,13 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Certificate for CloudFront using DNS validation
 
-#Resources:
-#  ReubenCertV2:
-#    Type: AWS::CertificateManager::Certificate
-#    Properties:
-#      DomainName: reubenmulholland.com
-#      ValidationMethod: DNS
-
 Resources:
   ReubenCertV2:
     Type: AWS::CertificateManager::Certificate
@@ -20,5 +13,3 @@ Resources:
 Outputs:
   CertificateArn:
     Value: !Ref ReubenCertV2
-    Export:
-      Name: ReubenCertificateArn

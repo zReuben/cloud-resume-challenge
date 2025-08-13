@@ -1,46 +1,65 @@
-.PHONY: build deploy-infra deploy-site deploy-cert deploy-cert-guided
+.PHONY: build deploy-infra deploy-site deploy-cert deploy-cert-guided invalidate-cache
 
-# Build from resume-infra directory
+NEED_ENV_TARGETS := deploy-infra deploy-cert deploy-cert-guided
+ifneq (,$(filter $(NEED_ENV_TARGETS),$(MAKECMDGOALS)))
+ifndef ENV
+$(error ENV is not set. Run like: make $@ ENV=prod)
+endif
+endif
+
+REGION ?= us-east-1
+
+PROFILE := $(ENV)
+
 build:
 	cd resume-infra && sam build
 
-# Deploy the infrastructure stack using the 'resume' config env
 deploy-infra:
 	cd resume-infra && \
-	aws-vault exec my-user --no-session -- \
-	sam deploy --config-env resume --debug
+	sam deploy --config-env $(ENV) --region $(REGION)
 
-# Deploy the certificate stack using the 'cert' config env
 deploy-cert:
 	cd resume-cert && \
-	aws-vault exec my-user --no-session -- \
-	sam deploy --template-file cert.yaml --config-env cert
+	sam deploy --template-file cert.yaml --config-env cert --region $(REGION)
 
 deploy-site:
-	aws-vault exec my-user --no-session -- bash -c '\
 	BUCKET_NAME=$$(aws cloudformation describe-stacks \
 	  --stack-name cloud-resume-infra \
-	  --query '\''Stacks[0].Outputs[?OutputKey==`LandingPage`].OutputValue'\'' \
-	  --output text --region us-east-1); \
+	  --query 'Stacks[0].Outputs[?OutputKey==`LandingPage`].OutputValue' \
+	  --output text --region $(REGION)); \
+	API_URL=$$(aws cloudformation describe-stacks \
+	  --stack-name cloud-resume-infra \
+	  --query 'Stacks[0].Outputs[?OutputKey==`VisitorApiBaseUrl`].OutputValue' \
+	  --output text --region $(REGION)); \
+	echo "Writing resume-site/config.json with API_URL=$$API_URL"; \
+	printf '{ "apiBaseUrl": "%s" }\n' "$$API_URL" > resume-site/config.json; \
 	echo "Deploying to $$BUCKET_NAME"; \
-	aws s3 sync ./resume-site s3://$$BUCKET_NAME --delete'
+	aws s3 sync ./resume-site s3://$$BUCKET_NAME --delete \
+	  --cache-control "no-store" \
+	  --exact-timestamps \
+	  --region $(REGION)
 
-
-# Redeploy certificate stack interactively
 deploy-cert-guided:
 	cd resume-cert && \
-	aws-vault exec my-user --no-session -- \
-	sam deploy --guided --config-env cert
+	sam deploy --guided --config-env cert --region $(REGION) 
 
-# Invalidate CloudFront Cache
 invalidate-cache:
-	aws-vault exec my-user --no-session -- bash -c '\
 	DISTRIBUTION_ID=$$(aws cloudformation describe-stacks \
 	  --stack-name cloud-resume-infra \
-	  --query '\''Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue'\'' \
-	  --output text --region us-east-1); \
+	  --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue' \
+	  --output text --region $(REGION); \
 	echo "Invalidating CloudFront distribution $$DISTRIBUTION_ID..."; \
 	aws cloudfront create-invalidation \
 	  --distribution-id $$DISTRIBUTION_ID \
-	  --paths "/*"'
-
+	  --paths "/*" \
+	  --region $(REGION)
+invalidate-cache:
+	DISTRIBUTION_ID=$$(aws cloudformation describe-stacks \
+	  --stack-name cloud-resume-infra \
+	  --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue' \
+	  --output text --region $(REGION)); \
+	echo "Invalidating CloudFront distribution $$DISTRIBUTION_ID..."; \
+	aws cloudfront create-invalidation \
+	  --distribution-id $$DISTRIBUTION_ID \
+	  --paths '/*' \
+	  --region $(REGION)
