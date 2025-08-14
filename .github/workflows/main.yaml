@@ -168,3 +168,62 @@ jobs:
         working-directory: resume-site
         run: |
           npx node tests/e2e/test-visitor-count.js https://reubenmulholland.com
+
+  root-dns:
+    name: Update ROOT Route53 DNS
+    runs-on: ubuntu-latest
+    needs: deploy-backend   # wait until infra (CloudFront) is updated
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AWS_REGION: us-east-1
+      PROD_ROLE_ARN: arn:aws:iam::354076468099:role/GitHubActionsDeployer
+      ROOT_ROLE_ARN: arn:aws:iam::697945510911:role/RootDnsGithubDeployer
+      HOSTED_ZONE_ID: Z01586713VI3GCIKLX3QW   # ROOT hosted zone id
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 1) Assume PROD to read CF domain outputs
+      - name: Configure AWS credentials for PROD (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.PROD_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: gha-read-prod-${{ github.run_id }}
+
+      - name: Read CloudFront target domain names from PROD stack outputs
+        id: read_prod_outputs
+        run: |
+          APEX=$(aws cloudformation describe-stacks \
+            --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='MyDistributionDomainName'].OutputValue" \
+            --output text)
+          WWW=$(aws cloudformation describe-stacks \
+            --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='WwwRedirectDistributionDomainName'].OutputValue" \
+            --output text)
+          echo "APEX=${APEX}" >> $GITHUB_ENV
+          echo "WWW=${WWW}"   >> $GITHUB_ENV
+
+      # 2) Switch to ROOT and deploy the DNS stack
+      - name: Configure AWS credentials for ROOT (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROOT_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: gha-root-dns-${{ github.run_id }}
+
+      - name: Deploy root-dns stack in ROOT
+        run: |
+          aws cloudformation deploy \
+            --stack-name root-dns \
+            --template-file root-dns/root-dns.yaml \
+            --parameter-overrides \
+              HostedZoneId=${HOSTED_ZONE_ID} \
+              ApexTargetDomainName=${APEX} \
+              WwwTargetDomainName=${WWW} \
+            --capabilities CAPABILITY_NAMED_IAM
