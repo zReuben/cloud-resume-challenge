@@ -220,10 +220,12 @@ jobs:
       - name: Deploy root-dns stack in ROOT
         run: |
           aws cloudformation deploy \
+            --no-fail-on-empty-changeset \
             --stack-name root-dns \
             --template-file root-dns/root-dns.yaml \
             --parameter-overrides \
               HostedZoneId=${HOSTED_ZONE_ID} \
               ApexTargetDomainName=${APEX} \
               WwwTargetDomainName=${WWW} \
-            --capabilities CAPABILITY_NAMED_IAM
+            --capabilities CAPABILITY_NAMED_IAM \
+            --region us-east-1

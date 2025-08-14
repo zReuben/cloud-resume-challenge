@@ -19,6 +19,8 @@ Conditions:
 Resources:
   ApexARecord:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref HostedZoneId
       Name: reubenmulholland.com
@@ -30,6 +32,8 @@ Resources:
 
   WwwARecord:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Condition: HasWww
     Properties:
       HostedZoneId: !Ref HostedZoneId
