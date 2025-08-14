@@ -216,6 +216,29 @@ jobs:
           role-to-assume: ${{ env.ROOT_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: gha-root-dns-${{ github.run_id }}
+    
+      - name: Ensure root-dns stack is updatable (ROOT)
+        run: |
+          set -euo pipefail
+          STATUS=$(aws cloudformation describe-stacks \
+            --stack-name root-dns --region us-east-1 \
+            --query 'Stacks[0].StackStatus' --output text 2>/dev/null || echo "NOT_FOUND")
+
+          echo "root-dns stack status: $STATUS"
+
+          case "$STATUS" in
+            ROLLBACK_COMPLETE|ROLLBACK_FAILED|DELETE_FAILED)
+              echo "Deleting wedged root-dns stack..."
+              aws cloudformation delete-stack --stack-name root-dns --region us-east-1
+              aws cloudformation wait stack-delete-complete --stack-name root-dns --region us-east-1
+              ;;
+            NOT_FOUND|CREATE_COMPLETE|UPDATE_COMPLETE|UPDATE_ROLLBACK_COMPLETE|REVIEW_IN_PROGRESS|CREATE_IN_PROGRESS|UPDATE_IN_PROGRESS)
+              echo "No cleanup required."
+              ;;
+            *)
+              echo "Proceeding without cleanup (status $STATUS)."
+              ;;
+          esac
 
       - name: Deploy root-dns stack in ROOT
         run: |
