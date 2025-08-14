@@ -2,16 +2,19 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: DNS records for reubenmulholland.com pointing to prod CloudFront
 
 Parameters:
-  HostedZoneId:
+  HostedZoneIdSsmPath:
     Type: String
-    Description: Route53 hosted zone ID for reubenmulholland.com (the zone in ROOT)
+    Default: /cloud-resume/root/hosted_zone_id
+    Description: SSM path in ROOT that stores the Hosted Zone ID
+
   ApexTargetDomainName:
     Type: String
-    Description: Domain name of prod CloudFront distribution (e.g., d123abc.cloudfront.net)
+    Description: dxxxx.cloudfront.net from PROD outputs
+
   WwwTargetDomainName:
     Type: String
     Default: ""
-    Description: Domain name of WWW redirect CloudFront distribution (optional)
+    Description: dxxxx.cloudfront.net (optional, for www)
 
 Conditions:
   HasWww: !Not [ !Equals [ !Ref WwwTargetDomainName, "" ] ]
@@ -22,7 +25,7 @@ Resources:
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      HostedZoneId: !Ref HostedZoneId
+      HostedZoneId: !Sub "{{resolve:ssm:${HostedZoneIdSsmPath}}}"
       Name: reubenmulholland.com
       Type: A
       AliasTarget:
@@ -36,7 +39,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Condition: HasWww
     Properties:
-      HostedZoneId: !Ref HostedZoneId
+      HostedZoneId: !Sub "{{resolve:ssm:${HostedZoneIdSsmPath}}}"
       Name: www.reubenmulholland.com
       Type: A
       AliasTarget:

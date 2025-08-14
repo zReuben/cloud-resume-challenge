@@ -14,21 +14,21 @@ Globals:
 Parameters:
   EnvironmentName:
     Type: String
-    Description: Environment name (e.g., prod, test, eng)
-    AllowedValues:
-      - prod
-      - test
-      - eng
+    AllowedValues: [prod, test, eng]
     Default: prod
-  RootDomainHostedZoneId:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /cloud-resume/prod/hosted_zone_id
-  RootDomainName:
-    Type: AWS::SSM::Parameter::Value<String>
+#  SsmPathHostedZoneId:
+#    Type: String
+#    Default: /cloud-resume/prod/hosted_zone_id
+#    Description: SSM path that holds the Route53 hosted zone ID (string)
+  SsmPathRootDomain:
+    Type: String
     Default: /cloud-resume/prod/root_domain
-  CertificateArn:
-    Type: AWS::SSM::Parameter::Value<String>
+    Description: SSM path that holds the apex/root domain name (string)
+  SsmPathCertificateArn:
+    Type: String
     Default: /cloud-resume/prod/certificate_arn
+    Description: SSM path that holds the ACM cert ARN (string)
+
 
 Conditions:
   IsProd: !Equals [!Ref EnvironmentName, prod]
@@ -65,7 +65,7 @@ Resources:
             Aliases:
               - reubenmulholland.com
             ViewerCertificate:
-                AcmCertificateArn: !Ref CertificateArn
+                AcmCertificateArn: !Sub "{{resolve:ssm:${SsmPathCertificateArn}}}"
                 SslSupportMethod: sni-only
             DefaultCacheBehavior:
                 ViewerProtocolPolicy: redirect-to-https
@@ -208,10 +208,10 @@ Resources:
     Type: AWS::S3::Bucket
     Condition: IsProd
     Properties:
-      BucketName: !Sub "www.${RootDomainName}"
+      BucketName: !Join ['', ['www.', !Sub '{{resolve:ssm:${SsmPathRootDomain}}}']]
       WebsiteConfiguration:
         RedirectAllRequestsTo:
-          HostName: !Ref RootDomainName
+          HostName: !Sub "{{resolve:ssm:${SsmPathRootDomain}}}"
           Protocol: https
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
@@ -226,7 +226,7 @@ Resources:
       DistributionConfig:
         Enabled: true
         Aliases:
-          - www.reubenmulholland.com
+          - !Join ['', ['www.', !Sub '{{resolve:ssm:${SsmPathRootDomain}}}']]
         DefaultCacheBehavior:
           TargetOriginId: WwwRedirectOrigin
           ViewerProtocolPolicy: redirect-to-https
@@ -235,7 +235,7 @@ Resources:
           ForwardedValues:
             QueryString: false
         ViewerCertificate:
-          AcmCertificateArn: !Ref CertificateArn
+          AcmCertificateArn: !Sub "{{resolve:ssm:${SsmPathCertificateArn}}}"
           SslSupportMethod: sni-only
         Origins:
           - Id: WwwRedirectOrigin
