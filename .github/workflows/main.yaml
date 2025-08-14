@@ -240,6 +240,12 @@ jobs:
               ;;
           esac
 
+      - name: Validate root-dns template (ROOT)
+        run: |
+          aws cloudformation validate-template \
+            --template-body file://root-dns/root-dns.yaml \
+            --region us-east-1
+
       - name: Deploy root-dns stack in ROOT
         run: |
           aws cloudformation deploy \
