@@ -57,11 +57,17 @@ Resources:
     Type: "AWS::CloudFront::Distribution"
     Properties:
         DistributionConfig:
-            Aliases:
-              - reubenmulholland.com
-            ViewerCertificate:
+            Aliases: !If
+              - IsProd
+              - [ !Sub "{{resolve:ssm:${SsmPathRootDomain}}}" ]
+              - !Ref "AWS::NoValue"
+            ViewerCertificate: !If
+              - IsProd
+              - 
                 AcmCertificateArn: !Sub "{{resolve:ssm:${SsmPathCertificateArn}}}"
                 SslSupportMethod: sni-only
+              - 
+                CloudFrontDefaultCertificate: true
             DefaultCacheBehavior:
                 ViewerProtocolPolicy: redirect-to-https
                 TargetOriginId: S3Origin
@@ -70,11 +76,37 @@ Resources:
                 MaxTTL: 31536000 # 1 year (for long-lived assets like images/CSS
                 ForwardedValues:
                     QueryString: false
+            
+            #Route API paths to API gateway (Same dist -> Same origin, = no CORS headaches)
+            CacheBehaviors:
+              - PathPattern: "/visitor-count*"
+                TargetOriginId: ApiOrigin
+                ViewerProtocolPolicy: redirect-to-https
+                AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+                CachedMethods:  [GET, HEAD, OPTIONS]
+                ForwardedValues:
+                  QueryString: true
+                  Headers:
+                    - Origin
+                    - Access-Control-Request-Headers
+                    - Access-Control-Request-Method
+                MinTTL: 0
+                DefaultTTL: 0
+                MaxTTL: 0
+
             Origins:
+            #Static Site Origin (S3)
               - DomainName: !GetAtt LandingPage.RegionalDomainName
                 Id: S3Origin
-                S3OriginConfig:
-                    OriginAccessIdentity: ""
+                S3OriginConfig:  
+                  OriginAccessIdentity: ""
+            #API Origin (API Gateway)
+              - DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
+                Id: ApiOrigin
+                OriginPath: "/Prod"   # implicit SAM stage name
+                CustomOriginConfig:
+                  OriginProtocolPolicy: https-only
+            
             Enabled: true
             DefaultRootObject: index.html
 
@@ -116,7 +148,10 @@ Resources:
             Method: GET
           Cors:
             AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
-            AllowOrigin: "'https://reubenmulholland.com'"
+            AllowOrigin: !If
+              - IsProd
+              - !Sub "'https://{{resolve:ssm:${SsmPathRootDomain}}}'"
+              - "'*'"
 
   PostVisitorCountFunction:
     Type: AWS::Serverless::Function
@@ -143,7 +178,10 @@ Resources:
             Method: ANY
           Cors:
             AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
-            AllowOrigin: "'https://reubenmulholland.com'"
+            AllowOrigin: !If
+              - IsProd
+              - !Sub "'https://{{resolve:ssm:${SsmPathRootDomain}}}'"
+              - "'*'"
 
   PutVisitorCountFunction:
     Type: AWS::Serverless::Function
@@ -170,7 +208,10 @@ Resources:
             Method: PUT
           Cors:
             AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
-            AllowOrigin: "'https://reubenmulholland.com'"
+            AllowOrigin: !If
+              - IsProd
+              - !Sub "'https://{{resolve:ssm:${SsmPathRootDomain}}}'"
+              - "'*'"
 
   DeleteVisitorCountFunction:
     Type: AWS::Serverless::Function
@@ -197,7 +238,10 @@ Resources:
             Method: DELETE
           Cors:
             AllowMethods: "'OPTIONS,GET,POST,PUT,DELETE'"
-            AllowOrigin: "'https://reubenmulholland.com'"
+            AllowOrigin: !If
+              - IsProd
+              - !Sub "'https://{{resolve:ssm:${SsmPathRootDomain}}}'"
+              - "'*'"
 
   WwwRedirectBucket:
     Type: AWS::S3::Bucket

@@ -5,24 +5,16 @@ if (spinner) {
   spinner.style.display = "inline-block";
 }
 
-fetch('/config.json', { cache: 'no-store' })
-  .then(res => res.json())
-  .then(cfg => {
-    const url = cfg.apiBaseUrl;
+const url = "/visitor-count";
 
-    // First: Increment the visitor count
-    return fetch(url, { method: 'POST' })
-      .then(() => {
-        // Then: Retrieve the updated visitor count
-        return fetch(url);
-      })
-      .then(response => response.json())
-      .then(data => {
-        countSpan.innerText = data.count;
-      });
+fetch(url, { method: "POST" })        // First: increment
+  .then(() => fetch(url, { cache: "no-store" }))  // Then: read updated count
+  .then(response => response.json())
+  .then(data => {
+    countSpan.innerText = data.count;
   })
   .catch(error => {
-    console.error('Error loading config or fetching visitor count:', error);
+    console.error("Error fetching visitor count:", error);
     countSpan.innerText = "N/A";
   })
   .finally(() => {

@@ -11,6 +11,34 @@ region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 image_repositories = []
+parameter_overrides = [
+  "EnvironmentName=prod",
+  "SsmPathRootDomain=/cloud-resume/prod/root_domain",
+  "SsmPathCertificateArn=/cloud-resume/prod/certificate_arn"
+]
 
 [eng.deploy.parameters]
+stack_name = "cloud-resume-infra"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+resolve_s3 = true
+s3_prefix = "cloud-resume-infra"
+parameter_overrides = [
+  "EnvironmentName=eng",
+  "SsmPathRootDomain=/cloud-resume/eng/root_domain",
+  "SsmPathCertificateArn=/cloud-resume/eng/certificate_arn"
+]
+
 [test.deploy.parameters]
+stack_name = "cloud-resume-infra"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+resolve_s3 = true
+s3_prefix = "cloud-resume-infra"
+parameter_overrides = [
+  "EnvironmentName=test",
+  "SsmPathRootDomain=/cloud-resume/test/root_domain",
+  "SsmPathCertificateArn=/cloud-resume/test/certificate_arn"
+]
