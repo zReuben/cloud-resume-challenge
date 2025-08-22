@@ -16,10 +16,6 @@ Parameters:
     Type: String
     AllowedValues: [prod, test, eng]
     Default: prod
-#  SsmPathHostedZoneId:
-#    Type: String
-#    Default: /cloud-resume/prod/hosted_zone_id
-#    Description: SSM path that holds the Route53 hosted zone ID (string)
   SsmPathRootDomain:
     Type: String
     Default: /cloud-resume/prod/root_domain
@@ -28,7 +24,6 @@ Parameters:
     Type: String
     Default: /cloud-resume/prod/certificate_arn
     Description: SSM path that holds the ACM cert ARN (string)
-
 
 Conditions:
   IsProd: !Equals [!Ref EnvironmentName, prod]
