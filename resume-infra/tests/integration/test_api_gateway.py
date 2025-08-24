@@ -2,6 +2,20 @@ import os
 import boto3
 import pytest
 import requests
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
+
+def _creds_available() -> bool:
+    try:
+        return boto3.Session().get_credentials() is not None
+    except (NoCredentialsError, PartialCredentialsError):
+        return False
+    except Exception:
+        return False
+
+pytestmark = pytest.mark.skipif(
+    not _creds_available(),
+    reason="Integration test needs AWS credentials (skipped in PR CI)."
+)
 
 class TestApiGateway:
 
