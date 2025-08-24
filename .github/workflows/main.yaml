@@ -33,13 +33,6 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements-dev.txt
-      
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::354076468099:role/GitHubActionsDeployer
-          aws-region: us-east-1
-          role-session-name: gha-test-${{ github.run_id }}
 
       - name: Run unit tests
         run: |
