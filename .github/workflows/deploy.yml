@@ -17,6 +17,10 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ENG }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: Install Python 3.11 for SAM build
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Build & deploy infra (ENG)
         run: |
           make build
@@ -95,6 +99,10 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TEST }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: Install Python 3.11 for SAM build
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Build & deploy infra (TEST)
         run: |
           make build
@@ -159,6 +167,10 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: Install Python 3.11 for SAM build
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Build & deploy infra (PROD)
         run: |
           make build
