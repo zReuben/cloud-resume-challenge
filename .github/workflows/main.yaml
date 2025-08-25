@@ -45,6 +45,7 @@ jobs:
           python -m pytest resume-infra/tests/integration/
 
   deploy-backend:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
     needs: test
@@ -93,6 +94,7 @@ jobs:
             --resolve-s3
 
   deploy-frontend:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Deploy Frontend
     runs-on: ubuntu-latest
     needs: test
