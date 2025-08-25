@@ -155,10 +155,10 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: resume-site/tests/e2e/package-lock.json
+          cache-dependency-path: resume-site/package-lock.json
 
       - name: Install Puppeteer dependencies
-        working-directory: resume-site/tests/e2e
+        working-directory: resume-site
         env:
           NPM_CONFIG_FETCH_RETRIES: '5'
           NPM_CONFIG_FETCH_RETRY_MINTIMEOUT: '20000'
@@ -172,7 +172,7 @@ jobs:
           done
 
       - name: Run Puppeteer E2E test
-        working-directory: resume-site/tests/e2e
+        working-directory: resume-site
         run: |
           npx node tests/e2e/test-visitor-count.js "https://${{ steps.get_domain.outputs.domain }}"
 
