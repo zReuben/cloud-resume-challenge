@@ -1,0 +1,213 @@
+name: deploy
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy-infra-eng:
+    environment: eng
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ENG }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Build & deploy infra (ENG)
+        run: |
+          make build
+          make deploy-infra ENV=eng
+
+  deploy-frontend-eng:
+    needs: deploy-infra-eng
+    environment: eng
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ENG }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get S3 bucket
+        id: get_bucket
+        run: |
+          echo "bucket=$(aws cloudformation describe-stacks \
+            --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='LandingPage'].OutputValue" --output text)" >> $GITHUB_OUTPUT
+
+      - name: Get CF distribution
+        id: get_distribution
+        run: |
+          echo "distribution_id=$(aws cloudformation describe-stacks \
+            --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" --output text)" >> $GITHUB_OUTPUT
+
+      - name: Sync site
+        run: aws s3 sync resume-site/ s3://${{ steps.get_bucket.outputs.bucket }} --delete
+
+      - name: Invalidate CF
+        run: aws cloudfront create-invalidation --distribution-id ${{ steps.get_distribution.outputs.distribution_id }} --paths "/*"
+
+      - name: Get CF domain
+        id: get_domain
+        run: |
+          echo "domain=$(aws cloudfront get-distribution --id ${{ steps.get_distribution.outputs.distribution_id }} \
+            --query "Distribution.DomainName" --output text)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: resume-site/package-lock.json
+
+      - name: Install E2E deps (resume-site)
+        working-directory: resume-site
+        env:
+          NPM_CONFIG_FETCH_RETRIES: '5'
+          NPM_CONFIG_FETCH_RETRY_MINTIMEOUT: '20000'
+          NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT: '120000'
+        shell: bash
+        run: |
+          for i in {1..5}; do
+            npm ci --no-audit --fund=false && break
+            echo "npm ci failed (attempt $i). Retrying in $((i*10))s…"
+            sleep $((i*10))
+          done
+
+      - name: E2E against ENG
+        working-directory: resume-site
+        run: node tests/e2e/test-visitor-count.js "https://${{ steps.get_domain.outputs.domain }}"
+
+  deploy-infra-test:
+    needs: deploy-frontend-eng
+    environment: test   # approvals configured in GitHub
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TEST }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Build & deploy infra (TEST)
+        run: |
+          make build
+          make deploy-infra ENV=test
+
+  deploy-frontend-test:
+    needs: deploy-infra-test
+    environment: test
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TEST }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get S3 bucket
+        id: get_bucket
+        run: |
+          echo "bucket=$(aws cloudformation describe-stacks --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='LandingPage'].OutputValue" --output text)" >> $GITHUB_OUTPUT
+
+      - name: Get CF distribution
+        id: get_distribution
+        run: |
+          echo "distribution_id=$(aws cloudformation describe-stacks --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" --output text)" >> $GITHUB_OUTPUT
+
+      - name: Sync site
+        run: aws s3 sync resume-site/ s3://${{ steps.get_bucket.outputs.bucket }} --delete
+
+      - name: Invalidate CF
+        run: aws cloudfront create-invalidation --distribution-id ${{ steps.get_distribution.outputs.distribution_id }} --paths "/*"
+
+      - name: Get CF domain
+        id: get_domain
+        run: |
+          echo "domain=$(aws cloudfront get-distribution --id ${{ steps.get_distribution.outputs.distribution_id }} \
+            --query "Distribution.DomainName" --output text)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: resume-site/package-lock.json
+      - name: Install E2E deps
+        working-directory: resume-site
+        run: npm ci --no-audit --fund=false
+      - name: E2E against TEST
+        working-directory: resume-site
+        run: node tests/e2e/test-visitor-count.js "https://${{ steps.get_domain.outputs.domain }}"
+
+  deploy-infra-prod:
+    needs: deploy-frontend-test
+    environment: prod   # approvals configured in GitHub
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Build & deploy infra (PROD)
+        run: |
+          make build
+          make deploy-infra ENV=prod
+
+  deploy-frontend-prod:
+    needs: deploy-infra-prod
+    environment: prod
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get S3 bucket
+        id: get_bucket
+        run: |
+          echo "bucket=$(aws cloudformation describe-stacks --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='LandingPage'].OutputValue" --output text)" >> $GITHUB_OUTPUT
+
+      - name: Get CF distribution
+        id: get_distribution
+        run: |
+          echo "distribution_id=$(aws cloudformation describe-stacks --stack-name cloud-resume-infra \
+            --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" --output text)" >> $GITHUB_OUTPUT
+
+      - name: Sync site
+        run: aws s3 sync resume-site/ s3://${{ steps.get_bucket.outputs.bucket }} --delete
+
+      - name: Invalidate CF
+        run: aws cloudfront create-invalidation --distribution-id ${{ steps.get_distribution.outputs.distribution_id }} --paths "/*"
+
+      - name: Get CF domain
+        id: get_domain
+        run: |
+          echo "domain=$(aws cloudfront get-distribution --id ${{ steps.get_distribution.outputs.distribution_id }} \
+            --query "Distribution.DomainName" --output text)" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: resume-site/package-lock.json
+      - name: Install E2E deps
+        working-directory: resume-site
+        run: npm ci --no-audit --fund=false
+      - name: E2E (smoke) against PROD
+        working-directory: resume-site
+        run: node tests/e2e/test-visitor-count.js "https://${{ steps.get_domain.outputs.domain }}"
