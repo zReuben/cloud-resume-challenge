@@ -13,6 +13,20 @@ jobs:
     permissions: { id-token: write, contents: read }
     steps:
       - uses: actions/checkout@v4
+      #TEMP FOR DEBUGGING, PRINT OIDC TOKEN CLAIMS TO LOG
+      - name: Debug OIDC claims (temporary)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Request OIDC token for audience sts.amazonaws.com
+          TOKEN="$(curl -sSL -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" | jq -r .value)"
+          echo "OIDC header:"
+          echo "$TOKEN" | cut -d. -f1 | base64 -d 2>/dev/null | jq .
+          echo "OIDC claims (payload):"
+          echo "$TOKEN" | cut -d. -f2 | base64 -d 2>/dev/null | jq .
+      #END TEMP
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ENG }}
