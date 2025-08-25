@@ -24,8 +24,7 @@ jobs:
       - name: Build & deploy infra (ENG)
         run: |
           make build
-          sam deploy --config-env eng --region ${{ env.AWS_REGION }} \
-            --no-confirm-changeset --no-fail-on-empty-changeset
+          make deploy-infra ENV=eng
 
   deploy-frontend-eng:
     needs: deploy-infra-eng
