@@ -99,20 +99,17 @@ jobs:
       - name: Debug OIDC claims (test)
         shell: bash
         run: |
-          set -euo pipefail
-          tok="$(python - <<'PY'
-          import os, json, urllib.request
+          python - <<'PY'
+          import os, json, urllib.request, base64
           url = os.environ['ACTIONS_ID_TOKEN_REQUEST_URL'] + '?audience=sts.amazonaws.com'
-          req = urllib.request.Request(url, headers={'Authorization': 'Bearer ' + os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']})
-          with urllib.request.urlopen(req) as r:
-          print(json.load(r)['value'])
+          req = urllib.request.Request(url, headers={'Authorization':'Bearer ' + os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']})
+          r = urllib.request.urlopen(req)
+          tok = json.load(r)['value']
+          r.close()
+          payload_b64 = tok.split('.')[1]
+          payload = json.loads(base64.urlsafe_b64decode(payload_b64 + '==').decode())
+          print(json.dumps(payload, indent=2, sort_keys=True))
           PY
-          )"
-          echo "OIDC claims (payload):"
-          PAY="$(echo "$tok" | cut -d. -f2)"
-          # pad + decode URL-safe base64
-          missing=$(( (4 - ${#PAY} % 4) % 4 )); PAD=$(printf '=%.0s' $(seq 1 $missing))
-          echo "${PAY}${PAD}" | tr '_-' '/+' | base64 -d 2>/dev/null || true
       #TEMP DEBUG
       - uses: aws-actions/configure-aws-credentials@v4
         with:
