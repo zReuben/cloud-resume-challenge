@@ -95,6 +95,22 @@ jobs:
     permissions: { id-token: write, contents: read }
     steps:
       - uses: actions/checkout@v4
+      #TEMP DEBUG
+      - name: Debug OIDC claims (test)
+        shell: bash
+        run: |
+          set -euo pipefail
+          header=$(python - <<'PY'
+      import os, json, base64, requests
+      url=os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']+'?audience=sts.amazonaws.com'
+      tok=requests.get(url, headers={'Authorization':'Bearer '+os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']}).json()['value']
+      hdr,pay,_=tok.split('.')
+      import sys
+      print(base64.urlsafe_b64decode(pay+'==').decode())
+      PY
+      )
+          echo "$header"
+      #TEMP DEBUG
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TEST }}
