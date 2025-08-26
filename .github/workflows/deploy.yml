@@ -100,16 +100,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          header=$(python - <<'PY'
-      import os, json, base64, requests
-      url=os.environ['ACTIONS_ID_TOKEN_REQUEST_URL']+'?audience=sts.amazonaws.com'
-      tok=requests.get(url, headers={'Authorization':'Bearer '+os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']}).json()['value']
-      hdr,pay,_=tok.split('.')
-      import sys
-      print(base64.urlsafe_b64decode(pay+'==').decode())
-      PY
-      )
-          echo "$header"
+          RESP="$(curl -sS -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL?audience=sts.amazonaws.com")"
+          TOKEN="$(python - <<'PY' <<<"$RESP"
+          import sys, json
+          print(json.load(sys.stdin)["value"])
+          PY
+          )"
+          PAYLOAD="$(python - "$TOKEN" <<'PY'
+          import sys, base64
+          t=sys.argv[1]
+          print(base64.urlsafe_b64decode(t.split('.')[1] + '==').decode())
+          PY
+          )"
+          echo "$PAYLOAD"
       #TEMP DEBUG
       - uses: aws-actions/configure-aws-credentials@v4
         with:
