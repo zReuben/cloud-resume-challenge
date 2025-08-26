@@ -16,8 +16,13 @@ build:
 
 deploy-infra:
 	cd resume-infra && \
-	sam deploy --config-env $(ENV) --region $(REGION)
-	  --no-confirm-changeset --no-fail-on-empty-changeset
+	sam build && \
+	sam deploy 
+	  --config-env $(ENV) \
+	  --region $(REGION) \
+	  --no-confirm-changeset \
+	  --no-fail-on-empty-changeset \
+	  --capabilities CAPABILITY_IAM
 
 deploy-cert:
 	cd resume-cert && \
