@@ -3,91 +3,188 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reuben Mulholland – Cloud Resume Challenge</title>
+  <title>Reuben Mulholland — Product Leader & Cloud Technologist</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Product leader & cloud technologist. Multi-account AWS, IaC (SAM/CloudFormation), CI/CD with GitHub Actions, CloudFront/S3, API Gateway/Lambda/DynamoDB. Promotion pipeline across eng/test/prod." />
+
+  <!-- Social -->
+  <meta property="og:title" content="Reuben Mulholland — Product Leader & Cloud Technologist">
+  <meta property="og:description" content="Multi-account AWS • IaC • CI/CD • Serverless • Promotion pipeline (eng→test→prod)">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://reubenmulholland.com">
+  <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.ico" />
+
+  <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-
 </head>
 <body>
   <div class="container">
 
-    <!-- Header with image + name/title/links -->
+    <!-- Header -->
     <div class="intro-flex">
       <img src="profile.jpg" alt="Reuben Mulholland" class="intro-image" />
       <div class="intro-text">
-        <h2>Reuben Mulholland</h2>
-        <h2>Product Leader & Cloud Technologist</h2>
+        <h1 class="headline">Reuben Mulholland</h1>
+        <p class="subhead">Product Leader & Cloud Technologist · Multi-account AWS · IaC · CI/CD</p>
         <p>
-          Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display: none;"></span>
+          Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span>
         </p>
+        <div class="cta-row">
+          <a class="button" href="resume.html">View Resume</a>
+          <a class="button button--secondary" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Download PDF</a>
+          <a class="button button--secondary" href="mailto:hello@reubenmulholland.com">Contact</a>
+        </div>
       </div>
     </div>
 
-    <!-- Navigation menu -->
+    <!-- Navigation -->
     <div class="nav-wrapper">
-      <nav>
+      <nav aria-label="Primary">
         <a href="index.html">👤 About</a>
-        <a href="resume.html">📄 My Resume</a>
+        <a href="resume.html">📄 Resume</a>
+        <a href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">⬇️ Resume (PDF)</a>
+        <a href="https://github.com/zReuben" target="_blank" rel="noopener noreferrer">💻 GitHub</a>
         <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
       </nav>
     </div>
 
-
-    <!-- Site content -->
-    <div class="section">
-      <h3>🎓 Background & Experience</h3>
-      <p>
-      I’m an AWS Certified Solutions Architect – Associate with a BE and MS in Computer Engineering. My master’s included an advanced certification in Networking & Wireless Communication, fueling my interest in cloud infrastructure. After several years developing and supporting mission-critical hardware, I transitioned into agile product leadership roles. I’ve led scrum teams, owned roadmaps, and driven growth in cybersecurity and aerospace, and now, I’m focused on building in the cloud where my background and interests align.
-      </p>
-    </div>
-
+    <!-- Why -->
     <div class="section">
       <h3>🔧 Why This Site Exists</h3>
       <p>
-      This site is part of the <strong>Cloud Resume Challenge</strong>, a full-stack cloud project designed to showcase real-world skills in <strong>AWS</strong>, <strong>DevOps</strong>, and <strong>Infrastructure as Code (IaC)</strong>. It’s more than a resume, it’s an evolving technical portfolio demonstrating how I approach architecture, automation, and secure cloud deployment.
+        This began as the <strong>Cloud Resume Challenge</strong> and evolved into a production-style, multi-account AWS build. It’s a living portfolio of how I approach architecture, automation, and guardrails: <em>SAM/CloudFormation IaC</em>, <em>GitHub Actions CI/CD</em>, <em>CloudFront/S3</em>, and a <em>serverless API</em> (API Gateway → Lambda → DynamoDB).
       </p>
     </div>
 
+    <!-- What I've Built -->
     <div class="section">
-      <h3>✅ What I’ve Built So Far</h3>
-      <ol>
-        <li>Set up <strong>AWS Organizations</strong> with separate accounts for management, development, test, and production environments</li>
-        <li>Secured administrative access using <strong>AWS Vault</strong> and <strong>MFA-protected temporary credentials</strong> across accounts with delegated roles and scoped permissions</li>
-        <li>Purchased a domain and configured <strong>Route 53</strong> DNS routing to a <strong>CloudFront</strong> distribution backed by a validated SSL certificate from <strong>AWS Certificate Manager</strong></li>
-        <li>Defined all infrastructure using <strong>AWS SAM</strong> and <strong>CloudFormation</strong>, including S3, CloudFront, Route 53, Certificate Manager, API Gateway, Lambda, and DynamoDB</li>
-        <li>Deployed a <strong>serverless visitor counter</strong> using Lambda functions triggered by API Gateway and persisting data to DynamoDB</li>
-        <li>Integrated <strong>GitHub Actions</strong> for CI/CD to automate testing and deployment of both frontend and backend across environments</li>
-        <li>Implemented <strong>AWS Budgets</strong>, <strong>SNS alerts</strong>, and a <strong>Lambda-powered kill switch</strong> to prevent runaway costs in case of misconfiguration or malicious traffic</li>
-        <li>Hosted the site statically on <strong>Amazon S3</strong>, served globally via <strong>CloudFront</strong>, and styled with a responsive <strong>HTML + CSS layout</strong></li>
-      </ol>
+      <h3>✅ What I’ve Built</h3>
+      <ul>
+        <li><strong>Multi-account AWS</strong> (mgmt/eng/test/prod) with role assumption via AWS Vault and scoped IAM.</li>
+        <li><strong>Promotion pipeline</strong> (build once, promote <em>eng → test → prod</em>) with GitHub Environments + approvals.</li>
+        <li><strong>Static site</strong> via CloudFront + S3, Route 53, and ACM; HTTPS + global caching.</li>
+        <li><strong>Serverless visitor API</strong> (API Gateway → Lambda → DynamoDB) — completed and live.</li>
+        <li><strong>Full IaC</strong> with AWS SAM/CloudFormation — no console drift.</li>
+      </ul>
+      <p class="statusline">
+        <span class="badge">eng ✅</span>
+        <span class="badge">test ✅</span>
+        <span class="badge">prod ✅</span>
+      </p>
     </div>
 
+    <!-- Security -->
+    <div class="section">
+      <h3>🔒 Security & Reliability</h3>
+      <ul class="tight">
+        <li><strong>OIDC to AWS</strong>: GitHub → AWS role assumption (no long-lived CI keys).</li>
+        <li><strong>Least-privilege IAM</strong>: separate deploy roles per account; scoped permissions for SAM/CFN/S3.</li>
+        <li><strong>Change control</strong>: environment protections + human approvals for <em>test</em> and <em>prod</em>.</li>
+        <li><strong>Drift resistance</strong>: IaC-only deployments; no manual console changes.</li>
+        <li><strong>Rollback</strong>: promote immutable artifacts; fast revert to last known good.</li>
+        <li><strong>Next</strong>: Budgets + SNS + <em>Kill Switch Lambda</em>, CloudWatch dashboards/alarms, org-wide CloudTrail, IAM Identity Center.</li>
+      </ul>
+    </div>
+
+    <!-- Release Pipeline -->
+    <div class="section">
+      <h3>🚀 Release Pipeline</h3>
+      <div class="cards">
+        <article class="card">
+          <h4>Build Once</h4>
+          <p>Package SAM template to a promotion S3 bucket with checksums/SBOM; the same artifact moves through stages.</p>
+          <div class="badges">
+            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Promote with Approvals</h4>
+          <p>GitHub Environments enforce reviewers for <em>test</em> & <em>prod</em>; deploy uses OIDC (no long-lived keys).</p>
+          <div class="badges">
+            <span class="badge">GitHub OIDC</span><span class="badge">Environments</span><span class="badge">Approvals</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Immutable Inputs</h4>
+          <p>Env config via Parameters/SSM; identical build promoted across stages; fast rollback to last known good.</p>
+          <div class="badges">
+            <span class="badge">SSM</span><span class="badge">IaC</span><span class="badge">Rollback</span>
+          </div>
+        </article>
+      </div>
+      <div class="cta-row" style="margin-top:.75rem;">
+        <a class="button button--secondary" href="https://github.com/zReuben" target="_blank" rel="noopener">View CI/CD on GitHub</a>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="section">
+      <h3>🧩 Selected Projects</h3>
+      <div class="cards">
+        <article class="card">
+          <h4>Cloud Resume (Prod)</h4>
+          <p>Multi-account IaC deployment, static hosting via CloudFront/S3, serverless visitor API, CI/CD with GitHub Actions.</p>
+          <div class="badges">
+            <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">DynamoDB</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Cost Guardrails (Next)</h4>
+          <p>Budgets + SNS alerts and a <em>Kill Switch Lambda</em> to automatically pause spend anomalies.</p>
+          <div class="badges">
+            <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Identity & Observability</h4>
+          <p>IAM Identity Center rollout; CloudWatch dashboards/alarms; org-wide CloudTrail for audit and forensics.</p>
+          <div class="badges">
+            <span class="badge">Identity Center</span><span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- What's Next -->
     <div class="section">
       <h3>📈 What’s Next</h3>
       <ol>
-        <li>Implement a visitor counter using <strong>JavaScript</strong> on the frontend, backed by a <strong>Lambda function</strong>, <strong>DynamoDB</strong>, and <strong>API Gateway</strong></li>
-        <li>Write backend logic in <strong>Python</strong> using the <strong>boto3</strong> SDK and add unit tests to ensure reliability</li>
-        <li>Set up <strong>CI/CD pipelines</strong> using <strong>GitHub Actions</strong> to automate deployment of both frontend and backend code</li>
-        <li>Enhance <strong>monitoring and logging</strong> with <strong>CloudWatch</strong> to track API usage and detect issues</li>
-        <li>Refine <strong>IAM policies</strong> for the Lambda role to ensure least-privilege execution</li>
-        <li>Simulate a basic <strong>AWS Organizations</strong> setup to explore multi-account structure, billing separation, and cost control best practices</li>
+        <li>Ship <strong>Kill Switch Lambda</strong> with Budgets + SNS across eng → test → prod.</li>
+        <li>Stand up <strong>CloudWatch dashboards/alarms</strong> and an org-wide <strong>CloudTrail</strong>.</li>
+        <li>Roll out <strong>IAM Identity Center</strong> for clean, scalable access.</li>
+        <li>Explore <strong>Kubernetes/containers</strong> (EKS/ECS + Docker) for the next portfolio project.</li>
       </ol>
     </div>
 
-
+    <!-- Career -->
     <div class="section">
       <h3>🎯 Career Focus</h3>
       <p>
-        I'm looking to join a forward-thinking team where I can apply my blend of product strategy and technical depth. I'm especially interested in roles in <strong>cloud-native product management</strong>, <strong>cloud engineering</strong>, <strong>DevOps</strong>, or <strong>solutions architecture</strong>, particularly in industries like <strong>SaaS</strong>, <strong>cybersecurity</strong>, or <strong>cloud infrastructure</strong>.
+        Open to roles in <strong>cloud-native product</strong>, <strong>cloud engineering</strong>, <strong>DevOps</strong>, or <strong>solutions architecture</strong>—especially SaaS, cybersecurity, and cloud infrastructure. I like small, sharp teams where shipping and reliability matter.
       </p>
-      <p>
-        I'm also open to opportunities at well-funded <strong>startups</strong> and smaller technical teams where I can contribute broadly, grow alongside the organization, and help build systems that scale.
-      </p>
+      <div class="cta-row">
+        <a class="button" href="resume.html">View Resume</a>
+        <a class="button button--secondary" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Download PDF</a>
+        <a class="button button--secondary" href="mailto:hello@reubenmulholland.com">Contact</a>
+      </div>
     </div>
 
-
+    <!-- Footer -->
+    <footer class="footer">
+      <small>
+        Last updated: Aug 2025 · Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions.
+        &nbsp;|&nbsp; <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a>
+      </small>
+    </footer>
   </div>
+
+  <!-- Visitor counter (kept) -->
   <script src="visitorCount.js?v=2"></script>
 </body>
 </html>
-
