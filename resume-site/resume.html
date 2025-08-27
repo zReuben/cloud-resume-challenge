@@ -3,26 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Resume – Reuben Mulholland</title>
+  <title>My Resume — Reuben Mulholland</title>
+
+  <!-- Favicons (optional, but keeps consistency) -->
+  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-
-      
 </head>
 <body>
-  <div class="container">
-    <nav aria-label="Primary">
-      <a href="index.html">👤 About</a>
+  <!-- Spotlight (same effect as home) -->
+  <div id="spotlight" aria-hidden="true"></div>
+
+  <header class="shell">
+    <div class="intro">
+      <img src="profile.jpg" alt="Reuben Mulholland" class="avatar" />
+      <div>
+        <h1 class="headline">Reuben Mulholland</h1>
+        <p class="roles">
+          <span>Product Leader</span><br>
+          <span>Aspiring Cloud Engineer</span>
+        </p>
+      </div>
+    </div>
+
+    <nav aria-label="Primary" class="topnav">
+      <a href="index.html">🏠 Home</a>
       <a href="resume.html">📄 Resume</a>
       <a href="https://github.com/zReuben" target="_blank" rel="noopener noreferrer">💻 GitHub</a>
       <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
     </nav>
-    
-    <div class="embed-wrapper">
-      <iframe src="Reuben Mulholland Resume 2025.pdf"></iframe>
-      <a class="button" href="Reuben Mulholland Resume 2025.pdf" download="Reuben Mulholland Resume 2025.pdf" type="application/pdf">Download PDF</a>
-    </div>
-  </div>
+  </header>
+
+  <main class="shell">
+    <section class="section">
+      <h3 class="kicker">📄 My Resume</h3>
+
+      <div class="pdf-actions">
+        <a class="link-chip" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Open in new tab</a>
+        <a class="link-chip" href="Reuben Mulholland Resume 2025.pdf" download>Download PDF</a>
+      </div>
+
+      <div class="embed">
+        <!-- Inline PDF viewer (falls back to a link if the browser can’t embed) -->
+        <object data="Reuben Mulholland Resume 2025.pdf" type="application/pdf" class="pdf-frame">
+          <p>Unable to display the PDF here. <a href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Open the PDF</a>.</p>
+        </object>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell footer">
+    <small>
+      Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions.
+      <span class="dot">•</span>
+      <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a>
+    </small>
+  </footer>
+
+  <!-- Spotlight JS (same as home) -->
+  <script>
+    (function(){
+      const s = document.getElementById('spotlight');
+      let tx = innerWidth/2, ty = innerHeight/2, x = tx, y = ty;
+      const onMove = (e) => { tx = e.clientX; ty = e.clientY; };
+      window.addEventListener('mousemove', onMove, { passive: true });
+      function tick(){
+        x += (tx - x) * 0.35;
+        y += (ty - y) * 0.35;
+        s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        requestAnimationFrame(tick);
+      }
+      tick();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.removeEventListener('mousemove', onMove);
+        s.style.display = 'none';
+      }
+    })();
+  </script>
 </body>
 </html>
-
