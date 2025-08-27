@@ -137,3 +137,29 @@ body{
 /* Ensure spotlight sits under content but above page bg here too */
 #spotlight { z-index: 1; }
 .shell, .section, .topnav { position: relative; z-index: 2; }
+
+/* Roles subline */
+.roles-sub { color: var(--muted); font-weight: 600; }
+
+/* Hiring manager orientation blurb */
+.hm-orient {
+  margin-top: .6rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* Results metrics */
+.metrics { margin-top: .8rem; }
+.metrics-list {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: .4rem;
+}
+.metrics-list li {
+  background: var(--badge-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: .5rem .6rem;
+  color: var(--badge-fg);
+  box-shadow: var(--shadow);
+}
+.metrics-list strong { color: #ffffff; }
