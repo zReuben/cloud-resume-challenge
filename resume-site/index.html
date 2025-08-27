@@ -20,6 +20,8 @@
   <link rel="icon" href="favicon.ico">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" href="favicon.ico">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -51,34 +53,25 @@
 
   <main class="shell">
     <section class="section">
-      <h3 class="kicker">🔧 Why This Site Exists</h3>
+      <h3 class="kicker">👋 About This Site</h3>
       <p>
-        This began as the <strong>Cloud Resume Challenge</strong> and evolved into a production-style, multi-account AWS build. It’s a living portfolio of how I approach architecture, automation, and guardrails: <em>SAM/CloudFormation IaC</em>, <em>GitHub Actions CI/CD</em>, <em>CloudFront/S3</em>, and a <em>serverless API</em> (API Gateway → Lambda → DynamoDB).
+        This project began as the <strong>Cloud Resume Challenge</strong>, where I implemented a serverless visitor counter backed by a RESTful API (API Gateway → Lambda → DynamoDB) and deployed it with CloudFront/S3 static hosting, HTTPS, and IaC. 
       </p>
-      <p class="hm-orient">
-        This mirrors how cloud-native teams safely promote changes into production—cost control, strong defaults for security, and rapid rollback. It’s the same foundation I’d bring to a SaaS or cloud engineering team to ship faster with less risk.
+      <p>
+        I then extended it into a <strong>multi-account AWS environment</strong> with CI/CD pipelines, promotion controls (eng → test → prod), and guardrails for cost and security. Together, it mirrors how cloud-native teams ship changes safely into production, and it’s the same foundation I’d bring to a SaaS or cloud engineering team.
       </p>
     </section>
+
 
     <section class="section">
       <h3 class="kicker">✅ What I’ve Built</h3>
       <ul class="bullets">
-        <li><strong>Multi-account AWS</strong> (mgmt/eng/test/prod) with role assumption via AWS Vault and scoped IAM.</li>
-        <li><strong>Promotion pipeline</strong> (build once, promote <em>eng → test → prod</em>) with GitHub Environments + approvals.</li>
-        <li><strong>Static site</strong> via CloudFront + S3, Route 53, and ACM; HTTPS + global caching.</li>
-        <li><strong>Serverless visitor API</strong> (API Gateway → Lambda → DynamoDB) — completed and live.</li>
-        <li><strong>Full IaC</strong> with AWS SAM/CloudFormation — no console drift.</li>
+        <li>Multi-account AWS (<em>mgmt, eng, test, prod</em>) with scoped IAM role assumption via AWS Vault.</li>
+        <li>Promotion pipeline using GitHub Environments + approvals — 3 gated environments; single-merge promotions.</li>
+        <li>Static site deployed to CloudFront + S3, integrated with Route 53 + ACM for HTTPS and global caching.</li>
+        <li>Serverless API (API Gateway → Lambda → DynamoDB) with <strong>0</strong> long-lived CI keys (GitHub OIDC → AWS).</li>
+        <li>100% IaC (SAM/CloudFormation); <strong>minutes</strong> to rollback via immutable artifacts; no console drift.</li>
       </ul>
-      <p class="envs"><span class="pill">eng ✅</span><span class="pill">test ✅</span><span class="pill">prod ✅</span></p>
-      <div class="metrics">
-      <ul class="metrics-list">
-        <li><strong>3</strong> environments with gated promotions (eng → test → prod)</li>
-        <li><strong>0</strong> long-lived CI keys (GitHub OIDC → AWS)</li>
-        <li><strong>100%</strong> IaC (SAM/CloudFormation), no console drift</li>
-        <li>Single-merge promotions; <strong>minutes</strong> to rollback via immutable artifacts</li>
-      </ul>
-</div>
-
     </section>
 
     <section class="section">
@@ -98,27 +91,17 @@
       <div class="cards">
         <article class="card">
           <h4>Build Once</h4>
-          <p>Package SAM template to a promotion S3 bucket with checksums/SBOM; the same artifact moves through stages.</p>
-          <div class="badges">
-            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
-          </div>
+          <p>Single SAM template packaged with checksums/SBOM; the same artifact moves through all stages.</p>
         </article>
         <article class="card">
           <h4>Promote with Approvals</h4>
-          <p>GitHub Environments enforce reviewers for <em>test</em> & <em>prod</em>; deploy uses OIDC (no long-lived keys).</p>
-          <div class="badges">
-            <span class="badge">GitHub OIDC</span><span class="badge">Environments</span><span class="badge">Approvals</span>
-          </div>
+          <p>GitHub Environments enforce reviewers for <em>test</em> and <em>prod</em>; deploys use OIDC (no long-lived keys).</p>
         </article>
         <article class="card">
           <h4>Immutable Inputs</h4>
-          <p>Env config via Parameters/SSM; identical build promoted across stages; fast rollback to last known good.</p>
-          <div class="badges">
-            <span class="badge">SSM</span><span class="badge">IaC</span><span class="badge">Rollback</span>
-          </div>
+          <p>Config via Parameters/SSM; identical builds promoted across stages; fast rollback to last known good.</p>
         </article>
       </div>
-      <p class="meta-note">Full pipeline & source on <a href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>.</p>
     </section>
 
     <section class="section">
@@ -156,14 +139,7 @@
         <li>Roll out <strong>IAM Identity Center</strong> for clean, scalable access.</li>
         <li>Explore <strong>Kubernetes/containers</strong> (EKS/ECS + Docker) for the next portfolio project.</li>
       </ol>
-    </section>
-
-    <section class="section">
-      <h3 class="kicker">🎯 Career Focus</h3>
-      <p>
-        Through projects like this portfolio, I’ve shown I can design and run AWS infrastructure as code, automate deployments, and build guardrails for cost and security. I’m looking for my first professional role in <strong>Cloud Engineering / DevOps / Solutions Architecture</strong>, where I can apply these skills in a team setting and continue growing into someone who owns pipelines and enables faster shipping.
-      </p>
-    </section>
+    </section> 
   </main>
 
   <footer class="shell footer">
