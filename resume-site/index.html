@@ -153,5 +153,14 @@
   </footer>
 
   <script src="visitorCount.js?v=5"></script>
+    <!-- Spotlight cursor effect -->
+  <div id="spotlight"></div>
+  <script>
+    const spotlight = document.getElementById("spotlight");
+    document.addEventListener("mousemove", (e) => {
+      spotlight.style.left = e.clientX + "px";
+      spotlight.style.top = e.clientY + "px";
+    });
+  </script>
 </body>
 </html>

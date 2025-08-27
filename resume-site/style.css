@@ -96,3 +96,17 @@ body{
 @media (max-width:640px){
   .intro{ text-align:center; justify-content:center; }
 }
+
+/* Spotlight cursor effect */
+#spotlight {
+  position: fixed;
+  pointer-events: none;       /* don’t block clicks */
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+  box-shadow: 0 0 40px rgba(0,0,0,0.35);
+  transform: translate(-50%, -50%);
+  transition: left 0.05s linear, top 0.05s linear;
+  z-index: 9999;
+}
