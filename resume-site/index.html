@@ -16,66 +16,57 @@
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Favicons (ico + png fallback) -->
+  <!-- Favicons (put favicon.ico and/or favicon.png in the same folder as this file) -->
   <link rel="icon" href="favicon.ico">
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" href="favicon.ico">
 
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-
-    <!-- Header -->
-    <div class="intro-flex">
-      <img src="profile.jpg" alt="Reuben Mulholland" class="intro-image" />
-      <div class="intro-text">
+  <header class="shell">
+    <div class="intro">
+      <img src="profile.jpg" alt="Reuben Mulholland" class="avatar" />
+      <div>
         <h1 class="headline">Reuben Mulholland</h1>
         <p class="subhead">Product Leader & Cloud Engineer · Multi-account AWS · IaC · CI/CD</p>
-        <p>Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
+        <p class="visitors">Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
       </div>
     </div>
 
-    <!-- Navigation -->
-    <div class="nav-wrapper">
-      <nav aria-label="Primary">
-        <a href="index.html">👤 About</a>
-        <a href="resume.html">📄 Resume</a>
-        <a href="https://github.com/zReuben" target="_blank" rel="noopener noreferrer">💻 GitHub</a>
-        <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
-      </nav>
-    </div>
+    <nav aria-label="Primary" class="topnav">
+      <a href="index.html">👤 About</a>
+      <a href="resume.html">📄 Resume</a>
+      <a href="https://github.com/zReuben" target="_blank" rel="noopener noreferrer">💻 GitHub</a>
+      <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
+    </nav>
+  </header>
 
-    <!-- Why -->
-    <section class="section section--panel">
-      <h3>🔧 Why This Site Exists</h3>
+  <main class="shell">
+    <section class="section">
+      <h3 class="kicker">🔧 Why This Site Exists</h3>
       <p>
         This began as the <strong>Cloud Resume Challenge</strong> and evolved into a production-style, multi-account AWS build. It’s a living portfolio of how I approach architecture, automation, and guardrails: <em>SAM/CloudFormation IaC</em>, <em>GitHub Actions CI/CD</em>, <em>CloudFront/S3</em>, and a <em>serverless API</em> (API Gateway → Lambda → DynamoDB).
       </p>
     </section>
 
-    <!-- What I've Built -->
-    <section class="section section--panel">
-      <h3>✅ What I’ve Built</h3>
-      <ul>
+    <section class="section">
+      <h3 class="kicker">✅ What I’ve Built</h3>
+      <ul class="bullets">
         <li><strong>Multi-account AWS</strong> (mgmt/eng/test/prod) with role assumption via AWS Vault and scoped IAM.</li>
         <li><strong>Promotion pipeline</strong> (build once, promote <em>eng → test → prod</em>) with GitHub Environments + approvals.</li>
         <li><strong>Static site</strong> via CloudFront + S3, Route 53, and ACM; HTTPS + global caching.</li>
         <li><strong>Serverless visitor API</strong> (API Gateway → Lambda → DynamoDB) — completed and live.</li>
         <li><strong>Full IaC</strong> with AWS SAM/CloudFormation — no console drift.</li>
       </ul>
-      <p class="statusline">
-        <span class="badge">eng ✅</span>
-        <span class="badge">test ✅</span>
-        <span class="badge">prod ✅</span>
-      </p>
+      <p class="envs"><span class="pill">eng ✅</span><span class="pill">test ✅</span><span class="pill">prod ✅</span></p>
     </section>
 
-    <!-- Security -->
-    <section class="section section--panel">
-      <h3>🔒 Security & Reliability</h3>
-      <ul class="tight">
+    <section class="section">
+      <h3 class="kicker">🔒 Security & Reliability</h3>
+      <ul class="bullets tight">
         <li><strong>OIDC to AWS</strong>: GitHub → AWS role assumption (no long-lived CI keys).</li>
         <li><strong>Least-privilege IAM</strong>: separate deploy roles per account; scoped permissions for SAM/CFN/S3.</li>
         <li><strong>Change control</strong>: environment protections + human approvals for <em>test</em> and <em>prod</em>.</li>
@@ -85,54 +76,53 @@
       </ul>
     </section>
 
-    <!-- Release Pipeline (accent band + dark cards) -->
-    <section class="section section--band">
-      <h3>🚀 Release Pipeline</h3>
+    <!-- Release Pipeline (now uses the same visual language as the rest) -->
+    <section class="section">
+      <h3 class="kicker">🚀 Release Pipeline</h3>
       <div class="cards">
-        <article class="card card--dark">
+        <article class="card">
           <h4>Build Once</h4>
           <p>Package SAM template to a promotion S3 bucket with checksums/SBOM; the same artifact moves through stages.</p>
           <div class="badges">
-            <span class="badge badge--dark">SAM</span><span class="badge badge--dark">S3 Artifacts</span><span class="badge badge--dark">Checksums</span>
+            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
           </div>
         </article>
-        <article class="card card--dark">
+        <article class="card">
           <h4>Promote with Approvals</h4>
           <p>GitHub Environments enforce reviewers for <em>test</em> & <em>prod</em>; deploy uses OIDC (no long-lived keys).</p>
           <div class="badges">
-            <span class="badge badge--dark">GitHub OIDC</span><span class="badge badge--dark">Environments</span><span class="badge badge--dark">Approvals</span>
+            <span class="badge">GitHub OIDC</span><span class="badge">Environments</span><span class="badge">Approvals</span>
           </div>
         </article>
-        <article class="card card--dark">
+        <article class="card">
           <h4>Immutable Inputs</h4>
           <p>Env config via Parameters/SSM; identical build promoted across stages; fast rollback to last known good.</p>
           <div class="badges">
-            <span class="badge badge--dark">SSM</span><span class="badge badge--dark">IaC</span><span class="badge badge--dark">Rollback</span>
+            <span class="badge">SSM</span><span class="badge">IaC</span><span class="badge">Rollback</span>
           </div>
         </article>
       </div>
-      <p class="small-note">Full pipeline & source on <a class="band-link" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>.</p>
+      <p class="meta-note">Full pipeline & source on <a href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>.</p>
     </section>
 
-    <!-- Projects (plain section + light cards) -->
-    <section class="section section--plain">
-      <h3>🧩 Selected Projects</h3>
+    <section class="section">
+      <h3 class="kicker">🧩 Selected Projects</h3>
       <div class="cards">
-        <article class="card card--light">
+        <article class="card">
           <h4>Cloud Resume (Prod)</h4>
           <p>Multi-account IaC deployment, static hosting via CloudFront/S3, serverless visitor API, CI/CD with GitHub Actions.</p>
           <div class="badges">
             <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">DynamoDB</span>
           </div>
         </article>
-        <article class="card card--light">
+        <article class="card">
           <h4>Cost Guardrails (Next)</h4>
           <p>Budgets + SNS alerts and a <em>Kill Switch Lambda</em> to automatically pause spend anomalies.</p>
           <div class="badges">
             <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
           </div>
         </article>
-        <article class="card card--light">
+        <article class="card">
           <h4>Identity & Observability</h4>
           <p>IAM Identity Center rollout; CloudWatch dashboards/alarms; org-wide CloudTrail for audit and forensics.</p>
           <div class="badges">
@@ -142,10 +132,9 @@
       </div>
     </section>
 
-    <!-- What's Next -->
-    <section class="section section--panel">
-      <h3>📈 What’s Next</h3>
-      <ol>
+    <section class="section">
+      <h3 class="kicker">📈 What’s Next</h3>
+      <ol class="next">
         <li>Ship <strong>Kill Switch Lambda</strong> with Budgets + SNS across eng → test → prod.</li>
         <li>Stand up <strong>CloudWatch dashboards/alarms</strong> and an org-wide <strong>CloudTrail</strong>.</li>
         <li>Roll out <strong>IAM Identity Center</strong> for clean, scalable access.</li>
@@ -153,19 +142,16 @@
       </ol>
     </section>
 
-    <!-- Career -->
-    <section class="section section--panel">
-      <h3>🎯 Career Focus</h3>
+    <section class="section">
+      <h3 class="kicker">🎯 Career Focus</h3>
       <p>Open to roles in <strong>cloud-native product</strong>, <strong>cloud engineering</strong>, <strong>DevOps</strong>, or <strong>solutions architecture</strong>—especially SaaS, cybersecurity, and cloud infrastructure. I like small, sharp teams where shipping and reliability matter.</p>
     </section>
+  </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-      <small>Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions. <span class="dot">•</span> <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a></small>
-    </footer>
-  </div>
+  <footer class="shell footer">
+    <small>Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions. <span class="dot">•</span> <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a></small>
+  </footer>
 
-  <!-- Visitor counter (kept) -->
-  <script src="visitorCount.js?v=4"></script>
+  <script src="visitorCount.js?v=5"></script>
 </body>
 </html>
