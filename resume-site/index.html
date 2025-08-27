@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reuben Mulholland — Product Leader & Cloud Engineer</title>
+  <title>Reuben Mulholland — Product Leader & Aspiring Cloud Engineer</title>
 
   <!-- SEO -->
-  <meta name="description" content="Product leader & cloud engineer. Multi-account AWS, IaC (SAM/CloudFormation), CI/CD with GitHub Actions, CloudFront/S3, API Gateway/Lambda/DynamoDB. Promotion pipeline across eng/test/prod." />
+  <meta name="description" content="Reuben Mulholland — Product Leader & Aspiring Cloud Engineer. Multi-account AWS, IaC, and CI/CD portfolio with promotion pipeline across eng/test/prod." />
 
   <!-- Social -->
-  <meta property="og:title" content="Reuben Mulholland — Product Leader & Cloud Engineer">
-  <meta property="og:description" content="Multi-account AWS • IaC • CI/CD • Serverless • Promotion pipeline (eng→test→prod)">
+  <meta property="og:title" content="Reuben Mulholland — Product Leader & Aspiring Cloud Engineer">
+  <meta property="og:description" content="AWS multi-account portfolio: IaC, CI/CD, CloudFront/S3, API Gateway/Lambda/DynamoDB.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reubenmulholland.com">
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Favicons (put favicon.ico and/or favicon.png in the same folder as this file) -->
+  <!-- Favicons -->
   <link rel="icon" href="favicon.ico">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" href="favicon.ico">
@@ -26,12 +26,18 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- spotlight effect element -->
+  <div id="spotlight" aria-hidden="true"></div>
+
   <header class="shell">
     <div class="intro">
       <img src="profile.jpg" alt="Reuben Mulholland" class="avatar" />
       <div>
         <h1 class="headline">Reuben Mulholland</h1>
-        <p class="subhead">Product Leader & Cloud Engineer · Multi-account AWS · IaC · CI/CD</p>
+        <p class="roles">
+          <span>Product Leader</span><br>
+          <span>Aspiring Cloud Engineer</span>
+        </p>
         <p class="visitors">Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
       </div>
     </div>
@@ -76,7 +82,6 @@
       </ul>
     </section>
 
-    <!-- Release Pipeline (now uses the same visual language as the rest) -->
     <section class="section">
       <h3 class="kicker">🚀 Release Pipeline</h3>
       <div class="cards">
@@ -152,15 +157,33 @@
     <small>Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions. <span class="dot">•</span> <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a></small>
   </footer>
 
-  <script src="visitorCount.js?v=5"></script>
-    <!-- Spotlight cursor effect -->
-  <div id="spotlight"></div>
+  <!-- Spotlight JS: smooth rAF tracking -->
   <script>
-    const spotlight = document.getElementById("spotlight");
-    document.addEventListener("mousemove", (e) => {
-      spotlight.style.left = e.clientX + "px";
-      spotlight.style.top = e.clientY + "px";
-    });
+    (function(){
+      const s = document.getElementById('spotlight');
+      let tx = innerWidth/2, ty = innerHeight/2, x = tx, y = ty;
+
+      const onMove = (e) => { tx = e.clientX; ty = e.clientY; };
+      window.addEventListener('mousemove', onMove, { passive: true });
+
+      function tick(){
+        // ease towards target (higher factor = snappier)
+        x += (tx - x) * 0.35;
+        y += (ty - y) * 0.35;
+        s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        requestAnimationFrame(tick);
+      }
+      tick();
+
+      // Accessibility: respect reduced motion
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.removeEventListener('mousemove', onMove);
+        s.style.display = 'none';
+      }
+    })();
   </script>
+
+  <!-- Visitor counter -->
+  <script src="visitorCount.js?v=6"></script>
 </body>
 </html>
