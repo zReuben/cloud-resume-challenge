@@ -163,3 +163,7 @@ body{
   box-shadow: var(--shadow);
 }
 .metrics-list strong { color: #ffffff; }
+
+/* A touch more space under the flow cards */
+.section .cards + p,
+.section .cards + .meta-note { margin-top: .6rem; }

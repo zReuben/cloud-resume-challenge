@@ -5,30 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect</title>
 
-  <!-- SEO -->
+  <!-- page metadata & favicons -->
   <meta name="description" content="Cloud Engineer / DevOps / Solutions Architect. I run pipelines, manage multi-account AWS infra as code, enforce guardrails, and accelerate shipping with lower risk." />
-
-  <!-- Social -->
-  <meta property="og:title" content="Reuben Mulholland — Product Leader & Aspiring Cloud Engineer">
+  <meta property="og:title" content="Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect">
   <meta property="og:description" content="AWS multi-account portfolio: IaC, CI/CD, CloudFront/S3, API Gateway/Lambda/DynamoDB.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reubenmulholland.com">
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Favicons -->
-  <link rel="icon" href="favicon.ico">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="shortcut icon" href="favicon.ico">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" href="favicon.png">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
-  <!-- Fonts & CSS -->
+  <!-- fonts + site css -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- spotlight effect element -->
+  <!-- cursor spotlight (keep first so it sits under main content via z-index) -->
   <div id="spotlight" aria-hidden="true"></div>
 
   <header class="shell">
@@ -43,6 +37,8 @@
         <p class="visitors">Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
       </div>
     </div>
+
+    <!-- nav (keep Home first; external links open in new tab) -->
     <nav aria-label="Primary" class="topnav">
       <a href="index.html">🏠 Home</a>
       <a href="resume.html">📄 Resume</a>
@@ -52,58 +48,77 @@
   </header>
 
   <main class="shell">
+    <!-- intro: why + career alignment -->
     <section class="section">
       <h3 class="kicker">👋 About This Site</h3>
       <p>
-        This project began as the <strong>Cloud Resume Challenge</strong>, where I implemented a serverless visitor counter backed by a RESTful API (API Gateway → Lambda → DynamoDB) and deployed it with CloudFront/S3 static hosting, HTTPS, and IaC. 
+        This project began as the <strong>Cloud Resume Challenge</strong>, where I implemented a visitor counter backed by a RESTful API (API Gateway → Lambda → DynamoDB) and deployed a static site on CloudFront/S3 with HTTPS. Everything is defined as <strong>Infrastructure as Code</strong> using <strong>AWS CloudFormation / SAM</strong>.
       </p>
       <p>
-        I then extended it into a <strong>multi-account AWS environment</strong> with CI/CD pipelines, promotion controls (eng → test → prod), and guardrails for cost and security. Together, it mirrors how cloud-native teams ship changes safely into production, and it’s the same foundation I’d bring to a SaaS or cloud engineering team.
+        I then extended it into a <strong>multi-account AWS setup</strong> (mgmt, eng, test, prod) with <strong>GitHub Actions</strong> CI/CD, environment protections (approvals for test/prod), and guardrails for cost & security. It mirrors how cloud-native teams ship: build once, promote safely, and roll back quickly when needed.
       </p>
     </section>
 
-
+    <!-- concise feature list (keep to parallel bullets) -->
     <section class="section">
       <h3 class="kicker">✅ What I’ve Built</h3>
       <ul class="bullets">
-        <li>Multi-account AWS (<em>mgmt, eng, test, prod</em>) with scoped IAM role assumption via AWS Vault.</li>
-        <li>Promotion pipeline using GitHub Environments + approvals — 3 gated environments; single-merge promotions.</li>
-        <li>Static site deployed to CloudFront + S3, integrated with Route 53 + ACM for HTTPS and global caching.</li>
-        <li>Serverless API (API Gateway → Lambda → DynamoDB) with <strong>0</strong> long-lived CI keys (GitHub OIDC → AWS).</li>
-        <li>100% IaC (SAM/CloudFormation); <strong>minutes</strong> to rollback via immutable artifacts; no console drift.</li>
+        <li><strong>Cloud Resume Challenge:</strong> CloudFront/S3 static site, HTTPS (ACM + Route 53), visitor API (API Gateway → Lambda → DynamoDB).</li>
+        <li><strong>Multi-account AWS:</strong> mgmt/eng/test/prod with scoped IAM role assumption via AWS Vault.</li>
+        <li><strong>CI/CD with GitHub Actions:</strong> build once and promote; approvals gate test & prod; no long-lived CI keys (GitHub OIDC → AWS).</li>
+        <li><strong>100% IaC:</strong> AWS <strong>SAM/CloudFormation</strong>; no console drift; parameters/SSM for per-env config.</li>
+        <li><strong>Fast rollbacks:</strong> deploy from stored artifacts; re-deploy the last known good in <strong>minutes</strong>.</li>
       </ul>
     </section>
 
+    <!-- shipping model (small at-a-glance flow with chips) -->
     <section class="section">
-      <h3 class="kicker">🔒 Security & Reliability</h3>
-      <ul class="bullets tight">
-        <li><strong>OIDC to AWS</strong>: GitHub → AWS role assumption (no long-lived CI keys).</li>
-        <li><strong>Least-privilege IAM</strong>: separate deploy roles per account; scoped permissions for SAM/CFN/S3.</li>
-        <li><strong>Change control</strong>: environment protections + human approvals for <em>test</em> and <em>prod</em>.</li>
-        <li><strong>Drift resistance</strong>: IaC-only deployments; no manual console changes.</li>
-        <li><strong>Rollback</strong>: promote immutable artifacts; fast revert to last known good.</li>
-        <li><strong>Next</strong>: Budgets + SNS + <em>Kill Switch Lambda</em>, CloudWatch dashboards/alarms, org-wide CloudTrail, IAM Identity Center.</li>
-      </ul>
-    </section>
-
-    <section class="section">
-      <h3 class="kicker">🚀 Release Pipeline</h3>
+      <h3 class="kicker">🚀 How It Ships (at-a-glance)</h3>
       <div class="cards">
         <article class="card">
           <h4>Build Once</h4>
-          <p>Single SAM template packaged with checksums/SBOM; the same artifact moves through all stages.</p>
+          <p>Package a single SAM template and app bundle; the same artifact moves through all stages.</p>
+          <div class="badges">
+            <span class="badge">SAM</span>
+            <span class="badge">S3 Artifacts</span>
+            <span class="badge">Checksums</span>
+          </div>
         </article>
         <article class="card">
           <h4>Promote with Approvals</h4>
-          <p>GitHub Environments enforce reviewers for <em>test</em> and <em>prod</em>; deploys use OIDC (no long-lived keys).</p>
+          <p>GitHub Actions environments gate test &amp; prod; OIDC assumes AWS roles (no long-lived keys).</p>
+          <div class="badges">
+            <span class="badge">GitHub Actions</span>
+            <span class="badge">OIDC</span>
+            <span class="badge">Environments</span>
+            <span class="badge">Approvals</span>
+          </div>
         </article>
         <article class="card">
           <h4>Immutable Inputs</h4>
-          <p>Config via Parameters/SSM; identical builds promoted across stages; fast rollback to last known good.</p>
+          <p>Config from SSM/parameters; identical build promoted across stages; rollback = re-deploy last good.</p>
+          <div class="badges">
+            <span class="badge">SSM Params</span>
+            <span class="badge">IaC</span>
+            <span class="badge">Rollback</span>
+          </div>
         </article>
       </div>
     </section>
 
+    <!-- security posture -->
+    <section class="section">
+      <h3 class="kicker">🔒 Security &amp; Reliability</h3>
+      <ul class="bullets tight">
+        <li><strong>OIDC to AWS:</strong> GitHub → AWS role assumption (no long-lived CI keys).</li>
+        <li><strong>Least-privilege IAM:</strong> deploy roles per account; scoped permissions for SAM/CFN/S3.</li>
+        <li><strong>Change control:</strong> environment protections + human approvals for test and prod.</li>
+        <li><strong>Drift resistance:</strong> IaC-only deployments; no manual console changes.</li>
+        <li><strong>Next:</strong> Budgets + SNS + <em>Kill Switch Lambda</em>, CloudWatch dashboards/alarms, org-wide CloudTrail, IAM Identity Center.</li>
+      </ul>
+    </section>
+
+    <!-- examples -->
     <section class="section">
       <h3 class="kicker">🧩 Selected Projects</h3>
       <div class="cards">
@@ -122,7 +137,7 @@
           </div>
         </article>
         <article class="card">
-          <h4>Identity & Observability</h4>
+          <h4>Identity &amp; Observability</h4>
           <p>IAM Identity Center rollout; CloudWatch dashboards/alarms; org-wide CloudTrail for audit and forensics.</p>
           <div class="badges">
             <span class="badge">Identity Center</span><span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
@@ -131,6 +146,7 @@
       </div>
     </section>
 
+    <!-- roadmap -->
     <section class="section">
       <h3 class="kicker">📈 What’s Next</h3>
       <ol class="next">
@@ -139,24 +155,27 @@
         <li>Roll out <strong>IAM Identity Center</strong> for clean, scalable access.</li>
         <li>Explore <strong>Kubernetes/containers</strong> (EKS/ECS + Docker) for the next portfolio project.</li>
       </ol>
-    </section> 
+    </section>
   </main>
 
   <footer class="shell footer">
-    <small>Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions. <span class="dot">•</span> <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a></small>
+    <small>
+      Built with AWS SAM, CloudFormation, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions.
+      <span class="dot">•</span>
+      <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a>
+    </small>
   </footer>
 
-  <!-- Spotlight JS: smooth rAF tracking -->
+  <!-- spotlight logic (simple rAF follower; keep in sync with style.css) -->
   <script>
-    (function(){
+    (function () {
       const s = document.getElementById('spotlight');
-      let tx = innerWidth/2, ty = innerHeight/2, x = tx, y = ty;
+      let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty;
 
       const onMove = (e) => { tx = e.clientX; ty = e.clientY; };
       window.addEventListener('mousemove', onMove, { passive: true });
 
-      function tick(){
-        // ease towards target (higher factor = snappier)
+      function tick() {
         x += (tx - x) * 0.35;
         y += (ty - y) * 0.35;
         s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
@@ -164,7 +183,6 @@
       }
       tick();
 
-      // Accessibility: respect reduced motion
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         window.removeEventListener('mousemove', onMove);
         s.style.display = 'none';
@@ -172,7 +190,7 @@
     })();
   </script>
 
-  <!-- Visitor counter -->
-  <script src="visitorCount.js?v=6"></script>
+  <!-- visitor count script (same API as before) -->
+  <script src="visitorCount.js?v=7"></script>
 </body>
 </html>
