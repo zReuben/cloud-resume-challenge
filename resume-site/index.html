@@ -16,9 +16,9 @@
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Favicon -->
-  <link rel="icon" href="favicon.ico" />
-  <link rel="shortcut icon" href="favicon.ico" />
+  <!-- Favicons (ico + png fallback) -->
+  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="favicon.png">
 
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -33,13 +33,7 @@
       <div class="intro-text">
         <h1 class="headline">Reuben Mulholland</h1>
         <p class="subhead">Product Leader & Cloud Engineer · Multi-account AWS · IaC · CI/CD</p>
-        <p>
-          Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span>
-        </p>
-        <div class="cta-row">
-          <a class="button" href="resume.html">View Resume</a>
-          <a class="button button--secondary" href="mailto:hello@reubenmulholland.com">Contact</a>
-        </div>
+        <p>Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
       </div>
     </div>
 
@@ -54,15 +48,15 @@
     </div>
 
     <!-- Why -->
-    <div class="section">
+    <section class="section section--panel">
       <h3>🔧 Why This Site Exists</h3>
       <p>
         This began as the <strong>Cloud Resume Challenge</strong> and evolved into a production-style, multi-account AWS build. It’s a living portfolio of how I approach architecture, automation, and guardrails: <em>SAM/CloudFormation IaC</em>, <em>GitHub Actions CI/CD</em>, <em>CloudFront/S3</em>, and a <em>serverless API</em> (API Gateway → Lambda → DynamoDB).
       </p>
-    </div>
+    </section>
 
     <!-- What I've Built -->
-    <div class="section">
+    <section class="section section--panel">
       <h3>✅ What I’ve Built</h3>
       <ul>
         <li><strong>Multi-account AWS</strong> (mgmt/eng/test/prod) with role assumption via AWS Vault and scoped IAM.</li>
@@ -76,10 +70,10 @@
         <span class="badge">test ✅</span>
         <span class="badge">prod ✅</span>
       </p>
-    </div>
+    </section>
 
     <!-- Security -->
-    <div class="section">
+    <section class="section section--panel">
       <h3>🔒 Security & Reliability</h3>
       <ul class="tight">
         <li><strong>OIDC to AWS</strong>: GitHub → AWS role assumption (no long-lived CI keys).</li>
@@ -89,58 +83,56 @@
         <li><strong>Rollback</strong>: promote immutable artifacts; fast revert to last known good.</li>
         <li><strong>Next</strong>: Budgets + SNS + <em>Kill Switch Lambda</em>, CloudWatch dashboards/alarms, org-wide CloudTrail, IAM Identity Center.</li>
       </ul>
-    </div>
+    </section>
 
-    <!-- Release Pipeline (dark band, dark cards) -->
-    <div class="section section--alt">
+    <!-- Release Pipeline (accent band + dark cards) -->
+    <section class="section section--band">
       <h3>🚀 Release Pipeline</h3>
-      <div class="cards cards--alt">
-        <article class="card card--alt">
+      <div class="cards">
+        <article class="card card--dark">
           <h4>Build Once</h4>
           <p>Package SAM template to a promotion S3 bucket with checksums/SBOM; the same artifact moves through stages.</p>
           <div class="badges">
-            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
+            <span class="badge badge--dark">SAM</span><span class="badge badge--dark">S3 Artifacts</span><span class="badge badge--dark">Checksums</span>
           </div>
         </article>
-        <article class="card card--alt">
+        <article class="card card--dark">
           <h4>Promote with Approvals</h4>
           <p>GitHub Environments enforce reviewers for <em>test</em> & <em>prod</em>; deploy uses OIDC (no long-lived keys).</p>
           <div class="badges">
-            <span class="badge">GitHub OIDC</span><span class="badge">Environments</span><span class="badge">Approvals</span>
+            <span class="badge badge--dark">GitHub OIDC</span><span class="badge badge--dark">Environments</span><span class="badge badge--dark">Approvals</span>
           </div>
         </article>
-        <article class="card card--alt">
+        <article class="card card--dark">
           <h4>Immutable Inputs</h4>
           <p>Env config via Parameters/SSM; identical build promoted across stages; fast rollback to last known good.</p>
           <div class="badges">
-            <span class="badge">SSM</span><span class="badge">IaC</span><span class="badge">Rollback</span>
+            <span class="badge badge--dark">SSM</span><span class="badge badge--dark">IaC</span><span class="badge badge--dark">Rollback</span>
           </div>
         </article>
       </div>
-      <div class="cta-row" style="margin-top:.75rem;">
-        <a class="button button--ghost" href="https://github.com/zReuben" target="_blank" rel="noopener">View CI/CD on GitHub</a>
-      </div>
-    </div>
+      <p class="small-note">Full pipeline & source on <a class="band-link" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>.</p>
+    </section>
 
-    <!-- Projects -->
-    <div class="section">
+    <!-- Projects (plain section + light cards) -->
+    <section class="section section--plain">
       <h3>🧩 Selected Projects</h3>
       <div class="cards">
-        <article class="card">
+        <article class="card card--light">
           <h4>Cloud Resume (Prod)</h4>
           <p>Multi-account IaC deployment, static hosting via CloudFront/S3, serverless visitor API, CI/CD with GitHub Actions.</p>
           <div class="badges">
             <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">DynamoDB</span>
           </div>
         </article>
-        <article class="card">
+        <article class="card card--light">
           <h4>Cost Guardrails (Next)</h4>
           <p>Budgets + SNS alerts and a <em>Kill Switch Lambda</em> to automatically pause spend anomalies.</p>
           <div class="badges">
             <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
           </div>
         </article>
-        <article class="card">
+        <article class="card card--light">
           <h4>Identity & Observability</h4>
           <p>IAM Identity Center rollout; CloudWatch dashboards/alarms; org-wide CloudTrail for audit and forensics.</p>
           <div class="badges">
@@ -148,10 +140,10 @@
           </div>
         </article>
       </div>
-    </div>
+    </section>
 
     <!-- What's Next -->
-    <div class="section">
+    <section class="section section--panel">
       <h3>📈 What’s Next</h3>
       <ol>
         <li>Ship <strong>Kill Switch Lambda</strong> with Budgets + SNS across eng → test → prod.</li>
@@ -159,30 +151,21 @@
         <li>Roll out <strong>IAM Identity Center</strong> for clean, scalable access.</li>
         <li>Explore <strong>Kubernetes/containers</strong> (EKS/ECS + Docker) for the next portfolio project.</li>
       </ol>
-    </div>
+    </section>
 
     <!-- Career -->
-    <div class="section">
+    <section class="section section--panel">
       <h3>🎯 Career Focus</h3>
-      <p>
-        Open to roles in <strong>cloud-native product</strong>, <strong>cloud engineering</strong>, <strong>DevOps</strong>, or <strong>solutions architecture</strong>—especially SaaS, cybersecurity, and cloud infrastructure. I like small, sharp teams where shipping and reliability matter.
-      </p>
-      <div class="cta-row">
-        <a class="button" href="resume.html">View Resume</a>
-        <a class="button button--secondary" href="mailto:hello@reubenmulholland.com">Contact</a>
-      </div>
-    </div>
+      <p>Open to roles in <strong>cloud-native product</strong>, <strong>cloud engineering</strong>, <strong>DevOps</strong>, or <strong>solutions architecture</strong>—especially SaaS, cybersecurity, and cloud infrastructure. I like small, sharp teams where shipping and reliability matter.</p>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
-      <small>
-        Last updated: Aug 2025 · Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions.
-        &nbsp;|&nbsp; <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a>
-      </small>
+      <small>Built with AWS SAM, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions. <span class="dot">•</span> <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a></small>
     </footer>
   </div>
 
   <!-- Visitor counter (kept) -->
-  <script src="visitorCount.js?v=3"></script>
+  <script src="visitorCount.js?v=4"></script>
 </body>
 </html>
