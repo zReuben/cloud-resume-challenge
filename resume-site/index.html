@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reuben Mulholland — Product Leader & Cloud Technologist</title>
+  <title>Reuben Mulholland — Product Leader & Cloud Engineer</title>
 
   <!-- SEO -->
-  <meta name="description" content="Product leader & cloud technologist. Multi-account AWS, IaC (SAM/CloudFormation), CI/CD with GitHub Actions, CloudFront/S3, API Gateway/Lambda/DynamoDB. Promotion pipeline across eng/test/prod." />
+  <meta name="description" content="Product leader & cloud engineer. Multi-account AWS, IaC (SAM/CloudFormation), CI/CD with GitHub Actions, CloudFront/S3, API Gateway/Lambda/DynamoDB. Promotion pipeline across eng/test/prod." />
 
   <!-- Social -->
-  <meta property="og:title" content="Reuben Mulholland — Product Leader & Cloud Technologist">
+  <meta property="og:title" content="Reuben Mulholland — Product Leader & Cloud Engineer">
   <meta property="og:description" content="Multi-account AWS • IaC • CI/CD • Serverless • Promotion pipeline (eng→test→prod)">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://reubenmulholland.com">
@@ -17,7 +17,8 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Favicon -->
-  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="shortcut icon" href="favicon.ico" />
 
   <!-- Fonts & CSS -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -31,13 +32,12 @@
       <img src="profile.jpg" alt="Reuben Mulholland" class="intro-image" />
       <div class="intro-text">
         <h1 class="headline">Reuben Mulholland</h1>
-        <p class="subhead">Product Leader & Cloud Technologist · Multi-account AWS · IaC · CI/CD</p>
+        <p class="subhead">Product Leader & Cloud Engineer · Multi-account AWS · IaC · CI/CD</p>
         <p>
           Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span>
         </p>
         <div class="cta-row">
           <a class="button" href="resume.html">View Resume</a>
-          <a class="button button--secondary" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Download PDF</a>
           <a class="button button--secondary" href="mailto:hello@reubenmulholland.com">Contact</a>
         </div>
       </div>
@@ -48,7 +48,6 @@
       <nav aria-label="Primary">
         <a href="index.html">👤 About</a>
         <a href="resume.html">📄 Resume</a>
-        <a href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">⬇️ Resume (PDF)</a>
         <a href="https://github.com/zReuben" target="_blank" rel="noopener noreferrer">💻 GitHub</a>
         <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
       </nav>
@@ -92,25 +91,25 @@
       </ul>
     </div>
 
-    <!-- Release Pipeline -->
-    <div class="section">
+    <!-- Release Pipeline (dark band, dark cards) -->
+    <div class="section section--alt">
       <h3>🚀 Release Pipeline</h3>
-      <div class="cards">
-        <article class="card">
+      <div class="cards cards--alt">
+        <article class="card card--alt">
           <h4>Build Once</h4>
           <p>Package SAM template to a promotion S3 bucket with checksums/SBOM; the same artifact moves through stages.</p>
           <div class="badges">
             <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
           </div>
         </article>
-        <article class="card">
+        <article class="card card--alt">
           <h4>Promote with Approvals</h4>
           <p>GitHub Environments enforce reviewers for <em>test</em> & <em>prod</em>; deploy uses OIDC (no long-lived keys).</p>
           <div class="badges">
             <span class="badge">GitHub OIDC</span><span class="badge">Environments</span><span class="badge">Approvals</span>
           </div>
         </article>
-        <article class="card">
+        <article class="card card--alt">
           <h4>Immutable Inputs</h4>
           <p>Env config via Parameters/SSM; identical build promoted across stages; fast rollback to last known good.</p>
           <div class="badges">
@@ -119,7 +118,7 @@
         </article>
       </div>
       <div class="cta-row" style="margin-top:.75rem;">
-        <a class="button button--secondary" href="https://github.com/zReuben" target="_blank" rel="noopener">View CI/CD on GitHub</a>
+        <a class="button button--ghost" href="https://github.com/zReuben" target="_blank" rel="noopener">View CI/CD on GitHub</a>
       </div>
     </div>
 
@@ -170,7 +169,6 @@
       </p>
       <div class="cta-row">
         <a class="button" href="resume.html">View Resume</a>
-        <a class="button button--secondary" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Download PDF</a>
         <a class="button button--secondary" href="mailto:hello@reubenmulholland.com">Contact</a>
       </div>
     </div>
@@ -185,6 +183,6 @@
   </div>
 
   <!-- Visitor counter (kept) -->
-  <script src="visitorCount.js?v=2"></script>
+  <script src="visitorCount.js?v=3"></script>
 </body>
 </html>
