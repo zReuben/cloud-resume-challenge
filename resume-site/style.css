@@ -115,28 +115,23 @@ body{
   width: 100%; height: 85vh; border: none; border-radius: 8px; background: #fff;
 }
 
-/* Spotlight — big, subtle, and guaranteed to show (no blend modes) */
+/* Spotlight cursor effect (bigger, bluish, smooth) */
 #spotlight{
   position: fixed;
   left: 0; top: 0;
-  width: 3600px;               /* very large glow */
-  height: 3600px;
+  width: 900px; height: 900px;
   pointer-events: none;
   border-radius: 50%;
   transform: translate(-50%,-50%);
-  z-index: 9999;               /* above content */
-  /* plain radial so it renders everywhere */
-  background:
-    radial-gradient(circle at center,
-      rgba(90,160,255,0.08) 0%,
-      rgba(90,160,255,0.05) 22%,
-      rgba(90,160,255,0.03) 44%,
-      rgba(90,160,255,0.015) 66%,
-      rgba(90,160,255,0.0) 86%);
-  filter: blur(36px);
-  opacity: 0.22;               /* subtle but visible on dark bg */
+  z-index: 1;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle at center,
+      rgba(80,150,255,0.28) 0%,
+      rgba(80,150,255,0.18) 30%,
+      rgba(80,150,255,0.10) 40%,
+      rgba(0,0,0,0) 55%);
+  filter: blur(10px);
 }
-
 /* small subheading used in Projects section */
 .subkicker{
   margin: .2rem 0 .6rem;
