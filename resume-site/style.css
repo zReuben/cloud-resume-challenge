@@ -119,15 +119,15 @@ body{
 #spotlight{
   position: fixed;
   left: 0; top: 0;
-  width: 900px; height: 900px;
+  width: 1600px; height: 1600px;
   pointer-events: none;
   border-radius: 50%;
   transform: translate(-50%,-50%);
   z-index: 1;
   mix-blend-mode: screen;
   background: radial-gradient(circle at center,
-    rgba(80,150,255,0.12) 0%,
-    rgba(80,150,255,0.08) 28%,
+    rgba(80,150,255,0.12) 28%,
+    rgba(80,150,255,0.08) 39%,
     rgba(80,150,255,0.05) 55%,
     rgba(80,150,255,0.025) 78%,
     rgba(0,0,0,0) 95%);
