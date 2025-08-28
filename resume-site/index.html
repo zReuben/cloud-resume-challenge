@@ -81,13 +81,13 @@
             Extended the site into a <strong>mgmt/eng/test/prod org</strong> with role assumption via AWS Vault. 
             CI/CD runs in <strong>GitHub Actions</strong> using OIDC (no long-lived keys). 
             The pipeline <strong>builds once</strong> (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> across environments with human approvals. 
-            Reliability is baked in: environment drift is prevented, parameters are consistent via SSM, and rollback is instant by re-deploying the last good artifact.
+            Reliability is baked in: environment drift is prevented, parameters are consistent via <strong>SSM Parameter Store</strong>, and rollback is instant by re-deploying the last good artifact.
           </p>
           <div class="badges">
             <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
             <span class="badge">GitHub Actions</span><span class="badge">OIDC</span>
             <span class="badge">Environments</span><span class="badge">Approvals</span>
-            <span class="badge">SSM Params</span><span class="badge">IaC</span><span class="badge">Rollback</span>
+            <span class="badge">SSM Parameter Store</span><span class="badge">IaC</span><span class="badge">Rollback</span>
           </div>
         </article>
       </div>
@@ -95,13 +95,14 @@
       <h4 class="subkicker">Next Up</h4>
       <div class="cards">
         <article class="card">
-          <h4>CloudWatch & CloudTrail</h4>
+          <h4>Observability & Access</h4>
           <p>
-            Add observability and monitoring with CloudWatch dashboards/alarms and org-wide CloudTrail logging for auditability.
+            Add organization-wide visibility and access controls: <strong>CloudWatch</strong> dashboards/alarms, <strong>CloudTrail</strong> logging for auditability, 
+            and <strong>IAM Identity Center</strong> for clean, scalable user access across accounts.
           </p>
           <div class="badges">
             <span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
-            <span class="badge">Monitoring</span>
+            <span class="badge">Identity Center</span><span class="badge">Monitoring</span>
           </div>
         </article>
 
@@ -145,6 +146,7 @@
       window.addEventListener('mousemove', onMove, { passive: true });
 
       function tick() {
+        // responsive catch-up so it feels attached to the cursor
         x += (tx - x) * 0.6;
         y += (ty - y) * 0.6;
         s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
