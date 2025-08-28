@@ -119,20 +119,22 @@ body{
 #spotlight{
   position: fixed;
   left: 0; top: 0;
-  width: 2000px; height: 2000px;
+  width: 3000px; height: 3000px;
   pointer-events: none;
   border-radius: 50%;
   transform: translate(-50%,-50%);
   z-index: 1;
   mix-blend-mode: screen;
   background: radial-gradient(circle at center,
-    rgba(80,150,255,0.12) 5%,
-    rgba(80,150,255,0.11) 15%,
-    rgba(80,150,255,0.1) 25%,
-    rgba(80,150,255,0.08) 45%,
-    rgba(80,150,255,0.05) 55%,
-    rgba(80,150,255,0.02) 65%,
-    rgba(80,150,255,0.01) 80%,
+    rgba(80,150,255,0.09) 5%,
+    rgba(80,150,255,0.08) 15%,
+    rgba(80,150,255,0.07) 25%,
+    rgba(80,150,255,0.06) 35%,
+    rgba(80,150,255,0.05) 45%,
+    rgba(80,150,255,0.04) 55%,
+    rgba(80,150,255,0.03) 65%,
+    rgba(80,150,255,0.02) 75%,
+    rgba(80,150,255,0.01) 85%,
     rgba(0,0,0,0) 95%);
   filter: blur(10px);
 }
