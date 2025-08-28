@@ -216,33 +216,42 @@ body{
 }
 
 /* Metrics bubble */
-.cards.metrics-row .card {
-  max-width: 960px;
-  margin-inline: auto;
+/* --- spacing above the Impact & Metrics card --- */
+.cards.metrics-row {
+  margin-top: 28px;     /* give the row breathing room */
 }
-.metrics-card h3 {
-  margin-top: 0;
-  margin-bottom: 0.75rem;
+/* if a metrics row comes right after a normal cards row, add extra space */
+.cards + .cards.metrics-row {
+  margin-top: 32px;
 }
+/* --- 2×2 metrics layout (responsive) --- */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+  grid-template-columns: 1fr;         /* mobile: single column */
+  gap: 14px;
+}
+@media (min-width: 640px) {
+  .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 .metric {
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.035);
   padding: 14px 16px;
   border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .metric .num {
   display: block;
   font-weight: 700;
-  font-size: clamp(20px, 4.5vw, 30px);
+  font-size: clamp(20px, 4.5vw, 28px);
   line-height: 1.15;
   margin-bottom: 2px;
 }
 .metric .label {
   opacity: 0.9;
-  font-size: 0.98rem;
+  font-size: 0.95rem;
 }
