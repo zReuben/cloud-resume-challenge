@@ -216,42 +216,46 @@ body{
 }
 
 /* Metrics bubble */
-/* --- spacing above the Impact & Metrics card --- */
-.cards.metrics-row {
-  margin-top: 28px;     /* give the row breathing room */
+/* spacing above/below the Impact & Metrics row */
+.cards.metrics-row { 
+  margin: 36px 0 18px;   /* more air above; a little space below */
 }
-/* if a metrics row comes right after a normal cards row, add extra space */
-.cards + .cards.metrics-row {
-  margin-top: 32px;
-}
-/* --- 2×2 metrics layout (responsive) --- */
+
+/* 2×2 metrics layout (collapses to 1 col on small screens) */
 .metrics-grid {
   display: grid;
-  grid-template-columns: 1fr;         /* mobile: single column */
+  grid-template-columns: 1fr;   /* mobile */
   gap: 14px;
 }
 @media (min-width: 640px) {
-  .metrics-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* metric “pill” — same tone as other cards/pills */
 .metric {
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.035);
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-radius: 14px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;      /* number and label on one line */
+  gap: 10px;
 }
+
+/* number is bold but not oversized */
 .metric .num {
-  display: block;
   font-weight: 700;
-  font-size: clamp(20px, 4.5vw, 28px);
-  line-height: 1.15;
-  margin-bottom: 2px;
+  font-size: 1rem;
+  line-height: 1.2;
 }
+
+/* label same size as number for a single-line look */
 .metric .label {
-  opacity: 0.9;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+/* make card header spacing consistent with other cards */
+.card h4 { 
+  margin: .15rem 0 .6rem;   /* aligns title toward the top like other cards */
 }
