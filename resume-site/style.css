@@ -115,29 +115,26 @@ body{
   width: 100%; height: 85vh; border: none; border-radius: 8px; background: #fff;
 }
 
-/* Spotlight — bigger & lighter */
+/* Spotlight */
 #spotlight{
   position: fixed;
   left: 0; top: 0;
-  width: 1800px;                /* ~20% bigger */
-  height: 1800px;
+  width: 3600px;  /* doubled from 1800 */
+  height: 3600px;
   pointer-events: none;
   border-radius: 50%;
   transform: translate(-50%,-50%);
   z-index: 1;
   mix-blend-mode: screen;
-  /* cut transparency ~50% compared to last version */
   background:
     radial-gradient(circle at center,
-      rgba(80,150,255,0.06) 0%,
-      rgba(80,150,255,0.05) 18%,
-      rgba(80,150,255,0.04) 34%,
-      rgba(80,150,255,0.03) 50%,
-      rgba(80,150,255,0.02) 64%,
-      rgba(80,150,255,0.01) 78%,
-      rgba(80,150,255,0.00) 90%);
-  filter: blur(20px);
-  opacity: 0.6;
+      rgba(80,150,255,0.03) 0%,
+      rgba(80,150,255,0.02) 35%,
+      rgba(80,150,255,0.015) 60%,
+      rgba(80,150,255,0.008) 80%,
+      rgba(80,150,255,0.0) 100%);
+  filter: blur(40px);
+  opacity: 0.3; 
 }
 
 /* small subheading used in Projects section */

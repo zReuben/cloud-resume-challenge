@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect</title>
 
-  <!-- meta -->
   <meta name="description" content="Cloud Engineer / DevOps / Solutions Architect. I run pipelines, manage multi-account AWS infra as code, enforce guardrails, and accelerate shipping with lower risk." />
   <meta property="og:title" content="Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect">
   <meta property="og:description" content="AWS multi-account portfolio: IaC, CI/CD, CloudFront/S3, API Gateway/Lambda/DynamoDB.">
@@ -14,16 +13,13 @@
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- PNG favicon only -->
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png?v=4">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=5">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png?v=5">
 
-  <!-- fonts + css -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- spotlight -->
   <div id="spotlight" aria-hidden="true"></div>
 
   <header class="shell">
@@ -48,18 +44,17 @@
   </header>
 
   <main class="shell">
-    <!-- intro -->
     <section class="section">
       <h3 class="kicker">👋 About This Site</h3>
       <p>
-        This project began as the <strong>Cloud Resume Challenge</strong>, where I implemented a visitor counter backed by a RESTful API (API Gateway → Lambda → DynamoDB) and deployed a static site on CloudFront/S3 with HTTPS. Everything is defined as <strong>Infrastructure as Code</strong> using <strong>AWS CloudFormation / SAM</strong>.
+        This began as the <strong>Cloud Resume Challenge</strong>, where I built my first AWS project: a static site on CloudFront/S3 with HTTPS, a visitor counter API (API Gateway → Lambda → DynamoDB), and IaC with CloudFormation/SAM. 
+        It was my first exposure to cloud—and it took persistence to get everything wired securely with no console drift. 
       </p>
       <p>
-        I then extended it into a <strong>multi-account AWS setup</strong> (mgmt, eng, test, prod) with <strong>GitHub Actions</strong> CI/CD, environment protections (approvals for test/prod), and guardrails for cost & security. It mirrors how cloud-native teams ship: build once, promote safely, and roll back quickly when needed.
+        I later extended it into a <strong>multi-account AWS setup</strong> (mgmt, eng, test, prod) with <strong>GitHub Actions</strong> CI/CD. The pipeline builds once, promotes the same artifact through environments with approvals, and supports instant rollback. 
       </p>
     </section>
 
-    <!-- Projects only (Completed & Next) -->
     <section class="section">
       <h3 class="kicker">🧩 Projects — Completed & Next</h3>
 
@@ -68,23 +63,25 @@
         <article class="card">
           <h4>Cloud Resume Challenge</h4>
           <p>
-            Static site on CloudFront/S3 with HTTPS (ACM + Route 53) and a visitor counter API (API Gateway → Lambda → DynamoDB).
-            Defined end-to-end as IaC with SAM/CloudFormation.
+            Built a static site on CloudFront/S3 (with ACM + Route 53) and a visitor counter API (API Gateway → Lambda → DynamoDB). 
+            Everything was IaC with SAM/CloudFormation. It introduced me to AWS fundamentals and forced me to solve challenges around HTTPS, certs, and data persistence.
+            I also applied early <strong>security and reliability practices</strong>—like least-privilege IAM and IaC-only deployments.
           </p>
           <div class="badges">
             <span class="badge">CloudFront</span><span class="badge">S3</span>
             <span class="badge">API Gateway</span><span class="badge">Lambda</span>
             <span class="badge">DynamoDB</span><span class="badge">SAM</span>
+            <span class="badge">IAM</span><span class="badge">IaC</span>
           </div>
         </article>
 
         <article class="card">
           <h4>Multi-Account + CI/CD Promotion</h4>
           <p>
-            Built a full <strong>mgmt/eng/test/prod</strong> org with role assumption via AWS Vault. CI/CD runs in
-            <strong>GitHub Actions</strong> using OIDC (no long-lived keys). The pipeline <strong>builds once</strong> (SAM → S3 artifact with checksums)
-            and <strong>promotes the same artifact</strong> through environments with human approvals for test &amp; prod.
-            Rollback is fast by re-deploying the last known good artifact.
+            Extended the site into a <strong>mgmt/eng/test/prod org</strong> with role assumption via AWS Vault. 
+            CI/CD runs in <strong>GitHub Actions</strong> using OIDC (no long-lived keys). 
+            The pipeline <strong>builds once</strong> (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> across environments with human approvals. 
+            Reliability is baked in: environment drift is prevented, parameters are consistent via SSM, and rollback is instant by re-deploying the last good artifact.
           </p>
           <div class="badges">
             <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
@@ -93,29 +90,35 @@
             <span class="badge">SSM Params</span><span class="badge">IaC</span><span class="badge">Rollback</span>
           </div>
         </article>
-
-        <article class="card">
-          <h4>Security &amp; Reliability</h4>
-          <p>
-            Enforced <strong>least-privilege IAM</strong> roles per account, <strong>IaC-only deployments</strong> (no console drift), and environment protections
-            to gate high-risk changes. Config is parameterized via SSM so the same build moves across stages consistently.
-            <em>Next up inside this track:</em> Budgets + SNS + <strong>Kill Switch Lambda</strong>, CloudWatch dashboards/alarms, and org-wide CloudTrail.
-          </p>
-          <div class="badges">
-            <span class="badge">IAM</span><span class="badge">IaC</span><span class="badge">Approvals</span>
-            <span class="badge">Rollback</span><span class="badge">Budgets</span>
-            <span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
-          </div>
-        </article>
       </div>
 
       <h4 class="subkicker">Next Up</h4>
       <div class="cards">
         <article class="card">
+          <h4>CloudWatch & CloudTrail</h4>
+          <p>
+            Add observability and monitoring with CloudWatch dashboards/alarms and org-wide CloudTrail logging for auditability.
+          </p>
+          <div class="badges">
+            <span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
+            <span class="badge">Monitoring</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h4>Kill Switch Lambda</h4>
+          <p>
+            Implement a cost guardrail with AWS Budgets + SNS + a Kill Switch Lambda that can halt deployments when spend crosses thresholds.
+          </p>
+          <div class="badges">
+            <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
+          </div>
+        </article>
+
+        <article class="card">
           <h4>Containers/Kubernetes</h4>
           <p>
-            Next portfolio step: Docker + ECR, and orchestration via ECS or EKS with GitHub Actions. Goal is to apply the same
-            promotion/guardrail model to containerized workloads.
+            Extend the promotion model to containerized workloads using Docker + ECR, orchestrated via ECS or EKS with GitHub Actions.
           </p>
           <div class="badges">
             <span class="badge">Docker</span><span class="badge">ECR</span>
@@ -134,7 +137,6 @@
     </small>
   </footer>
 
-  <!-- spotlight logic -->
   <script>
     (function () {
       const s = document.getElementById('spotlight');
@@ -143,7 +145,6 @@
       window.addEventListener('mousemove', onMove, { passive: true });
 
       function tick() {
-        // snappier follow so it feels close to the cursor
         x += (tx - x) * 0.6;
         y += (ty - y) * 0.6;
         s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
@@ -158,6 +159,6 @@
     })();
   </script>
 
-  <script src="visitorCount.js?v=8"></script>
+  <script src="visitorCount.js?v=9"></script>
 </body>
 </html>
