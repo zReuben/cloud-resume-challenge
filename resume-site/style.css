@@ -126,10 +126,12 @@ body{
   z-index: 1;
   mix-blend-mode: screen;
   background: radial-gradient(circle at center,
-      rgba(80,150,255,0.28) 0%,
-      rgba(80,150,255,0.18) 30%,
-      rgba(80,150,255,0.10) 40%,
-      rgba(0,0,0,0) 55%);
+    rgba(80,150,255,0.14) 0%,
+    rgba(80,150,255,0.09) 22%,
+    rgba(80,150,255,0.06) 45%,
+    rgba(80,150,255,0.03) 70%,
+    rgba(80,150,255,0.015) 85%,
+    rgba(0,0,0,0) 92%);
   filter: blur(10px);
 }
 /* small subheading used in Projects section */
