@@ -214,3 +214,35 @@ body{
   color: #cfe2ff;
   letter-spacing: .02em;
 }
+
+/* Metrics bubble */
+.cards.metrics-row .card {
+  max-width: 960px;
+  margin-inline: auto;
+}
+.metrics-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.metric {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.035);
+  padding: 14px 16px;
+  border-radius: 14px;
+}
+.metric .num {
+  display: block;
+  font-weight: 700;
+  font-size: clamp(20px, 4.5vw, 30px);
+  line-height: 1.15;
+  margin-bottom: 2px;
+}
+.metric .label {
+  opacity: 0.9;
+  font-size: 0.98rem;
+}
