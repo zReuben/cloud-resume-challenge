@@ -127,15 +127,15 @@ body{
   mix-blend-mode: screen;
   background: radial-gradient(circle at center,
     rgba(80,150,255,0.09) 5%,
-    rgba(80,150,255,0.08) 15%,
-    rgba(80,150,255,0.07) 25%,
-    rgba(80,150,255,0.06) 35%,
-    rgba(80,150,255,0.05) 45%,
-    rgba(80,150,255,0.04) 55%,
-    rgba(80,150,255,0.03) 65%,
-    rgba(80,150,255,0.02) 75%,
-    rgba(80,150,255,0.01) 85%,
-    rgba(80,150,255,0.005) 95%,
+    rgba(80,150,255,0.07) 15%,
+    rgba(80,150,255,0.05) 25%,
+    rgba(80,150,255,0.04) 35%,
+    rgba(80,150,255,0.03) 45%,
+    rgba(80,150,255,0.02) 55%,
+    rgba(80,150,255,0.01) 65%,
+    rgba(80,150,255,0.005) 75%,
+    rgba(80,150,255,0.0025) 85%,
+    rgba(80,150,255,0.00125) 95%,
     rgba(0,0,0,0) 99%);
   filter: blur(10px);
 }
@@ -182,3 +182,21 @@ body{
 .about-lead{ margin: 0 0 .4rem; color: var(--muted); }
 .about-facts{ margin: 0; padding-left: 1.1rem; line-height: 1.55; }
 .about-facts li{ margin: .16rem 0; }
+
+/* nav icon + pill styling */
+.topnav { gap: 10px; }
+.topnav a { display: inline-flex; align-items: center; gap: 8px; }
+.topnav .nav-icn { width: 18px; height: 18px; fill: currentColor; opacity: .9; }
+.topnav a:hover .nav-icn { opacity: 1; }
+
+.pill{
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 9999px;
+  border: 1px solid rgba(120,170,255,.35);
+  background: rgba(120,170,255,.14);
+  color: #cfe2ff;
+  letter-spacing: .02em;
+}
