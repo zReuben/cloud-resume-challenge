@@ -83,15 +83,6 @@
         <!-- Cloud Resume Challenge -->
         <article class="card">
           <h4>Cloud Resume Challenge</h4>
-          <div class="card">
-            <h3>Impact &amp; Metrics</h3>
-            <ul class="metrics-list">
-              <li><strong>0</strong> manual console changes — 100% IaC (SAM/CloudFormation).</li>
-              <li><strong>10–15 min</strong> idea-to-deploy loop via GitHub Actions CI/CD.</li>
-              <li><strong>Zero</strong> long-lived AWS keys — OIDC only, per-env roles.</li>
-              <li><strong>Safe promotions</strong> — prod uses the exact artifact vetted in test.</li>
-            </ul>
-          </div>
           <p>
             Built a static website (HTML/CSS/JS) on CloudFront + S3 (HTTPS via ACM) with a visitor counter backed by a
             RESTful API (API Gateway → Lambda in <strong>Python</strong> using <strong>boto3</strong> → DynamoDB <strong>database</strong>).
@@ -143,6 +134,30 @@
         </article>
       </div>
 
+      <div class="cards metrics-row">
+        <article class="card metrics-card">
+          <h3>Impact &amp; Metrics</h3>
+            <div class="metrics-grid">
+              <div class="metric">
+                <span class="num">0</span>
+                <span class="label">manual console changes — 100% IaC</span>
+              </div>
+              <div class="metric">
+                <span class="num">10–15&nbsp;min</span>
+                <span class="label">idea → deploy loop via CI/CD</span>
+              </div>
+              <div class="metric">
+                <span class="num">0</span>
+                <span class="label">long-lived AWS keys (OIDC only)</span>
+              </div>
+              <div class="metric">
+                <span class="num">Same artifact</span>
+                <span class="label">promoted ENG → TEST → PROD</span>
+              </div>
+            </div>
+        </article>
+      </div>
+
       <h4 class="subkicker">Next Up</h4>
       <div class="cards">
         <article class="card">
@@ -180,16 +195,6 @@
           </div>
         </article>
       </div>
-
-      <h4 class="subkicker">Impact Metrics</h4>
-        <article class="card">
-          <p>
-            0</strong> manual console changes — 100% IaC (SAM/CloudFormation).
-            5-10 min</strong> idea-to-deploy loop via GitHub Actions CI/CD.
-            0</strong> long-lived AWS keys — OIDC only, per-env roles.
-            Safe promotions</strong> — prod uses the exact artifact vetted in test.
-          </p>
-        </article>
     </section>
   </main>
 
