@@ -76,46 +76,60 @@
         I hold an <strong>AWS Certified Solutions Architect – Associate</strong>, which I earned before starting the <strong>Cloud Resume Challenge</strong> as a foundation for building on AWS. That project became my first end-to-end cloud build: a static site on CloudFront/S3 with HTTPS, a visitor counter API (API Gateway → Lambda → DynamoDB), and fully defined infrastructure as code with CloudFormation/SAM. It was my first exposure to deploying in the cloud, and it took persistence to wire everything securely with no console drift.
       </p>
       <p>
-        I later extended the project into a <strong>multi-account AWS setup</strong> (mgmt, eng, test, prod) with <strong>GitHub Actions</strong> CI/CD. The pipeline builds once, promotes the same artifact through environments with approvals, and supports instant rollback—mirroring how modern cloud-native teams ship safely into production.
+        I later extended the project into a <strong>multi-account AWS setup</strong> (mgmt, eng, test, prod) with <strong>GitHub Actions</strong> CI/CD. The pipeline builds once, promotes the same artifact through environments with approvals, and supports instant rollback, which mirrors how modern cloud-native teams ship safely into production.
       </p>
       <p>
-        A little about me: I earned my M.S. in Computer Engineering from Stony Brook University, alongside an <strong>Advanced Certification in Networking and Wireless Communications</strong>. I began my career as an Applications Engineer at Data Device Corporation, moved into Product Ownership at <strong>Owl Cyber Defense</strong> (a cybersecurity company where I ran two scrum teams in an agile environment), and most recently served as a Product Line Manager at Power Device Corporation, driving roadmaps in the defense and aerospace sector. That path gave me both technical depth and product leadership experience—but my real passion has always been cloud, which is why I’m pivoting back into engineering roles where I can apply both sides of that background to DevOps, cloud infrastructure, and solutions architecture.
+        A little about me: I earned my B.E. & M.S. in Computer Engineering from Stony Brook University, alongside an <strong>Advanced Certification in Networking and Wireless Communications</strong>. I began my career as an Applications Engineer at Data Device Corporation, moved into Product Ownership at <strong>Owl Cyber Defense</strong> (a cybersecurity company where I ran two scrum teams in an agile environment), and most recently served as a Product Line Manager at Power Device Corporation, driving roadmaps in the defense and aerospace sector. That path gave me both technical depth and product leadership experience, but my real passion has always been cloud, which is why I’m pivoting back into engineering roles where I can apply both sides of that background to DevOps, cloud infrastructure, and solutions architecture.
       </p>
     </section>
-
+    
     <section class="section">
       <h3 class="kicker">🧩 Projects — Completed & Next</h3>
 
       <h4 class="subkicker">Completed</h4>
       <div class="cards">
+        <!-- Cloud Resume Challenge -->
         <article class="card">
           <h4>Cloud Resume Challenge</h4>
           <p>
-            Built a static site on CloudFront/S3 (with ACM + Route 53) and a visitor counter API (API Gateway → Lambda → DynamoDB). 
-            Everything was IaC with SAM/CloudFormation. It introduced me to AWS fundamentals and forced me to solve challenges around HTTPS, certs, and data persistence.
-            I also applied early <strong>security and reliability practices</strong>—like least-privilege IAM and IaC-only deployments.
+            Built a static website (HTML/CSS/JS) on CloudFront + S3 (HTTPS via ACM) with a visitor counter backed by a
+            RESTful API (API Gateway → Lambda in <strong>Python</strong> using <strong>boto3</strong> → DynamoDB <strong>database</strong>).
+            Custom <strong>DNS</strong> is managed in Route 53. All infrastructure is defined as <strong>IaC</strong> with
+            SAM/CloudFormation (<strong>YAML</strong> templates).
           </p>
           <div class="badges">
-            <span class="badge">CloudFront</span><span class="badge">S3</span>
+            <span class="badge">HTML</span><span class="badge">CSS</span><span class="badge">JavaScript</span>
+            <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">DNS</span>
+            <span class="badge">Route 53</span><span class="badge">ACM</span>
             <span class="badge">API Gateway</span><span class="badge">Lambda</span>
-            <span class="badge">DynamoDB</span><span class="badge">SAM</span>
-            <span class="badge">IAM</span><span class="badge">IaC</span>
+            <span class="badge">Python</span><span class="badge">boto3</span>
+            <span class="badge">DynamoDB</span><span class="badge">Database</span>
+            <span class="badge">SAM</span><span class="badge">CloudFormation</span><span class="badge">YAML</span>
           </div>
         </article>
 
+        <!-- Multi-Account + CI/CD -->
         <article class="card">
           <h4>Multi-Account + CI/CD Promotion</h4>
           <p>
-            Extended the site into a <strong>mgmt/eng/test/prod org</strong> with role assumption via AWS Vault. 
-            CI/CD runs in <strong>GitHub Actions</strong> using OIDC (no long-lived keys). 
-            The pipeline <strong>builds once</strong> (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> across environments with human approvals. 
-            Reliability is baked in: environment drift is prevented, parameters are consistent via <strong>SSM Parameter Store</strong>, and rollback is instant by re-deploying the last good artifact.
+            Extended into a <strong>multi-account</strong> AWS setup (<em>mgmt / eng / test / prod</em>) under
+            <strong>AWS Organizations</strong>, with role assumption via AWS Vault and <strong>MFA</strong>.
+            CI/CD runs in <strong>GitHub Actions</strong> (OIDC, no long-lived keys). The pipeline <strong>builds once</strong>
+            (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> through environments with
+            approvals. Config is centralized in <strong>SSM Parameter Store</strong> (AWS <strong>Systems Manager</strong>) to keep
+            parameters consistent across stages. Test coverage includes <strong>unit</strong>, <strong>integration</strong>, and
+            <strong>end-to-end</strong> runs (<strong>pytest</strong> + JS E2E). Supporting glue handled via
+            lightweight <strong>shell scripts</strong>.
           </p>
           <div class="badges">
-            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
+            <span class="badge">AWS Organizations</span><span class="badge">MFA</span>
             <span class="badge">GitHub Actions</span><span class="badge">OIDC</span>
             <span class="badge">Environments</span><span class="badge">Approvals</span>
-            <span class="badge">SSM Parameter Store</span><span class="badge">IaC</span><span class="badge">Rollback</span>
+            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
+            <span class="badge">SSM Parameter Store</span><span class="badge">Systems Manager</span>
+            <span class="badge">IaC</span><span class="badge">YAML</span>
+            <span class="badge">Unit Tests</span><span class="badge">Integration Tests</span><span class="badge">E2E Tests</span>
+            <span class="badge">pytest</span><span class="badge">Shell Scripts</span>
           </div>
         </article>
       </div>
@@ -125,8 +139,8 @@
         <article class="card">
           <h4>Observability & Access</h4>
           <p>
-            Add organization-wide visibility and access controls: <strong>CloudWatch</strong> dashboards/alarms, <strong>CloudTrail</strong> logging for auditability, 
-            and <strong>IAM Identity Center</strong> for clean, scalable user access across accounts.
+            Org-wide visibility and access controls: <strong>CloudWatch</strong> dashboards/alarms, <strong>CloudTrail</strong>
+            logging for auditability, and <strong>IAM Identity Center</strong> for scalable user access across accounts.
           </p>
           <div class="badges">
             <span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
@@ -137,7 +151,8 @@
         <article class="card">
           <h4>Kill Switch Lambda</h4>
           <p>
-            Implement a cost guardrail with AWS Budgets + SNS + a Kill Switch Lambda that can halt deployments when spend crosses thresholds.
+            Cost guardrails using <strong>AWS Budgets</strong> + <strong>SNS</strong> + a Kill Switch <strong>Lambda</strong> that can
+            halt deployments when spend crosses thresholds.
           </p>
           <div class="badges">
             <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
@@ -147,7 +162,8 @@
         <article class="card">
           <h4>Containers/Kubernetes</h4>
           <p>
-            Extend the promotion model to containerized workloads using Docker + ECR, orchestrated via ECS or EKS with GitHub Actions.
+            Extend the promotion model to containerized workloads using Docker + ECR, orchestrated via ECS or EKS with
+            GitHub Actions.
           </p>
           <div class="badges">
             <span class="badge">Docker</span><span class="badge">ECR</span>
@@ -156,6 +172,7 @@
         </article>
       </div>
     </section>
+
   </main>
 
   <script>

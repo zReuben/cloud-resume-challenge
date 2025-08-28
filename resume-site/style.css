@@ -67,11 +67,14 @@ body{
 .card h4{ margin:.15rem 0 .25rem; font-size:1.05rem; }
 
 /* Badges & pills */
-.badges{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.5rem; }
+.badges{ display:flex; flex-wrap:wrap; gap:.4rem .5rem; }
+.badge{ white-space:nowrap; }
 .badge{ display:inline-block; font-size:.78rem; background:var(--badge-bg); color:var(--badge-fg);
   padding:.18rem .5rem; border-radius:999px; border:1px solid var(--card-border); }
 .pill{ display:inline-block; background:var(--badge-bg); color:var(--badge-fg);
   padding:.2rem .55rem; border-radius:999px; margin-right:.35rem; font-size:.86rem; }
+
+
 
 /* Lists */
 .next{ margin:.4rem 0 0 1.3rem; }
@@ -126,10 +129,10 @@ body{
   z-index: 1;
   mix-blend-mode: screen;
   background: radial-gradient(circle at center,
-    rgba(80,150,255,0.09) 5%,
-    rgba(80,150,255,0.07) 15%,
-    rgba(80,150,255,0.05) 25%,
-    rgba(80,150,255,0.04) 35%,
+    rgba(80,150,255,0.1) 5%,
+    rgba(80,150,255,0.09) 15%,
+    rgba(80,150,255,0.07) 25%,
+    rgba(80,150,255,0.05) 35%,
     rgba(80,150,255,0.03) 45%,
     rgba(80,150,255,0.02) 55%,
     rgba(80,150,255,0.01) 65%,
