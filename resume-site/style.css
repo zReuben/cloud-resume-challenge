@@ -134,28 +134,31 @@ body{
   width: 100%; height: 85vh; border: none; border-radius: 8px; background: #fff;
 }
 
-/* Spotlight cursor effect — bigger + softer blush */
+/* Spotlight — larger, softer "blush" gradient */
 #spotlight{
   position: fixed;
   left: 0; top: 0;
-  width: 1300px;
-  height: 1300px;
+  width: 1500px;                 /* larger glow */
+  height: 1500px;
   pointer-events: none;
   border-radius: 50%;
   transform: translate(-50%,-50%);
   z-index: 1;
   mix-blend-mode: screen;
+  /* soft multi-ring fade; very low alpha for subtlety */
   background:
     radial-gradient(circle at center,
-      rgba(80,150,255,0.18) 0%,
-      rgba(80,150,255,0.14) 20%,
-      rgba(80,150,255,0.10) 38%,
-      rgba(80,150,255,0.06) 56%,
-      rgba(80,150,255,0.03) 70%,
-      rgba(80,150,255,0.00) 82%);
-  filter: blur(14px);
-  opacity: 0.9;
+      rgba(80,150,255,0.12) 0%,
+      rgba(80,150,255,0.10) 18%,
+      rgba(80,150,255,0.08) 34%,
+      rgba(80,150,255,0.06) 50%,
+      rgba(80,150,255,0.04) 64%,
+      rgba(80,150,255,0.02) 78%,
+      rgba(80,150,255,0.00) 90%);
+  filter: blur(18px);
+  opacity: 0.85;
 }
+@media (prefers-reduced-motion: reduce){ #spotlight{ display:none; } }
 
 /* small subheading used in Projects section */
 .subkicker{

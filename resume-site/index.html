@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect</title>
 
-  <!-- page metadata & favicons -->
+  <!-- meta -->
   <meta name="description" content="Cloud Engineer / DevOps / Solutions Architect. I run pipelines, manage multi-account AWS infra as code, enforce guardrails, and accelerate shipping with lower risk." />
   <meta property="og:title" content="Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect">
   <meta property="og:description" content="AWS multi-account portfolio: IaC, CI/CD, CloudFront/S3, API Gateway/Lambda/DynamoDB.">
@@ -13,17 +13,17 @@
   <meta property="og:url" content="https://reubenmulholland.com">
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <!-- cache-bust so browsers refresh favicon -->
-  <link rel="icon" href="favicon.ico?v=3" type="image/x-icon">
-  <link rel="icon" type="image/png" href="favicon.png?v=3">
-  <link rel="shortcut icon" href="favicon.ico?v=3" type="image/x-icon">
 
-  <!-- fonts + site css -->
+  <!-- use PNG favicon only -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png?v=4">
+
+  <!-- fonts + css -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- cursor spotlight -->
+  <!-- spotlight -->
   <div id="spotlight" aria-hidden="true"></div>
 
   <header class="shell">
@@ -48,6 +48,7 @@
   </header>
 
   <main class="shell">
+    <!-- intro -->
     <section class="section">
       <h3 class="kicker">👋 About This Site</h3>
       <p>
@@ -58,18 +59,54 @@
       </p>
     </section>
 
+    <!-- merged section: features + guardrails (no redundancy) -->
     <section class="section">
-      <h3 class="kicker">✅ What I’ve Built</h3>
+      <h3 class="kicker">✅ What I’ve Built (with Guardrails)</h3>
       <ul class="bullets">
         <li><strong>Cloud Resume Challenge:</strong> CloudFront/S3 static site, HTTPS (ACM + Route 53), visitor API (API Gateway → Lambda → DynamoDB).</li>
         <li><strong>Multi-account AWS:</strong> mgmt/eng/test/prod with scoped IAM role assumption via AWS Vault.</li>
-        <li><strong>CI/CD with GitHub Actions:</strong> build once and promote; approvals gate test & prod; no long-lived CI keys (GitHub OIDC → AWS).</li>
-        <li><strong>100% IaC:</strong> AWS <strong>SAM/CloudFormation</strong>; no console drift; parameters/SSM for per-env config.</li>
-        <li><strong>Fast rollbacks:</strong> deploy from stored artifacts; re-deploy the last known good in <strong>minutes</strong>.</li>
+        <li><strong>CI/CD with GitHub Actions:</strong> build once and promote; approvals gate test &amp; prod; no long-lived CI keys (GitHub OIDC → AWS).</li>
+        <li><strong>100% IaC:</strong> AWS <strong>SAM/CloudFormation</strong> with SSM-backed parameters for per-env config; no console drift.</li>
+        <li><strong>Security &amp; reliability:</strong> least-privilege IAM deploy roles; IaC-only changes; rollback by redeploying last known good artifact in minutes.</li>
       </ul>
     </section>
 
-    <!-- REPLACE "Selected Projects" + "What's Next" with one section -->
+    <!-- small flow with badges (kept) -->
+    <section class="section">
+      <h3 class="kicker">🚀 How It Ships (at-a-glance)</h3>
+      <div class="cards">
+        <article class="card">
+          <h4>Build Once</h4>
+          <p>Package a single SAM template and app bundle; the same artifact moves through all stages.</p>
+          <div class="badges">
+            <span class="badge">SAM</span>
+            <span class="badge">S3 Artifacts</span>
+            <span class="badge">Checksums</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Promote with Approvals</h4>
+          <p>GitHub Actions environments gate test &amp; prod; OIDC assumes AWS roles (no long-lived keys).</p>
+          <div class="badges">
+            <span class="badge">GitHub Actions</span>
+            <span class="badge">OIDC</span>
+            <span class="badge">Environments</span>
+            <span class="badge">Approvals</span>
+          </div>
+        </article>
+        <article class="card">
+          <h4>Immutable Inputs</h4>
+          <p>Config from SSM/parameters; identical build promoted across stages; rollback = re-deploy last good.</p>
+          <div class="badges">
+            <span class="badge">SSM Params</span>
+            <span class="badge">IaC</span>
+            <span class="badge">Rollback</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- projects (completed + next up) -->
     <section class="section">
       <h3 class="kicker">🧩 Projects — Completed & Next</h3>
 
@@ -107,8 +144,8 @@
         </article>
 
         <article class="card">
-          <h4>Identity & Observability</h4>
-          <p>IAM Identity Center; CloudWatch dashboards/alarms; org-wide CloudTrail for audit & forensics.</p>
+          <h4>Identity &amp; Observability</h4>
+          <p>IAM Identity Center; CloudWatch dashboards/alarms; org-wide CloudTrail for audit &amp; forensics.</p>
           <div class="badges">
             <span class="badge">Identity Center</span><span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
           </div>
@@ -123,18 +160,6 @@
           </div>
         </article>
       </div>
-    </section>
-
-    <!-- security posture -->
-    <section class="section">
-      <h3 class="kicker">🔒 Security &amp; Reliability</h3>
-      <ul class="bullets tight">
-        <li><strong>OIDC to AWS:</strong> GitHub → AWS role assumption (no long-lived CI keys).</li>
-        <li><strong>Least-privilege IAM:</strong> deploy roles per account; scoped permissions for SAM/CFN/S3.</li>
-        <li><strong>Change control:</strong> environment protections + human approvals for test and prod.</li>
-        <li><strong>Drift resistance:</strong> IaC-only deployments; no manual console changes.</li>
-        <li><strong>Next:</strong> Budgets + SNS + <em>Kill Switch Lambda</em>, CloudWatch dashboards/alarms, org-wide CloudTrail, IAM Identity Center.</li>
-      </ul>
     </section>
   </main>
 
@@ -151,14 +176,13 @@
     (function () {
       const s = document.getElementById('spotlight');
       let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty;
-
       const onMove = (e) => { tx = e.clientX; ty = e.clientY; };
       window.addEventListener('mousemove', onMove, { passive: true });
 
       function tick() {
-        // slightly snappier follow
-        x += (tx - x) * 0.45;
-        y += (ty - y) * 0.45;
+        // snappier follow so it feels close to the cursor
+        x += (tx - x) * 0.6;
+        y += (ty - y) * 0.6;
         s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         requestAnimationFrame(tick);
       }
@@ -171,6 +195,6 @@
     })();
   </script>
 
-  <script src="visitorCount.js?v=7"></script>
+  <script src="visitorCount.js?v=8"></script>
 </body>
 </html>
