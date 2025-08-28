@@ -14,7 +14,7 @@
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- use PNG favicon only -->
+  <!-- PNG favicon only -->
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=4">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon.png?v=4">
 
@@ -59,54 +59,7 @@
       </p>
     </section>
 
-    <!-- merged section: features + guardrails (no redundancy) -->
-    <section class="section">
-      <h3 class="kicker">✅ What I’ve Built (with Guardrails)</h3>
-      <ul class="bullets">
-        <li><strong>Cloud Resume Challenge:</strong> CloudFront/S3 static site, HTTPS (ACM + Route 53), visitor API (API Gateway → Lambda → DynamoDB).</li>
-        <li><strong>Multi-account AWS:</strong> mgmt/eng/test/prod with scoped IAM role assumption via AWS Vault.</li>
-        <li><strong>CI/CD with GitHub Actions:</strong> build once and promote; approvals gate test &amp; prod; no long-lived CI keys (GitHub OIDC → AWS).</li>
-        <li><strong>100% IaC:</strong> AWS <strong>SAM/CloudFormation</strong> with SSM-backed parameters for per-env config; no console drift.</li>
-        <li><strong>Security &amp; reliability:</strong> least-privilege IAM deploy roles; IaC-only changes; rollback by redeploying last known good artifact in minutes.</li>
-      </ul>
-    </section>
-
-    <!-- small flow with badges (kept) -->
-    <section class="section">
-      <h3 class="kicker">🚀 How It Ships (at-a-glance)</h3>
-      <div class="cards">
-        <article class="card">
-          <h4>Build Once</h4>
-          <p>Package a single SAM template and app bundle; the same artifact moves through all stages.</p>
-          <div class="badges">
-            <span class="badge">SAM</span>
-            <span class="badge">S3 Artifacts</span>
-            <span class="badge">Checksums</span>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Promote with Approvals</h4>
-          <p>GitHub Actions environments gate test &amp; prod; OIDC assumes AWS roles (no long-lived keys).</p>
-          <div class="badges">
-            <span class="badge">GitHub Actions</span>
-            <span class="badge">OIDC</span>
-            <span class="badge">Environments</span>
-            <span class="badge">Approvals</span>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Immutable Inputs</h4>
-          <p>Config from SSM/parameters; identical build promoted across stages; rollback = re-deploy last good.</p>
-          <div class="badges">
-            <span class="badge">SSM Params</span>
-            <span class="badge">IaC</span>
-            <span class="badge">Rollback</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- projects (completed + next up) -->
+    <!-- Projects only (Completed & Next) -->
     <section class="section">
       <h3 class="kicker">🧩 Projects — Completed & Next</h3>
 
@@ -114,7 +67,10 @@
       <div class="cards">
         <article class="card">
           <h4>Cloud Resume Challenge</h4>
-          <p>Static site on CloudFront/S3 with HTTPS (ACM + Route 53) and a visitor counter API (API Gateway → Lambda → DynamoDB). Defined as IaC with SAM/CloudFormation.</p>
+          <p>
+            Static site on CloudFront/S3 with HTTPS (ACM + Route 53) and a visitor counter API (API Gateway → Lambda → DynamoDB).
+            Defined end-to-end as IaC with SAM/CloudFormation.
+          </p>
           <div class="badges">
             <span class="badge">CloudFront</span><span class="badge">S3</span>
             <span class="badge">API Gateway</span><span class="badge">Lambda</span>
@@ -124,11 +80,31 @@
 
         <article class="card">
           <h4>Multi-Account + CI/CD Promotion</h4>
-          <p>Mgmt/eng/test/prod accounts with role assumption via AWS Vault. GitHub Actions builds once and promotes with environment approvals. No long-lived CI keys (GitHub OIDC → AWS).</p>
+          <p>
+            Built a full <strong>mgmt/eng/test/prod</strong> org with role assumption via AWS Vault. CI/CD runs in
+            <strong>GitHub Actions</strong> using OIDC (no long-lived keys). The pipeline <strong>builds once</strong> (SAM → S3 artifact with checksums)
+            and <strong>promotes the same artifact</strong> through environments with human approvals for test &amp; prod.
+            Rollback is fast by re-deploying the last known good artifact.
+          </p>
           <div class="badges">
+            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
             <span class="badge">GitHub Actions</span><span class="badge">OIDC</span>
             <span class="badge">Environments</span><span class="badge">Approvals</span>
-            <span class="badge">SSM Params</span><span class="badge">IaC</span>
+            <span class="badge">SSM Params</span><span class="badge">IaC</span><span class="badge">Rollback</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h4>Security &amp; Reliability</h4>
+          <p>
+            Enforced <strong>least-privilege IAM</strong> roles per account, <strong>IaC-only deployments</strong> (no console drift), and environment protections
+            to gate high-risk changes. Config is parameterized via SSM so the same build moves across stages consistently.
+            <em>Next up inside this track:</em> Budgets + SNS + <strong>Kill Switch Lambda</strong>, CloudWatch dashboards/alarms, and org-wide CloudTrail.
+          </p>
+          <div class="badges">
+            <span class="badge">IAM</span><span class="badge">IaC</span><span class="badge">Approvals</span>
+            <span class="badge">Rollback</span><span class="badge">Budgets</span>
+            <span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
           </div>
         </article>
       </div>
@@ -136,24 +112,11 @@
       <h4 class="subkicker">Next Up</h4>
       <div class="cards">
         <article class="card">
-          <h4>Cost Guardrails</h4>
-          <p>Budgets + SNS alerts and a <em>Kill Switch Lambda</em> to automatically pause spend anomalies (eng → test → prod).</p>
-          <div class="badges">
-            <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
-          </div>
-        </article>
-
-        <article class="card">
-          <h4>Identity &amp; Observability</h4>
-          <p>IAM Identity Center; CloudWatch dashboards/alarms; org-wide CloudTrail for audit &amp; forensics.</p>
-          <div class="badges">
-            <span class="badge">Identity Center</span><span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
-          </div>
-        </article>
-
-        <article class="card">
           <h4>Containers/Kubernetes</h4>
-          <p>Next portfolio step exploring Docker + ECR, and orchestration via ECS or EKS with GitHub Actions.</p>
+          <p>
+            Next portfolio step: Docker + ECR, and orchestration via ECS or EKS with GitHub Actions. Goal is to apply the same
+            promotion/guardrail model to containerized workloads.
+          </p>
           <div class="badges">
             <span class="badge">Docker</span><span class="badge">ECR</span>
             <span class="badge">ECS/EKS</span><span class="badge">CI/CD</span>

@@ -20,25 +20,6 @@ body{
   background:var(--bg); color:var(--text); line-height:1.6;
 }
 
-/* Spotlight cursor effect (bigger, bluish, smooth) */
-#spotlight{
-  position: fixed;
-  left: 0; top: 0;
-  width: 900px; height: 900px;                /* HUGE glow like the inspiration */
-  pointer-events: none;
-  border-radius: 50%;
-  transform: translate(-50%,-50%);
-  z-index: 1;
-  mix-blend-mode: screen;
-  background: radial-gradient(circle at center,
-      rgba(80,150,255,0.28) 0%,
-      rgba(80,150,255,0.18) 30%,
-      rgba(80,150,255,0.10) 55%,
-      rgba(0,0,0,0) 72%);
-  filter: blur(10px);
-}
-@media (prefers-reduced-motion: reduce){ #spotlight{ display:none; } }
-
 /* Layout shells */
 .shell{ max-width: 980px; margin: 0 auto; padding: 1.8rem 1.2rem; position: relative; z-index: 2; }
 
@@ -134,31 +115,30 @@ body{
   width: 100%; height: 85vh; border: none; border-radius: 8px; background: #fff;
 }
 
-/* Spotlight — larger, softer "blush" gradient */
+/* Spotlight — bigger & lighter */
 #spotlight{
   position: fixed;
   left: 0; top: 0;
-  width: 1500px;                 /* larger glow */
-  height: 1500px;
+  width: 1800px;                /* ~20% bigger */
+  height: 1800px;
   pointer-events: none;
   border-radius: 50%;
   transform: translate(-50%,-50%);
   z-index: 1;
   mix-blend-mode: screen;
-  /* soft multi-ring fade; very low alpha for subtlety */
+  /* cut transparency ~50% compared to last version */
   background:
     radial-gradient(circle at center,
-      rgba(80,150,255,0.12) 0%,
-      rgba(80,150,255,0.10) 18%,
-      rgba(80,150,255,0.08) 34%,
-      rgba(80,150,255,0.06) 50%,
-      rgba(80,150,255,0.04) 64%,
-      rgba(80,150,255,0.02) 78%,
+      rgba(80,150,255,0.06) 0%,
+      rgba(80,150,255,0.05) 18%,
+      rgba(80,150,255,0.04) 34%,
+      rgba(80,150,255,0.03) 50%,
+      rgba(80,150,255,0.02) 64%,
+      rgba(80,150,255,0.01) 78%,
       rgba(80,150,255,0.00) 90%);
-  filter: blur(18px);
-  opacity: 0.85;
+  filter: blur(20px);
+  opacity: 0.6;
 }
-@media (prefers-reduced-motion: reduce){ #spotlight{ display:none; } }
 
 /* small subheading used in Projects section */
 .subkicker{
