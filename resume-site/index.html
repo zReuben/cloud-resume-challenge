@@ -13,13 +13,14 @@
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=5">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png?v=5">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png?v=6">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png?v=6">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- spotlight layer -->
   <div id="spotlight" aria-hidden="true"></div>
 
   <header class="shell">
@@ -28,8 +29,8 @@
       <div>
         <h1 class="headline">Reuben Mulholland</h1>
         <p class="roles">
-          <span>Cloud Engineer&nbsp;|&nbsp;DevOps&nbsp;|&nbsp;Solutions Architect</span><br>
-          <span class="roles-sub">ex-Product Manager • Applications Engineer</span>
+          <span class="roles-sub">ex-Product Manager &nbsp;|&nbsp; Applications Engineer</span><br>
+          <span class="roles-looking">Looking for: Cloud Engineer &nbsp;·&nbsp; DevOps &nbsp;·&nbsp; Solutions Architect</span>
         </p>
         <p class="visitors">Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
       </div>
@@ -130,29 +131,24 @@
     </section>
   </main>
 
-  <footer class="shell footer">
-    <small>
-      Built with AWS SAM, CloudFormation, CloudFront/S3, API Gateway/Lambda/DynamoDB, and GitHub Actions.
-      <span class="dot">•</span>
-      <a class="footer-link" href="Reuben Mulholland Resume 2025.pdf" target="_blank" rel="noopener">Resume PDF</a>
-    </small>
-  </footer>
-
   <script>
     (function () {
+      // robust spotlight follower
       const s = document.getElementById('spotlight');
+      if (!s) return;
+
       let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty;
       const onMove = (e) => { tx = e.clientX; ty = e.clientY; };
       window.addEventListener('mousemove', onMove, { passive: true });
 
       function tick() {
-        // responsive catch-up so it feels attached to the cursor
         x += (tx - x) * 0.6;
         y += (ty - y) * 0.6;
+        // translate to cursor and center the radial
         s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         requestAnimationFrame(tick);
       }
-      tick();
+      requestAnimationFrame(tick);
 
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         window.removeEventListener('mousemove', onMove);
@@ -161,6 +157,6 @@
     })();
   </script>
 
-  <script src="visitorCount.js?v=9"></script>
+  <script src="visitorCount.js?v=10"></script>
 </body>
 </html>
