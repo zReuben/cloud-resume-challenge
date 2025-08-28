@@ -80,21 +80,17 @@ body{
 .next{ margin:.4rem 0 0 1.3rem; }
 
 /* Footer */
-.footer {
-  margin-top: 3rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid #444; /* subtle divider, darker to match bg */
-  font-size: 0.95rem;
+.footer{
+  margin-top: 1.2rem;      
+  padding: .9rem 0;        
+  border-top: none;       
+  font-size: .95rem;
   text-align: center;
-  color: #fff; /* white font */
+  color: #fff;
 }
-.footer a {
-  color: #4da6ff; /* bright link color that pops on dark bg */
-  text-decoration: none;
-}
-.footer a:hover {
-  text-decoration: underline;
-}
+.footer a{ color:#4da6ff; text-decoration:none; }
+.footer a:hover{ text-decoration:underline; }
+
 
 /* Spinner */
 .spinner{
