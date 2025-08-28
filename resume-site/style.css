@@ -259,3 +259,10 @@ body{
 .card h4 { 
   margin: .15rem 0 .6rem;   /* aligns title toward the top like other cards */
 }
+
+/* Cert line under name */
+.roles-cert{
+  color: var(--text);
+  font-weight: 700;
+  letter-spacing: .01em;
+}

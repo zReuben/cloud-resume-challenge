@@ -29,6 +29,7 @@
       <div>
         <h1 class="headline">Reuben Mulholland</h1>
         <p class="roles">
+          <span class="roles-cert">AWS Certified Solutions Architect – Associate (AWS SAA)</span><br>
           <span class="roles-sub">Experienced: Product Line Manager &nbsp;|&nbsp; Product Owner &nbsp;|&nbsp; Applications Engineer</span><br>
           <span class="roles-looking">Looking for: Cloud Engineer &nbsp;|&nbsp; DevOps &nbsp;|&nbsp; Solutions Architect</span>
         </p>
@@ -71,8 +72,15 @@
   <main class="shell">
     <section class="section">
       <h3 class="kicker">About Me</h3>
-      <p><strong>AWS-focused engineer with end-to-end experience in IaC, CI/CD, and multi-account architectures</strong> — bridging hands-on build work (CloudFront, API Gateway, Lambda/Python/boto3, DynamoDB) with product-minded delivery and guard-railed releases.</p>
-      <p>I like solving real problems with production discipline: everything as code, short feedback loops, and secure pipelines (OIDC, no long-lived keys). I’m targeting Cloud Engineer, DevOps, or Solutions Architect roles in Cloud, SaaS, or Cybersecurity companies where I can own the path from idea → safe, observable, repeatable deployments.</p>
+      <p>
+        I earned the AWS Certified Solutions Architect – Associate before building this site so I had a solid baseline in AWS. The first phase was the Cloud Resume Challenge: CloudFront + S3 with HTTPS, a visitor counter API (API Gateway → Lambda/Python with boto3 → DynamoDB), and all infrastructure defined in SAM/CloudFormation. Every change is validated with unit, integration, and end-to-end tests in GitHub Actions, so nothing ships untested.
+      </p>
+      <p>
+        I then extended it into a multi-account architecture (mgmt, eng, test, prod) under AWS Organizations with OIDC-based CI/CD. The pipeline builds once and promotes the same artifact through environments with approvals—no console drift, short idea-to-deploy loops, and fast rollback to the last known good. It mirrors how cloud-native teams ship safely.
+      </p>
+      <p>
+        My background spans an M.S. in Computer Engineering from Stony Brook University with an Advanced Certification in Networking & Wireless Communications; Applications Engineer at Data Device Corporation; Product Owner at Owl Cyber Defense (agile, cybersecurity); and Product Line Manager at Power Device Corporation. I’m now channeling that mix of technical depth and product leadership into cloud engineering, DevOps, and solutions architecture.
+      </p>
     </section>
 
     <section class="section">
@@ -146,7 +154,7 @@
         </article>
       </div>
 
-      <h4 class="subkicker">Next Up</h4>
+      <h4 class="subkicker">Currently Learning</h4>
       <div class="cards">
         <article class="card">
           <h4>Observability & Access</h4>
