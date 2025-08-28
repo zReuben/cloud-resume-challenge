@@ -13,16 +13,17 @@
   <meta property="og:url" content="https://reubenmulholland.com">
   <meta property="og:image" content="https://reubenmulholland.com/profile.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <!-- cache-bust so browsers refresh favicon -->
+  <link rel="icon" href="favicon.ico?v=3" type="image/x-icon">
+  <link rel="icon" type="image/png" href="favicon.png?v=3">
+  <link rel="shortcut icon" href="favicon.ico?v=3" type="image/x-icon">
 
   <!-- fonts + site css -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- cursor spotlight (keep first so it sits under main content via z-index) -->
+  <!-- cursor spotlight -->
   <div id="spotlight" aria-hidden="true"></div>
 
   <header class="shell">
@@ -38,7 +39,6 @@
       </div>
     </div>
 
-    <!-- nav (keep Home first; external links open in new tab) -->
     <nav aria-label="Primary" class="topnav">
       <a href="index.html">🏠 Home</a>
       <a href="resume.html">📄 Resume</a>
@@ -48,7 +48,6 @@
   </header>
 
   <main class="shell">
-    <!-- intro: why + career alignment -->
     <section class="section">
       <h3 class="kicker">👋 About This Site</h3>
       <p>
@@ -59,7 +58,6 @@
       </p>
     </section>
 
-    <!-- concise feature list (keep to parallel bullets) -->
     <section class="section">
       <h3 class="kicker">✅ What I’ve Built</h3>
       <ul class="bullets">
@@ -71,36 +69,57 @@
       </ul>
     </section>
 
-    <!-- shipping model (small at-a-glance flow with chips) -->
+    <!-- REPLACE "Selected Projects" + "What's Next" with one section -->
     <section class="section">
-      <h3 class="kicker">🚀 How It Ships (at-a-glance)</h3>
+      <h3 class="kicker">🧩 Projects — Completed & Next</h3>
+
+      <h4 class="subkicker">Completed</h4>
       <div class="cards">
         <article class="card">
-          <h4>Build Once</h4>
-          <p>Package a single SAM template and app bundle; the same artifact moves through all stages.</p>
+          <h4>Cloud Resume Challenge</h4>
+          <p>Static site on CloudFront/S3 with HTTPS (ACM + Route 53) and a visitor counter API (API Gateway → Lambda → DynamoDB). Defined as IaC with SAM/CloudFormation.</p>
           <div class="badges">
-            <span class="badge">SAM</span>
-            <span class="badge">S3 Artifacts</span>
-            <span class="badge">Checksums</span>
+            <span class="badge">CloudFront</span><span class="badge">S3</span>
+            <span class="badge">API Gateway</span><span class="badge">Lambda</span>
+            <span class="badge">DynamoDB</span><span class="badge">SAM</span>
           </div>
         </article>
+
         <article class="card">
-          <h4>Promote with Approvals</h4>
-          <p>GitHub Actions environments gate test &amp; prod; OIDC assumes AWS roles (no long-lived keys).</p>
+          <h4>Multi-Account + CI/CD Promotion</h4>
+          <p>Mgmt/eng/test/prod accounts with role assumption via AWS Vault. GitHub Actions builds once and promotes with environment approvals. No long-lived CI keys (GitHub OIDC → AWS).</p>
           <div class="badges">
-            <span class="badge">GitHub Actions</span>
-            <span class="badge">OIDC</span>
-            <span class="badge">Environments</span>
-            <span class="badge">Approvals</span>
+            <span class="badge">GitHub Actions</span><span class="badge">OIDC</span>
+            <span class="badge">Environments</span><span class="badge">Approvals</span>
+            <span class="badge">SSM Params</span><span class="badge">IaC</span>
           </div>
         </article>
+      </div>
+
+      <h4 class="subkicker">Next Up</h4>
+      <div class="cards">
         <article class="card">
-          <h4>Immutable Inputs</h4>
-          <p>Config from SSM/parameters; identical build promoted across stages; rollback = re-deploy last good.</p>
+          <h4>Cost Guardrails</h4>
+          <p>Budgets + SNS alerts and a <em>Kill Switch Lambda</em> to automatically pause spend anomalies (eng → test → prod).</p>
           <div class="badges">
-            <span class="badge">SSM Params</span>
-            <span class="badge">IaC</span>
-            <span class="badge">Rollback</span>
+            <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h4>Identity & Observability</h4>
+          <p>IAM Identity Center; CloudWatch dashboards/alarms; org-wide CloudTrail for audit & forensics.</p>
+          <div class="badges">
+            <span class="badge">Identity Center</span><span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h4>Containers/Kubernetes</h4>
+          <p>Next portfolio step exploring Docker + ECR, and orchestration via ECS or EKS with GitHub Actions.</p>
+          <div class="badges">
+            <span class="badge">Docker</span><span class="badge">ECR</span>
+            <span class="badge">ECS/EKS</span><span class="badge">CI/CD</span>
           </div>
         </article>
       </div>
@@ -117,45 +136,6 @@
         <li><strong>Next:</strong> Budgets + SNS + <em>Kill Switch Lambda</em>, CloudWatch dashboards/alarms, org-wide CloudTrail, IAM Identity Center.</li>
       </ul>
     </section>
-
-    <!-- examples -->
-    <section class="section">
-      <h3 class="kicker">🧩 Selected Projects</h3>
-      <div class="cards">
-        <article class="card">
-          <h4>Cloud Resume (Prod)</h4>
-          <p>Multi-account IaC deployment, static hosting via CloudFront/S3, serverless visitor API, CI/CD with GitHub Actions.</p>
-          <div class="badges">
-            <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">DynamoDB</span>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Cost Guardrails (Next)</h4>
-          <p>Budgets + SNS alerts and a <em>Kill Switch Lambda</em> to automatically pause spend anomalies.</p>
-          <div class="badges">
-            <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Identity &amp; Observability</h4>
-          <p>IAM Identity Center rollout; CloudWatch dashboards/alarms; org-wide CloudTrail for audit and forensics.</p>
-          <div class="badges">
-            <span class="badge">Identity Center</span><span class="badge">CloudWatch</span><span class="badge">CloudTrail</span>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- roadmap -->
-    <section class="section">
-      <h3 class="kicker">📈 What’s Next</h3>
-      <ol class="next">
-        <li>Ship <strong>Kill Switch Lambda</strong> with Budgets + SNS across eng → test → prod.</li>
-        <li>Stand up <strong>CloudWatch dashboards/alarms</strong> and an org-wide <strong>CloudTrail</strong>.</li>
-        <li>Roll out <strong>IAM Identity Center</strong> for clean, scalable access.</li>
-        <li>Explore <strong>Kubernetes/containers</strong> (EKS/ECS + Docker) for the next portfolio project.</li>
-      </ol>
-    </section>
   </main>
 
   <footer class="shell footer">
@@ -166,7 +146,7 @@
     </small>
   </footer>
 
-  <!-- spotlight logic (simple rAF follower; keep in sync with style.css) -->
+  <!-- spotlight logic -->
   <script>
     (function () {
       const s = document.getElementById('spotlight');
@@ -176,8 +156,9 @@
       window.addEventListener('mousemove', onMove, { passive: true });
 
       function tick() {
-        x += (tx - x) * 0.35;
-        y += (ty - y) * 0.35;
+        // slightly snappier follow
+        x += (tx - x) * 0.45;
+        y += (ty - y) * 0.45;
         s.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
         requestAnimationFrame(tick);
       }
@@ -190,7 +171,6 @@
     })();
   </script>
 
-  <!-- visitor count script (same API as before) -->
   <script src="visitorCount.js?v=7"></script>
 </body>
 </html>
