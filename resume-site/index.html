@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect</title>
-
-  <meta name="description" content="Cloud Engineer / DevOps / Solutions Architect. I run pipelines, manage multi-account AWS infra as code, enforce guardrails, and accelerate shipping with lower risk." />
+  <meta name="description" content="AWS cloud engineer building multi-account, IaC-first systems with CI/CD, OIDC, and CloudFront/API Gateway/Lambda/DynamoDB. Promotion-based pipeline from ENG to TEST to PROD.">
   <meta property="og:title" content="Reuben Mulholland — Cloud Engineer | DevOps | Solutions Architect">
   <meta property="og:description" content="AWS multi-account portfolio: IaC, CI/CD, CloudFront/S3, API Gateway/Lambda/DynamoDB.">
   <meta property="og:type" content="website">
@@ -71,33 +70,28 @@
 
   <main class="shell">
     <section class="section">
-      <h3 class="kicker">👋 About the Site & About Me</h3>
-      <p>
-        I hold an <strong>AWS Certified Solutions Architect – Associate</strong>, which I earned before starting the
-        <strong>Cloud Resume Challenge</strong> as a foundation for building on AWS. That project became my first end-to-end
-        cloud build: a static site on CloudFront/S3 with HTTPS, a visitor counter API (API Gateway → Lambda in
-        <strong>Python</strong> using <strong>boto3</strong> → DynamoDB database), and infrastructure fully defined in
-        <strong>SAM/CloudFormation</strong>. Every change is validated with <strong>unit, integration, and end-to-end tests</strong>
-        in <strong>GitHub Actions</strong> before deployment, so nothing ships untested.
-      </p>
-      <p>
-        I later extended the project into a <strong>multi-account AWS setup</strong> (mgmt, eng, test, prod) with
-        <strong>GitHub Actions</strong> CI/CD. The pipeline builds once, promotes the same artifact through environments
-        with approvals, and supports instant rollback—mirroring how modern cloud-native teams ship safely into production.
-      </p>
-      <p>
-        A little about me: I earned my B.E. & M.S. in Computer Engineering from Stony Brook University, alongside an <strong>Advanced Certification in Networking and Wireless Communications</strong>. I began my career as an Applications Engineer at Data Device Corporation, moved into Product Ownership at <strong>Owl Cyber Defense</strong> (a cybersecurity company where I ran two scrum teams in an agile environment), and most recently served as a Product Line Manager at Power Device Corporation, driving roadmaps in the defense and aerospace sector. That path gave me both technical depth and product leadership experience, but my real passion has always been cloud, which is why I’m pivoting back into engineering roles where I can apply both sides of that background to DevOps, cloud infrastructure, and solutions architecture.
-      </p>
+      <h3 class="kicker">About Me</h3>
+      <p><strong>AWS-focused engineer with end-to-end experience in IaC, CI/CD, and multi-account architectures</strong> — bridging hands-on build work (CloudFront, API Gateway, Lambda/Python/boto3, DynamoDB) with product-minded delivery and guard-railed releases.</p>
+      <p>I like solving real problems with production discipline: everything as code, short feedback loops, and secure pipelines (OIDC, no long-lived keys). I’m targeting Cloud Engineer, DevOps, or Solutions Architect roles in Cloud, SaaS, or Cybersecurity companies where I can own the path from idea → safe, observable, repeatable deployments.</p>
     </section>
-    
+
     <section class="section">
-      <h3 class="kicker">🧩 Projects — Completed & Next</h3>
+      <h3 class="kicker">Projects</h3>
 
       <h4 class="subkicker">Completed</h4>
       <div class="cards">
         <!-- Cloud Resume Challenge -->
         <article class="card">
           <h4>Cloud Resume Challenge</h4>
+          <div class="card">
+            <h3>Impact &amp; Metrics</h3>
+            <ul class="metrics-list">
+              <li><strong>0</strong> manual console changes — 100% IaC (SAM/CloudFormation).</li>
+              <li><strong>10–15 min</strong> idea-to-deploy loop via GitHub Actions CI/CD.</li>
+              <li><strong>Zero</strong> long-lived AWS keys — OIDC only, per-env roles.</li>
+              <li><strong>Safe promotions</strong> — prod uses the exact artifact vetted in test.</li>
+            </ul>
+          </div>
           <p>
             Built a static website (HTML/CSS/JS) on CloudFront + S3 (HTTPS via ACM) with a visitor counter backed by a
             RESTful API (API Gateway → Lambda in <strong>Python</strong> using <strong>boto3</strong> → DynamoDB <strong>database</strong>).
@@ -131,6 +125,11 @@
             (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> through environments with
             approvals. Config is centralized in <strong>SSM Parameter Store</strong> (AWS <strong>Systems Manager</strong>) to keep
             parameters consistent across stages. Supporting glue handled via lightweight <strong>shell scripts</strong>.
+          </p>
+          <p class="note">
+            This mirrors common SaaS multi-account setups: <strong>ENG</strong> for rapid iteration,
+            <strong>TEST</strong> as controlled pre-prod with human approvals and integration checks,
+            and <strong>PROD</strong> gated by promotion of the exact, immutable artifact.
           </p>
           <div class="badges">
             <span class="badge">AWS Organizations</span><span class="badge">MFA</span>
@@ -211,5 +210,14 @@
   </script>
 
   <script src="visitorCount.js?v=10"></script>
+  <footer class="shell footer">
+    <p>
+      🚀 Interested in working together? 
+      Connect with me on 
+      <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank">LinkedIn</a> 
+      or explore more on 
+      <a href="https://github.com/zReuben" target="_blank">GitHub</a>.
+    </p>
+  </footer>
 </body>
 </html>
