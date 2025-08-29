@@ -40,7 +40,7 @@ jobs:
             --stack-name cloud-resume-infra \
             --parameter-overrides EnvironmentName=eng OrgId=${{ secrets.ORG_ID }} DeployRolePattern='GitHubActionsDeployer' \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-            --resolve-s3
+            --resolve-s3 \
             --no-fail-on-empty-changeset
 
       # 2) Only on main: now that the ENG stack exists, package the template
