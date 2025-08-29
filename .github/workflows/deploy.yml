@@ -7,6 +7,7 @@ env:
   AWS_REGION: us-east-1
   PROMO_BUCKET: cloud-resume-promo-central-515275665162
   APP_PREFIX: cloud-resume-infra
+  TEMPLATE_PATH: resume-infra/template.yaml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -29,16 +30,15 @@ jobs:
           python-version: "3.11"
 
       - name: Build (ENG)
-        run: make build
+        run: sam build --use-container --template-file "$TEMPLATE_PATH"
 
       # NEW: Only persist artifacts for main (reduce storage)
       - name: Package & persist SAM artifact by SHA (ENG, main only)
         if: github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
-          TEMPLATE=".aws-sam/build/template.yaml"
           aws cloudformation package \
-            --template-file "$TEMPLATE" \
+            --template-file .aws-sam/build/template.yaml \
             --s3-bucket "${PROMO_BUCKET}" \
             --s3-prefix "${APP_PREFIX}/${GITHUB_SHA}/lambda" \
             --output-template-file packaged.yaml
