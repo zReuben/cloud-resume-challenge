@@ -90,7 +90,7 @@ Resources:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
               ArnLike:
-                aws:PrincipalArn: !Sub "arn:aws:iam::*:role/${DeployRolePattern}"
+                aws:PrincipalArn: !Sub "arn:aws:sts::*:assumed-role/${DeployRolePattern}/*"
 
           # ENG account root can fully manage its own promo bucket (optional but handy)
           - Sid: AllowEngAccountRW
