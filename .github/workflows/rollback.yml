@@ -29,7 +29,7 @@ jobs:
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.REGION }}
-          role-to-assume: ${{ secrets['AWS_ROLE_' + github.event.inputs.environment] }}
+          role-to-assume: ${{ secrets[format('AWS_ROLE_{0}', github.event.inputs.environment)] }}
 
       - name: Resolve & download packaged.yaml (allow short SHA)
         run: |
