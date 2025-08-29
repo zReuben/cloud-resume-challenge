@@ -27,7 +27,15 @@ Parameters:
   AppPrefix:                      # <— new (used in the policy path)
     Type: String
     Default: cloud-resume-infra
-
+  # NEW: explicit cross-account principals for promo bucket reads
+  TestDeployRoleArn:
+    Type: String
+    Default: ""
+    Description: "ARN of the GitHub deploy role in TEST (reader of promo bucket)"
+  ProdDeployRoleArn:
+    Type: String
+    Default: ""
+    Description: "ARN of the GitHub deploy role in PROD (reader of promo bucket)"
   # --- NEW: pass from workflow (no SSM required) ---
   OrgId:
     Type: String
@@ -46,17 +54,12 @@ Resources:
   # --- Resources ---
   PromotionArtifactsBucketCentral:
     Type: AWS::S3::Bucket
-    Condition: IsEng                 # <— ensure only created in ENG
+    Condition: IsEng
     Properties:
       BucketName: !Sub cloud-resume-promo-central-${AWS::AccountId}
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
       VersioningConfiguration:
         Status: Enabled
       LifecycleConfiguration:
@@ -75,7 +78,7 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          # Let any principal in *my AWS Organization* list the bucket
+          # Allow accounts in my AWS Organization to list the bucket
           - Sid: AllowOrgList
             Effect: Allow
             Principal: "*"
@@ -85,7 +88,7 @@ Resources:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
 
-          # Let any principal in my Org read objects under the app prefix
+          # Allow org principals to read only our app prefix (where packaged.yaml lives)
           - Sid: AllowOrgGetObjects
             Effect: Allow
             Principal: "*"
@@ -94,6 +97,7 @@ Resources:
             Condition:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
+
 
   LandingPage:
     Type: AWS::S3::Bucket
