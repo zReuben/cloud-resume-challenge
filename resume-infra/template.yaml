@@ -67,38 +67,38 @@ Resources:
             NoncurrentVersionExpiration:
               NoncurrentDays: 30
 
-PromotionArtifactsBucketPolicy:
-  Type: AWS::S3::BucketPolicy
-  Condition: IsEng
-  Properties:
-    Bucket: !Ref PromotionArtifactsBucketCentral
-    PolicyDocument:
-      Version: "2012-10-17"
-      Statement:
-        - Sid: AllowOrgReadForDeployRole
-          Effect: Allow
-          Principal: "*"
-          Action:
-            - s3:ListBucket   # required on the bucket itself
-          Resource:
-            - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
-          Condition:
-            StringEquals:
-              aws:PrincipalOrgID: !Ref OrgId
-            ArnLike:
-              aws:PrincipalArn: !Sub "arn:aws:sts::*:assumed-role/${DeployRolePattern}/*"
-        - Sid: AllowOrgGetObjectForDeployRole
-          Effect: Allow
-          Principal: "*"
-          Action:
-            - s3:GetObject   # required for objects
-          Resource:
-            - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
-          Condition:
-            StringEquals:
-              aws:PrincipalOrgID: !Ref OrgId
-            ArnLike:
-              aws:PrincipalArn: !Sub "arn:aws:sts::*:assumed-role/${DeployRolePattern}/*"
+  PromotionArtifactsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: IsEng
+    Properties:
+      Bucket: !Ref PromotionArtifactsBucketCentral
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowOrgReadForDeployRole
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:ListBucket   # required on the bucket itself
+            Resource:
+              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: !Ref OrgId
+              ArnLike:
+                aws:PrincipalArn: !Sub "arn:aws:sts::*:assumed-role/${DeployRolePattern}/*"
+          - Sid: AllowOrgGetObjectForDeployRole
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject   # required for objects
+            Resource:
+              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: !Ref OrgId
+              ArnLike:
+                aws:PrincipalArn: !Sub "arn:aws:sts::*:assumed-role/${DeployRolePattern}/*"
 
   LandingPage:
     Type: AWS::S3::Bucket
