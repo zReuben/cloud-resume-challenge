@@ -38,7 +38,12 @@ jobs:
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
             --stack-name cloud-resume-infra \
-            --parameter-overrides EnvironmentName=eng OrgId=${{ secrets.ORG_ID }} DeployRolePattern='GitHubActionsDeployer' \
+            --parameter-overrides \
+                EnvironmentName=eng \
+                OrgId=${{ secrets.ORG_ID }} \
+                DeployRolePattern='GitHubActionsDeployer' \
+                TestDeployRoleArn='${{ secrets.AWS_ROLE_TEST }}' \
+                ProdDeployRoleArn='${{ secrets.AWS_ROLE_PROD }}' \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --resolve-s3 \
             --no-fail-on-empty-changeset
