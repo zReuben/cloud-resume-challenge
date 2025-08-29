@@ -78,25 +78,26 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          # List is bucket-level; allow TEST/PROD deploy roles
-          - Sid: AllowListFromTestProd
+          # Allow accounts in my AWS Organization to list the bucket
+          - Sid: AllowOrgList
             Effect: Allow
-            Principal:
-              AWS:
-                - !Ref TestDeployRoleArn
-                - !Ref ProdDeployRoleArn
+            Principal: "*"
             Action: s3:ListBucket
             Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: !Ref OrgId
 
-          # GetObject for packaged.yaml + any future objects under your prefix
-          - Sid: AllowGetObjectsFromTestProd
+          # Allow org principals to read only our app prefix (where packaged.yaml lives)
+          - Sid: AllowOrgGetObjects
             Effect: Allow
-            Principal:
-              AWS:
-                - !Ref TestDeployRoleArn
-                - !Ref ProdDeployRoleArn
+            Principal: "*"
             Action: s3:GetObject
             Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: !Ref OrgId
+
 
   LandingPage:
     Type: AWS::S3::Bucket
