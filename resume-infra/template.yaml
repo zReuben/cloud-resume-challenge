@@ -24,6 +24,9 @@ Parameters:
     Type: String
     Default: /cloud-resume/prod/certificate_arn
     Description: SSM path that holds the ACM cert ARN (string)
+  AppPrefix:                      # <— new (used in the policy path)
+    Type: String
+    Default: cloud-resume-infra
 
   # --- NEW: pass from workflow (no SSM required) ---
   OrgId:
@@ -40,45 +43,68 @@ Conditions:
 
 Resources:
   # --- NEW: central artifacts bucket exists ONLY in ENG ---
+  # --- Resources ---
   PromotionArtifactsBucketCentral:
-    Condition: IsEng
     Type: AWS::S3::Bucket
+    Condition: IsEng                 # <— ensure only created in ENG
     Properties:
       BucketName: !Sub cloud-resume-promo-central-${AWS::AccountId}
-      VersioningConfiguration: { Status: Enabled }
-      LifecycleConfiguration:
+      OwnershipControls:
         Rules:
-          - Id: ExpireOldRollbackArtifacts
-            Status: Enabled
-            Prefix: cloud-resume-infra/
-            ExpirationInDays: 60
+          - ObjectOwnership: BucketOwnerEnforced
       PublicAccessBlockConfiguration:
         BlockPublicAcls: true
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireOldArtifacts
+            Status: Enabled
+            ExpirationInDays: 30
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 30
 
   PromotionArtifactsBucketPolicy:
-    Condition: IsEng
     Type: AWS::S3::BucketPolicy
+    Condition: IsEng                 # <— policy only when bucket exists
     Properties:
       Bucket: !Ref PromotionArtifactsBucketCentral
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          - Sid: AllowReadFromOrgDeployRoles
+          # Allow any account in my Org, **only** when assuming our deploy role,
+          # to list/get artifact objects under <AppPrefix>/
+          - Sid: AllowOrgReadForDeployRole
             Effect: Allow
             Principal: "*"
-            Action: [ "s3:ListBucket", "s3:GetObject" ]
+            Action:
+              - s3:ListBucket
+              - s3:GetObject
             Resource:
               - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
-              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/cloud-resume-infra/*
+              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
             Condition:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
-              # Match any role whose name equals your deploy role (works across accounts)
-              StringLike:
+              ArnLike:
                 aws:PrincipalArn: !Sub "arn:aws:iam::*:role/${DeployRolePattern}"
+
+          # ENG account root can fully manage its own promo bucket (optional but handy)
+          - Sid: AllowEngAccountRW
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action:
+              - s3:ListBucket
+              - s3:GetObject
+              - s3:PutObject
+              - s3:DeleteObject
+            Resource:
+              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/*
 
   LandingPage:
     Type: AWS::S3::Bucket
@@ -334,10 +360,11 @@ Resources:
 
 Outputs:
   # --- NEW (optional reference) ---
-  PromotionArtifactsBucket:
+  PromotionArtifactsBucketName:
     Condition: IsEng
     Value: !Ref PromotionArtifactsBucketCentral
-
+    Export:
+      Name: !Sub ${AWS::StackName}-PromoBucket
   VisitorApiBaseUrl:
     Description: "Base URL for visitor-count GET endpoint"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/visitor-count"

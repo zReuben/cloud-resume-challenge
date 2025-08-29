@@ -135,7 +135,14 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TEST }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # NEW: no build/package in TEST — reuse ENG artifact
+      #DEBUG
+      - name: Debug list ENG bucket prefix
+        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/"
+
+      - name: Debug list this SHA path
+        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/"
+      #END DEBUG
+          # NEW: no build/package in TEST — reuse ENG artifact
       - name: Fetch packaged.yaml for this SHA (from ENG bucket)
         run: |
           aws s3 cp "s3://${PROMO_BUCKET}/${APP_PREFIX}/${{ github.sha }}/packaged.yaml" packaged.yaml
@@ -210,7 +217,13 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
           aws-region: ${{ env.AWS_REGION }}
+      #DEBUG
+      - name: Debug list ENG bucket prefix
+        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/"
 
+      - name: Debug list this SHA path
+        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/"
+      #END DEBUG
       # NEW: no build/package in PROD — reuse ENG artifact
       - name: Fetch packaged.yaml for this SHA (from ENG bucket)
         run: |
