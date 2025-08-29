@@ -25,10 +25,61 @@ Parameters:
     Default: /cloud-resume/prod/certificate_arn
     Description: SSM path that holds the ACM cert ARN (string)
 
+  # --- NEW: pass from workflow (no SSM required) ---
+  OrgId:
+    Type: String
+    Description: "AWS Organizations ID (e.g., o-abc123xyz)"
+  DeployRolePattern:
+    Type: String
+    Default: "GitHubActionsDeployer"   # exact role name you use in each account
+
 Conditions:
   IsProd: !Equals [!Ref EnvironmentName, prod]
+  # --- NEW ---
+  IsEng:  !Equals [!Ref EnvironmentName, eng]
 
 Resources:
+  # --- NEW: central artifacts bucket exists ONLY in ENG ---
+  PromotionArtifactsBucketCentral:
+    Condition: IsEng
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub cloud-resume-promo-central-${AWS::AccountId}
+      VersioningConfiguration: { Status: Enabled }
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpireOldRollbackArtifacts
+            Status: Enabled
+            Prefix: cloud-resume-infra/
+            ExpirationInDays: 60
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  PromotionArtifactsBucketPolicy:
+    Condition: IsEng
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref PromotionArtifactsBucketCentral
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowReadFromOrgDeployRoles
+            Effect: Allow
+            Principal: "*"
+            Action: [ "s3:ListBucket", "s3:GetObject" ]
+            Resource:
+              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/cloud-resume-infra/*
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: !Ref OrgId
+              # Match any role whose name equals your deploy role (works across accounts)
+              StringLike:
+                aws:PrincipalArn: !Sub "arn:aws:iam::*:role/${DeployRolePattern}"
+
   LandingPage:
     Type: AWS::S3::Bucket
     Properties:
@@ -56,59 +107,56 @@ Resources:
   MyDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
-        DistributionConfig:
-            Aliases: !If
-              - IsProd
-              - [ !Sub "{{resolve:ssm:${SsmPathRootDomain}}}" ]
-              - !Ref "AWS::NoValue"
-            ViewerCertificate: !If
-              - IsProd
-              - 
-                AcmCertificateArn: !Sub "{{resolve:ssm:${SsmPathCertificateArn}}}"
-                SslSupportMethod: sni-only
-              - 
-                CloudFrontDefaultCertificate: true
-            DefaultCacheBehavior:
-                ViewerProtocolPolicy: redirect-to-https
-                TargetOriginId: S3Origin
-                DefaultTTL: 84600 # 1 day
-                MinTTL: 0 # Kept at 0 to allow cache bursting when needed
-                MaxTTL: 31536000 # 1 year (for long-lived assets like images/CSS
-                ForwardedValues:
-                    QueryString: false
-            
-            #Route API paths to API gateway (Same dist -> Same origin, = no CORS headaches)
-            CacheBehaviors:
-              - PathPattern: "/visitor-count*"
-                TargetOriginId: ApiOrigin
-                ViewerProtocolPolicy: redirect-to-https
-                AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
-                CachedMethods:  [GET, HEAD, OPTIONS]
-                ForwardedValues:
-                  QueryString: true
-                  Headers:
-                    - Origin
-                    - Access-Control-Request-Headers
-                    - Access-Control-Request-Method
-                MinTTL: 0
-                DefaultTTL: 0
-                MaxTTL: 0
-
-            Origins:
-            #Static Site Origin (S3)
-              - DomainName: !GetAtt LandingPage.RegionalDomainName
-                Id: S3Origin
-                S3OriginConfig:  
-                  OriginAccessIdentity: ""
-            #API Origin (API Gateway)
-              - DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
-                Id: ApiOrigin
-                OriginPath: "/Prod"   # implicit SAM stage name
-                CustomOriginConfig:
-                  OriginProtocolPolicy: https-only
-            
-            Enabled: true
-            DefaultRootObject: index.html
+      DistributionConfig:
+        Aliases: !If
+          - IsProd
+          - [ !Sub "{{resolve:ssm:${SsmPathRootDomain}}}" ]
+          - !Ref "AWS::NoValue"
+        ViewerCertificate: !If
+          - IsProd
+          - 
+            AcmCertificateArn: !Sub "{{resolve:ssm:${SsmPathCertificateArn}}}"
+            SslSupportMethod: sni-only
+          - 
+            CloudFrontDefaultCertificate: true
+        DefaultCacheBehavior:
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: S3Origin
+          DefaultTTL: 84600 # 1 day
+          MinTTL: 0 # Kept at 0 to allow cache bursting when needed
+          MaxTTL: 31536000 # 1 year (for long-lived assets like images/CSS
+          ForwardedValues:
+            QueryString: false
+        #Route API paths to API gateway (Same dist -> Same origin, = no CORS headaches)
+        CacheBehaviors:
+          - PathPattern: "/visitor-count*"
+            TargetOriginId: ApiOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+            CachedMethods:  [GET, HEAD, OPTIONS]
+            ForwardedValues:
+              QueryString: true
+              Headers:
+                - Origin
+                - Access-Control-Request-Headers
+                - Access-Control-Request-Method
+            MinTTL: 0
+            DefaultTTL: 0
+            MaxTTL: 0
+        Origins:
+          #Static Site Origin (S3)
+          - DomainName: !GetAtt LandingPage.RegionalDomainName
+            Id: S3Origin
+            S3OriginConfig:  
+              OriginAccessIdentity: ""
+          #API Origin (API Gateway)
+          - DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
+            Id: ApiOrigin
+            OriginPath: "/Prod"   # implicit SAM stage name
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+        Enabled: true
+        DefaultRootObject: index.html
 
   BucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -285,6 +333,11 @@ Resources:
               OriginProtocolPolicy: http-only
 
 Outputs:
+  # --- NEW (optional reference) ---
+  PromotionArtifactsBucket:
+    Condition: IsEng
+    Value: !Ref PromotionArtifactsBucketCentral
+
   VisitorApiBaseUrl:
     Description: "Base URL for visitor-count GET endpoint"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/visitor-count"
@@ -307,4 +360,3 @@ Outputs:
     Value: !GetAtt WwwRedirectDistribution.DomainName
     Export:
       Name: WwwRedirectDistributionDomainName
-
