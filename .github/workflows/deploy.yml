@@ -5,6 +5,8 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  PROMO_BUCKET: cloud-resume-promo-central-515275665162
+  APP_PREFIX: cloud-resume-infra
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -25,10 +27,32 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Build & deploy infra (ENG)
+
+      - name: Build (ENG)
+        run: make build
+
+      # NEW: Only persist artifacts for main (reduce storage)
+      - name: Package & persist SAM artifact by SHA (ENG, main only)
+        if: github.ref == 'refs/heads/main'
         run: |
-          make build
-          make deploy-infra ENV=eng
+          set -euo pipefail
+          TEMPLATE=".aws-sam/build/template.yaml"
+          aws cloudformation package \
+            --template-file "$TEMPLATE" \
+            --s3-bucket "${PROMO_BUCKET}" \
+            --s3-prefix "${APP_PREFIX}/${GITHUB_SHA}/lambda" \
+            --output-template-file packaged.yaml
+
+          aws s3 cp packaged.yaml "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/packaged.yaml"
+
+      # Replace make deploy so we can pass OrgId/DeployRolePattern clearly
+      - name: Deploy infra (ENG) with OrgId + role pattern
+        run: |
+          sam deploy \
+            --template-file .aws-sam/build/template.yaml \
+            --stack-name cloud-resume-infra \
+            --parameter-overrides EnvironmentName=eng OrgId=${{ secrets.ORG_ID }} DeployRolePattern='GitHubActionsDeployer' \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
 
   deploy-frontend-eng:
     needs: deploy-infra-eng
@@ -104,14 +128,20 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TEST }}
           aws-region: ${{ env.AWS_REGION }}
-      - name: Install Python 3.11 for SAM build
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Build & deploy infra (TEST)
+
+      # NEW: no build/package in TEST — reuse ENG artifact
+      - name: Fetch packaged.yaml for this SHA (from ENG bucket)
         run: |
-          make build
-          make deploy-infra ENV=test
+          aws s3 cp "s3://${PROMO_BUCKET}/${APP_PREFIX}/${{ github.sha }}/packaged.yaml" packaged.yaml
+
+      - name: Deploy TEST infra from artifact (no rebuild)
+        run: |
+          aws cloudformation deploy \
+            --template-file packaged.yaml \
+            --stack-name cloud-resume-infra \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --parameter-overrides EnvironmentName=test \
+            --no-fail-on-empty-changeset
 
   deploy-frontend-test:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -174,14 +204,20 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
           aws-region: ${{ env.AWS_REGION }}
-      - name: Install Python 3.11 for SAM build
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Build & deploy infra (PROD)
+
+      # NEW: no build/package in PROD — reuse ENG artifact
+      - name: Fetch packaged.yaml for this SHA (from ENG bucket)
         run: |
-          make build
-          make deploy-infra ENV=prod
+          aws s3 cp "s3://${PROMO_BUCKET}/${APP_PREFIX}/${{ github.sha }}/packaged.yaml" packaged.yaml
+
+      - name: Deploy PROD infra from artifact (no rebuild)
+        run: |
+          aws cloudformation deploy \
+            --template-file packaged.yaml \
+            --stack-name cloud-resume-infra \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --parameter-overrides EnvironmentName=prod \
+            --no-fail-on-empty-changeset
 
   deploy-frontend-prod:
     if: ${{ github.ref == 'refs/heads/main' }}

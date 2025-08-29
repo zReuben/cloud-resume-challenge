@@ -1,0 +1,55 @@
+name: rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Where to redeploy"
+        required: true
+        type: choice
+        options: [eng, test, prod]
+      sha:
+        description: "Commit SHA (full or short)"
+        required: true
+        type: string
+
+env:
+  REGION: us-east-1
+  STACK_NAME: cloud-resume-infra
+  PROMO_BUCKET: cloud-resume-promo-central-515275665162
+  APP_PREFIX: cloud-resume-infra
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}   # keeps your approvals
+    permissions: { id-token: write, contents: read }
+
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.REGION }}
+          role-to-assume: ${{ secrets['AWS_ROLE_' + github.event.inputs.environment] }}
+
+      - name: Resolve & download packaged.yaml (allow short SHA)
+        run: |
+          set -euo pipefail
+          BASE="s3://${PROMO_BUCKET}/${APP_PREFIX}/"
+          INPUT="${{ github.event.inputs.sha }}"
+          MATCH=$(aws s3 ls "$BASE" | awk '{print $2}' | sed 's/\/$//' | grep -E "^${INPUT}" | head -n1 || true)
+          if [ -z "$MATCH" ]; then
+            echo "No artifacts under ${BASE}${INPUT}*/"
+            echo "Available prefixes:" && aws s3 ls "$BASE" || true
+            exit 1
+          fi
+          echo "Using SHA: $MATCH"
+          aws s3 cp "s3://${PROMO_BUCKET}/${APP_PREFIX}/${MATCH}/packaged.yaml" packaged.yaml
+
+      - name: Deploy selected artifact
+        run: |
+          aws cloudformation deploy \
+            --template-file packaged.yaml \
+            --stack-name "${STACK_NAME}" \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --parameter-overrides EnvironmentName=${{ github.event.inputs.environment }} \
+            --no-fail-on-empty-changeset
