@@ -75,30 +75,25 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          - Sid: AllowOrgReadForDeployRole
+          # Let any principal in *my AWS Organization* list the bucket
+          - Sid: AllowOrgList
             Effect: Allow
             Principal: "*"
-            Action:
-              - s3:ListBucket   # required on the bucket itself
-            Resource:
-              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+            Action: s3:ListBucket
+            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
             Condition:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
-              ArnLike:
-                aws:PrincipalArn: !Sub "arn:aws:sts::*:assumed-role/${DeployRolePattern}/*"
-          - Sid: AllowOrgGetObjectForDeployRole
+
+          # Let any principal in my Org read objects under the app prefix
+          - Sid: AllowOrgGetObjects
             Effect: Allow
             Principal: "*"
-            Action:
-              - s3:GetObject   # required for objects
-            Resource:
-              - !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
             Condition:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
-              ArnLike:
-                aws:PrincipalArn: !Sub "arn:aws:sts::*:assumed-role/${DeployRolePattern}/*"
 
   LandingPage:
     Type: AWS::S3::Bucket
