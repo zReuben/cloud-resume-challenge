@@ -32,8 +32,18 @@ jobs:
       - name: Build (ENG)
         run: sam build --use-container --template-file "$TEMPLATE_PATH"
 
-      # NEW: Only persist artifacts for main (reduce storage)
-      - name: Package & persist SAM artifact by SHA (ENG, main only)
+      # 1) Deploy first. --resolve-s3 lets SAM create/use a managed bucket
+      - name: Deploy infra (ENG) with OrgId + role pattern
+        run: |
+          sam deploy \
+            --template-file .aws-sam/build/template.yaml \
+            --stack-name cloud-resume-infra \
+            --parameter-overrides EnvironmentName=eng OrgId=${{ secrets.ORG_ID }} DeployRolePattern='GitHubActionsDeployer' \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --resolve-s3
+
+      # 2) Only on main: now that the ENG stack exists, package the template
+      - name: Package SAM template by SHA (ENG, main only)
         if: github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
@@ -43,16 +53,11 @@ jobs:
             --s3-prefix "${APP_PREFIX}/${GITHUB_SHA}/lambda" \
             --output-template-file packaged.yaml
 
-          aws s3 cp packaged.yaml "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/packaged.yaml"
-
-      # Replace make deploy so we can pass OrgId/DeployRolePattern clearly
-      - name: Deploy infra (ENG) with OrgId + role pattern
+      # 3) Upload packaged.yaml for TEST/PROD to reuse
+      - name: Persist packaged.yaml for promotions (ENG, main only)
+        if: github.ref == 'refs/heads/main'
         run: |
-          sam deploy \
-            --template-file .aws-sam/build/template.yaml \
-            --stack-name cloud-resume-infra \
-            --parameter-overrides EnvironmentName=eng OrgId=${{ secrets.ORG_ID }} DeployRolePattern='GitHubActionsDeployer' \
-            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM
+          aws s3 cp packaged.yaml "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/packaged.yaml"
 
   deploy-frontend-eng:
     needs: deploy-infra-eng
