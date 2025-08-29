@@ -41,6 +41,8 @@ jobs:
             --parameter-overrides \
                 EnvironmentName=eng \
                 OrgId=${{ secrets.ORG_ID }} \
+                TestDeployRoleArn=${{ secrets.AWS_ROLE_TEST }} \
+                ProdDeployRoleArn=${{ secrets.AWS_ROLE_PROD }} \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --resolve-s3 \
             --no-fail-on-empty-changeset

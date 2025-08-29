@@ -78,7 +78,7 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          # Allow accounts in my AWS Organization to list the bucket
+          # (1) Org-wide convenience (keep)
           - Sid: AllowOrgList
             Effect: Allow
             Principal: "*"
@@ -88,7 +88,6 @@ Resources:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
 
-          # Allow org principals to read only our app prefix (where packaged.yaml lives)
           - Sid: AllowOrgGetObjects
             Effect: Allow
             Principal: "*"
@@ -98,6 +97,41 @@ Resources:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
 
+          # (2) Explicit TEST role access (fix for ListBucket in TEST)
+          - Sid: AllowTestRoleList
+            Effect: Allow
+            Principal:
+              AWS: !Ref TestDeployRoleArn
+            Action: s3:ListBucket
+            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+            Condition:
+              StringLike:
+                s3:prefix: "${AppPrefix}/*"
+
+          - Sid: AllowTestRoleGet
+            Effect: Allow
+            Principal:
+              AWS: !Ref TestDeployRoleArn
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+
+          # (3) Explicit PROD role access
+          - Sid: AllowProdRoleList
+            Effect: Allow
+            Principal:
+              AWS: !Ref ProdDeployRoleArn
+            Action: s3:ListBucket
+            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+            Condition:
+              StringLike:
+                s3:prefix: "${AppPrefix}/*"
+
+          - Sid: AllowProdRoleGet
+            Effect: Allow
+            Principal:
+              AWS: !Ref ProdDeployRoleArn
+            Action: s3:GetObject
+            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
 
   LandingPage:
     Type: AWS::S3::Bucket
