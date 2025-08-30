@@ -112,9 +112,6 @@ Resources:
               Principal: { AWS: !Ref TestDeployRoleArn }
               Action: s3:ListBucket
               Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
-              Condition:
-                StringLike:
-                  s3:prefix: "${AppPrefix}/*"
             - !Ref AWS::NoValue
 
           - !If
@@ -134,9 +131,6 @@ Resources:
               Principal: { AWS: !Ref ProdDeployRoleArn }
               Action: s3:ListBucket
               Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
-              Condition:
-                StringLike:
-                  s3:prefix: "${AppPrefix}/*"
             - !Ref AWS::NoValue
 
           - !If
