@@ -36,17 +36,16 @@ jobs:
       - name: Deploy infra (ENG) with OrgId + role pattern
         run: |
           sam deploy \
-            --template-file .aws-sam/build/template.yaml \
+            --template-file resume-infra/.aws-sam/build/template.yaml \
             --stack-name cloud-resume-infra \
-            --parameter-overrides \
-                EnvironmentName=eng \
-                OrgId=${{ secrets.ORG_ID }} \
-                TestDeployRoleArn=${{ secrets.AWS_ROLE_TEST }} \
-                ProdDeployRoleArn=${{ secrets.AWS_ROLE_PROD }} \
+            --region ${{ env.REGION }} \
+            --no-confirm-changeset \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-            --resolve-s3 \
-            --no-fail-on-empty-changeset
-
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              EnvironmentName=eng \
+              OrgId=${{ secrets.ORG_ID }} \
+              DeployRolePattern=GitHubActionsDeployer
 
       # 2) Only on main: now that the ENG stack exists, package the template
       - name: Package SAM template by SHA (ENG, main only)
@@ -154,12 +153,20 @@ jobs:
 
       - name: Deploy TEST infra from artifact (no rebuild)
         run: |
+          aws s3 cp "s3://${{ env.PROMO_BUCKET }}/${{ env.APP_PREFIX }}/${{ github.sha }}/packaged.yaml" packaged.yaml
           aws cloudformation deploy \
             --template-file packaged.yaml \
             --stack-name cloud-resume-infra \
+            --region ${{ env.REGION }} \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-            --parameter-overrides EnvironmentName=test \
-            --no-fail-on-empty-changeset
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              EnvironmentName=test \
+              OrgId=${{ secrets.ORG_ID }} \
+              DeployRolePattern=GitHubActionsDeployer \
+              TestDeployRoleArn=${{ secrets.AWS_ROLE_TEST }} \
+              ProdDeployRoleArn=${{ secrets.AWS_ROLE_PROD }}
+
 
   deploy-frontend-test:
     if: ${{ github.ref == 'refs/heads/main' }}
