@@ -30,7 +30,9 @@ jobs:
           python-version: "3.11"
 
       - name: Build (ENG)
-        run: sam build --use-container --template-file "$TEMPLATE_PATH"
+        working-directory: resume-infra
+        run: |
+          sam build --use-container --template-file template.yaml
 
       # 1) Deploy first. --resolve-s3 lets SAM create/use a managed bucket
       - name: Deploy infra (ENG) with OrgId + role pattern
