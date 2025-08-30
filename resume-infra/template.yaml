@@ -46,8 +46,9 @@ Parameters:
 
 Conditions:
   IsProd: !Equals [!Ref EnvironmentName, prod]
-  # --- NEW ---
   IsEng:  !Equals [!Ref EnvironmentName, eng]
+  HasTestRole: !Not [ !Equals [ !Ref TestDeployRoleArn, "" ] ]
+  HasProdRole: !Not [ !Equals [ !Ref ProdDeployRoleArn, "" ] ]
 
 Resources:
   # --- NEW: central artifacts bucket exists ONLY in ENG ---
@@ -78,7 +79,7 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          # (1) Org-wide convenience (keep)
+          # Org-wide allow (works without role ARNs)
           - Sid: AllowOrgList
             Effect: Allow
             Principal: "*"
@@ -97,41 +98,49 @@ Resources:
               StringEquals:
                 aws:PrincipalOrgID: !Ref OrgId
 
-          # (2) Explicit TEST role access (fix for ListBucket in TEST)
-          - Sid: AllowTestRoleList
-            Effect: Allow
-            Principal:
-              AWS: !Ref TestDeployRoleArn
-            Action: s3:ListBucket
-            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
-            Condition:
-              StringLike:
-                s3:prefix: "${AppPrefix}/*"
+          # TEST role (only if provided)
+          - !If
+            - HasTestRole
+            - Sid: AllowTestRoleList
+              Effect: Allow
+              Principal: { AWS: !Ref TestDeployRoleArn }
+              Action: s3:ListBucket
+              Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+              Condition:
+                StringLike:
+                  s3:prefix: "${AppPrefix}/*"
+            - !Ref AWS::NoValue
 
-          - Sid: AllowTestRoleGet
-            Effect: Allow
-            Principal:
-              AWS: !Ref TestDeployRoleArn
-            Action: s3:GetObject
-            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+          - !If
+            - HasTestRole
+            - Sid: AllowTestRoleGet
+              Effect: Allow
+              Principal: { AWS: !Ref TestDeployRoleArn }
+              Action: s3:GetObject
+              Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+            - !Ref AWS::NoValue
 
-          # (3) Explicit PROD role access
-          - Sid: AllowProdRoleList
-            Effect: Allow
-            Principal:
-              AWS: !Ref ProdDeployRoleArn
-            Action: s3:ListBucket
-            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
-            Condition:
-              StringLike:
-                s3:prefix: "${AppPrefix}/*"
+          # PROD role (only if provided)
+          - !If
+            - HasProdRole
+            - Sid: AllowProdRoleList
+              Effect: Allow
+              Principal: { AWS: !Ref ProdDeployRoleArn }
+              Action: s3:ListBucket
+              Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}
+              Condition:
+                StringLike:
+                  s3:prefix: "${AppPrefix}/*"
+            - !Ref AWS::NoValue
 
-          - Sid: AllowProdRoleGet
-            Effect: Allow
-            Principal:
-              AWS: !Ref ProdDeployRoleArn
-            Action: s3:GetObject
-            Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+          - !If
+            - HasProdRole
+            - Sid: AllowProdRoleGet
+              Effect: Allow
+              Principal: { AWS: !Ref ProdDeployRoleArn }
+              Action: s3:GetObject
+              Resource: !Sub arn:aws:s3:::${PromotionArtifactsBucketCentral}/${AppPrefix}/*
+            - !Ref AWS::NoValue
 
   LandingPage:
     Type: AWS::S3::Bucket
