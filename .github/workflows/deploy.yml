@@ -30,7 +30,7 @@ jobs:
           python-version: "3.11"
 
       - name: Build (ENG)
-        run: sam build --use-container
+        run: sam build --use-container --template-file "$TEMPLATE_PATH"
 
       # 1) Deploy first. --resolve-s3 lets SAM create/use a managed bucket
       - name: Deploy infra (ENG) with OrgId + role pattern
@@ -38,13 +38,13 @@ jobs:
         run: |
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
-            --stack-name "$STACK_NAME" \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --parameter-overrides \
                 EnvironmentName=eng \
                 OrgId=${{ secrets.ORG_ID }} \
                 DeployRolePattern=GitHubActionsDeployer \
             --no-confirm-changeset \
+            --resolve-s3 \
             --no-fail-on-empty-changeset \
             --region "${{ env.AWS_REGION }}"
 
