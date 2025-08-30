@@ -143,14 +143,6 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TEST }}
           aws-region: ${{ env.AWS_REGION }}
-
-      #DEBUG
-      - name: Debug list ENG bucket prefix
-        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/"
-
-      - name: Debug list this SHA path
-        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/"
-      #END DEBUG
           # NEW: no build/package in TEST — reuse ENG artifact
       - name: Fetch packaged.yaml for this SHA (from ENG bucket)
         run: |
@@ -167,11 +159,8 @@ jobs:
             --no-fail-on-empty-changeset \
             --parameter-overrides \
               EnvironmentName=test \
-              OrgId=${{ secrets.ORG_ID }} \
               DeployRolePattern=GitHubActionsDeployer \
               TestDeployRoleArn=${{ secrets.AWS_ROLE_TEST }} \
-              ProdDeployRoleArn=${{ secrets.AWS_ROLE_PROD }}
-
 
   deploy-frontend-test:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -234,13 +223,6 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_PROD }}
           aws-region: ${{ env.AWS_REGION }}
-      #DEBUG
-      - name: Debug list ENG bucket prefix
-        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/"
-
-      - name: Debug list this SHA path
-        run: aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/"
-      #END DEBUG
       # NEW: no build/package in PROD — reuse ENG artifact
       - name: Fetch packaged.yaml for this SHA (from ENG bucket)
         run: |
@@ -251,9 +233,13 @@ jobs:
           aws cloudformation deploy \
             --template-file packaged.yaml \
             --stack-name cloud-resume-infra \
+            --region ${{ env.AWS_REGION }} \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-            --parameter-overrides EnvironmentName=prod \
-            --no-fail-on-empty-changeset
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              EnvironmentName=prod \
+              DeployRolePattern=GitHubActionsDeployer \
+              TestDeployRoleArn=${{ secrets.AWS_ROLE_PROD }} \
 
   deploy-frontend-prod:
     if: ${{ github.ref == 'refs/heads/main' }}
