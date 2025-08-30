@@ -45,6 +45,8 @@ jobs:
                 EnvironmentName=eng \
                 OrgId=${{ secrets.ORG_ID }} \
                 DeployRolePattern=GitHubActionsDeployer \
+                TestDeployRoleArn=${{ secrets.AWS_ROLE_TEST }} \
+                ProdDeployRoleArn=${{ secrets.AWS_ROLE_PROD }} \
             --no-confirm-changeset \
             --resolve-s3 \
             --stack-name cloud-resume-infra \
