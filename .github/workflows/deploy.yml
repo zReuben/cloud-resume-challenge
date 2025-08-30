@@ -45,6 +45,7 @@ jobs:
                 DeployRolePattern=GitHubActionsDeployer \
             --no-confirm-changeset \
             --resolve-s3 \
+            --stack-name cloud-resume-infra \
             --no-fail-on-empty-changeset \
             --region "${{ env.AWS_REGION }}"
 
