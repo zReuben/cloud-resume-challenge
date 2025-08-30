@@ -30,38 +30,40 @@ jobs:
           python-version: "3.11"
 
       - name: Build (ENG)
-        run: sam build --use-container --template-file "$TEMPLATE_PATH"
+        working-directory: resume-infra
+        run: |
+          sam build --use-container --template-file template.yaml
 
       # 1) Deploy first. --resolve-s3 lets SAM create/use a managed bucket
       - name: Deploy infra (ENG) with OrgId + role pattern
+        working-directory: resume-infra
         run: |
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
-            --stack-name cloud-resume-infra \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --parameter-overrides \
                 EnvironmentName=eng \
                 OrgId=${{ secrets.ORG_ID }} \
-            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+                DeployRolePattern=GitHubActionsDeployer \
+            --no-confirm-changeset \
             --resolve-s3 \
-            --no-fail-on-empty-changeset
+            --stack-name cloud-resume-infra \
+            --no-fail-on-empty-changeset \
+            --region "${{ env.AWS_REGION }}"
 
 
-      # 2) Only on main: now that the ENG stack exists, package the template
-      - name: Package SAM template by SHA (ENG, main only)
+      - name: Package & persist SAM artifact by SHA (ENG, main only)
         if: github.ref == 'refs/heads/main'
+        working-directory: resume-infra
         run: |
-          set -euo pipefail
           aws cloudformation package \
             --template-file .aws-sam/build/template.yaml \
-            --s3-bucket "${PROMO_BUCKET}" \
-            --s3-prefix "${APP_PREFIX}/${GITHUB_SHA}/lambda" \
+            --s3-bucket "$PROMO_BUCKET" \
+            --s3-prefix "$APP_PREFIX/$GITHUB_SHA/lambda" \
             --output-template-file packaged.yaml
 
-      # 3) Upload packaged.yaml for TEST/PROD to reuse
-      - name: Persist packaged.yaml for promotions (ENG, main only)
-        if: github.ref == 'refs/heads/main'
-        run: |
           aws s3 cp packaged.yaml "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/packaged.yaml"
+
 
   deploy-frontend-eng:
     needs: deploy-infra-eng
@@ -152,12 +154,20 @@ jobs:
 
       - name: Deploy TEST infra from artifact (no rebuild)
         run: |
+          aws s3 cp "s3://${{ env.PROMO_BUCKET }}/${{ env.APP_PREFIX }}/${{ github.sha }}/packaged.yaml" packaged.yaml
           aws cloudformation deploy \
             --template-file packaged.yaml \
             --stack-name cloud-resume-infra \
+            --region ${{ env.AWS_REGION }} \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-            --parameter-overrides EnvironmentName=test \
-            --no-fail-on-empty-changeset
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              EnvironmentName=test \
+              OrgId=${{ secrets.ORG_ID }} \
+              DeployRolePattern=GitHubActionsDeployer \
+              TestDeployRoleArn=${{ secrets.AWS_ROLE_TEST }} \
+              ProdDeployRoleArn=${{ secrets.AWS_ROLE_PROD }}
+
 
   deploy-frontend-test:
     if: ${{ github.ref == 'refs/heads/main' }}
