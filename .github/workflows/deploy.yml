@@ -30,39 +30,37 @@ jobs:
           python-version: "3.11"
 
       - name: Build (ENG)
-        run: sam build --use-container --template-file "$TEMPLATE_PATH"
+        run: sam build --use-container
 
       # 1) Deploy first. --resolve-s3 lets SAM create/use a managed bucket
       - name: Deploy infra (ENG) with OrgId + role pattern
+        working-directory: resume-infra
         run: |
           sam deploy \
-            --template-file resume-infra/.aws-sam/build/template.yaml \
-            --stack-name cloud-resume-infra \
-            --region ${{ env.AWS_REGION }} \ 
-            --no-confirm-changeset \
+            --template-file .aws-sam/build/template.yaml \
+            --stack-name "$STACK_NAME" \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
-            --no-fail-on-empty-changeset \
             --parameter-overrides \
-              EnvironmentName=eng \
-              OrgId=${{ secrets.ORG_ID }} \
-              DeployRolePattern=GitHubActionsDeployer
+                EnvironmentName=eng \
+                OrgId=${{ secrets.ORG_ID }} \
+                DeployRolePattern=GitHubActionsDeployer \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --region "${{ env.AWS_REGION }}"
 
-      # 2) Only on main: now that the ENG stack exists, package the template
-      - name: Package SAM template by SHA (ENG, main only)
+
+      - name: Package & persist SAM artifact by SHA (ENG, main only)
         if: github.ref == 'refs/heads/main'
+        working-directory: resume-infra
         run: |
-          set -euo pipefail
           aws cloudformation package \
             --template-file .aws-sam/build/template.yaml \
-            --s3-bucket "${PROMO_BUCKET}" \
-            --s3-prefix "${APP_PREFIX}/${GITHUB_SHA}/lambda" \
+            --s3-bucket "$PROMO_BUCKET" \
+            --s3-prefix "$APP_PREFIX/$GITHUB_SHA/lambda" \
             --output-template-file packaged.yaml
 
-      # 3) Upload packaged.yaml for TEST/PROD to reuse
-      - name: Persist packaged.yaml for promotions (ENG, main only)
-        if: github.ref == 'refs/heads/main'
-        run: |
           aws s3 cp packaged.yaml "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/packaged.yaml"
+
 
   deploy-frontend-eng:
     needs: deploy-infra-eng
