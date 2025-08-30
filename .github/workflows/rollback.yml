@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  REGION: us-east-1
+  AWS_REGION: us-east-1
   STACK_NAME: cloud-resume-infra
   PROMO_BUCKET: cloud-resume-promo-central-515275665162
   APP_PREFIX: cloud-resume-infra
