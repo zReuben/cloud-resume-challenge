@@ -146,6 +146,7 @@ jobs:
           # NEW: no build/package in TEST — reuse ENG artifact
       - name: Fetch packaged.yaml for this SHA (from ENG bucket)
         run: |
+          aws s3 ls "s3://${PROMO_BUCKET}/${APP_PREFIX}/${{ github.sha }}/"
           aws s3 cp "s3://${PROMO_BUCKET}/${APP_PREFIX}/${{ github.sha }}/packaged.yaml" packaged.yaml
 
       - name: Deploy TEST infra from artifact (no rebuild)
