@@ -40,7 +40,6 @@ jobs:
         run: |
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
-            --stack-name cloud-resume-infra \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --parameter-overrides \
                 EnvironmentName=eng \
@@ -52,6 +51,7 @@ jobs:
                 ProdDeployRoleArn=${{ secrets.AWS_ROLE_ENG_PROD}}
             --no-confirm-changeset \
             --resolve-s3 \
+            --stack-name cloud-resume-infra \
             --no-fail-on-empty-changeset \
             --region "${{ env.AWS_REGION }}"
 
