@@ -40,6 +40,12 @@ Parameters:
   OrgId:
     Type: String
     Description: "AWS Organizations ID (e.g., o-abc123xyz)"
+  TestAccountId:
+    Type: String
+    Default: ""   # must be passed in at deploy
+  ProdAccountId:
+    Type: String
+    Default: ""
   DeployRolePattern:
     Type: String
     Default: "GitHubActionsDeployer"   # exact role name you use in each account
