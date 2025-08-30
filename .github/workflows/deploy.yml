@@ -38,7 +38,7 @@ jobs:
           sam deploy \
             --template-file resume-infra/.aws-sam/build/template.yaml \
             --stack-name cloud-resume-infra \
-            --region ${{ env.REGION }} \
+            --region ${{ env.AWS_REGION }} \ 
             --no-confirm-changeset \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --no-fail-on-empty-changeset \
@@ -157,7 +157,7 @@ jobs:
           aws cloudformation deploy \
             --template-file packaged.yaml \
             --stack-name cloud-resume-infra \
-            --region ${{ env.REGION }} \
+            --region ${{ env.AWS_REGION }} \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --no-fail-on-empty-changeset \
             --parameter-overrides \
