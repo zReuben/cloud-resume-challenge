@@ -160,6 +160,7 @@ jobs:
             --no-fail-on-empty-changeset \
             --parameter-overrides \
               EnvironmentName=test \
+              OrgId=${{ secrets.ORG_ID }} \
               DeployRolePattern=GitHubActionsDeployer \
               TestDeployRoleArn=${{ secrets.AWS_ROLE_TEST }} \
 
@@ -239,6 +240,7 @@ jobs:
             --no-fail-on-empty-changeset \
             --parameter-overrides \
               EnvironmentName=prod \
+              OrgId=${{ secrets.ORG_ID }} \
               DeployRolePattern=GitHubActionsDeployer \
               TestDeployRoleArn=${{ secrets.AWS_ROLE_PROD }} \
 
