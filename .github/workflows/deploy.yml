@@ -36,7 +36,6 @@ jobs:
 
       # 1) Deploy first. --resolve-s3 lets SAM create/use a managed bucket
       - name: Deploy infra (ENG) with OrgId + role pattern
-        if: github.ref != 'refs/heads/main'
         working-directory: resume-infra
         run: |
           sam deploy \
@@ -97,7 +96,6 @@ jobs:
             --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" --output text)" >> $GITHUB_OUTPUT
 
       - name: Sync site
-        if: github.ref != 'refs/heads/main'
         run: aws s3 sync resume-site/ s3://${{ steps.get_bucket.outputs.bucket }} --delete
 
       - name: Persist frontend bundle by SHA (ENG, main only)
@@ -106,7 +104,6 @@ jobs:
           aws s3 sync resume-site/ "s3://${PROMO_BUCKET}/${APP_PREFIX}/${GITHUB_SHA}/site/" --delete
 
       - name: Invalidate CF
-        if: github.ref != 'refs/heads/main'
         run: aws cloudfront create-invalidation --distribution-id ${{ steps.get_distribution.outputs.distribution_id }} --paths "/*"
 
       - name: Get CF domain
