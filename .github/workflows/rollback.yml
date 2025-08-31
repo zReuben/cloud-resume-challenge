@@ -45,7 +45,7 @@ jobs:
           echo "Using SHA: $MATCH"
           aws s3 cp "s3://${PROMO_BUCKET}/${APP_PREFIX}/${MATCH}/packaged.yaml" packaged.yaml
 
-      - name: Deploy selected artifact
+      - name: Deploy selected infra artifact (CloudFormation)
         run: |
           aws cloudformation deploy \
             --template-file packaged.yaml \
@@ -53,3 +53,37 @@ jobs:
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --parameter-overrides EnvironmentName=${{ github.event.inputs.environment }} \
             --no-fail-on-empty-changeset
+
+      - name: Locate hosting bucket & distribution (current env)
+        id: outputs
+        run: |
+          set -euo pipefail
+          BUCKET=$(aws cloudformation describe-stacks \
+            --stack-name "${STACK_NAME}" \
+            --query "Stacks[0].Outputs[?OutputKey=='LandingPage'].OutputValue" \
+            --output text)
+          DIST=$(aws cloudformation describe-stacks \
+            --stack-name "${STACK_NAME}" \
+            --query "Stacks[0].Outputs[?OutputKey=='CloudFrontDistributionId'].OutputValue" \
+            --output text)
+          echo "bucket=$BUCKET" >> $GITHUB_OUTPUT
+          echo "dist_id=$DIST"  >> $GITHUB_OUTPUT
+
+      - name: Restore frontend files for selected SHA (if present)
+        run: |
+          set -euo pipefail
+          SRC_PREFIX="s3://${PROMO_BUCKET}/${APP_PREFIX}/${MATCH}/site/"
+          # If the 'site/' snapshot exists, sync it back to the live hosting bucket
+          if aws s3 ls "$SRC_PREFIX" >/dev/null 2>&1; then
+            echo "Restoring frontend from $SRC_PREFIX"
+            aws s3 sync "$SRC_PREFIX" "s3://${{ steps.outputs.outputs.bucket }}" --delete
+          else
+            echo "No frontend snapshot found at $SRC_PREFIX; skipping site restore."
+          fi
+
+      - name: Invalidate CloudFront (make rollback visible)
+        if: ${{ steps.outputs.outputs.dist_id != '' }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ steps.outputs.outputs.dist_id }}" \
+            --paths "/*"
