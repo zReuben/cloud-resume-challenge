@@ -40,76 +40,120 @@
   </header>
 
   <main class="shell">
-    <section class="section card">
+    <section class="section card prose">
       <h3 class="kicker">Cloud Resume Challenge</h3>
-      <h2 class="headline" style="margin-top:.25rem;">How I built a full-stack, serverless, CI/CD-driven resume site on AWS</h2>
+      <h2>How I built a full-stack, serverless, CI/CD-driven resume site on AWS</h2>
 
-      <p class="intro">
+      <div class="keylinks">
+        <a class="link-chip" href="https://cloudresumechallenge.dev" target="_blank" rel="noopener">CloudResumeChallenge.dev</a>
+        <a class="link-chip" href="https://reubenmulholland.com" target="_blank" rel="noopener">Live Site</a>
+        <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
+      </div>
+
+      <p>
         The <a href="https://cloudresumechallenge.dev" target="_blank" rel="noopener">Cloud Resume Challenge</a> is a hands-on spec
-        for proving cloud fundamentals end-to-end. I implemented the baseline and extended it with production-style practices
-        like automated tests and a promotion pipeline.
+        for proving cloud fundamentals end-to-end. I implemented the baseline and then pushed it further with infrastructure-as-code,
+        automated testing, and a promotion pipeline.
       </p>
 
-      <p><em>[TEXT PLACEHOLDER: screenshot of live site/visitor counter]</em></p>
+      <figure class="figure">
+        <!-- [ADD IMAGE: hero screenshot showing the site + visitor counter] -->
+        <img src="PLACEHOLDER-hero.png" alt="Live site with visitor counter"/>
+        <figcaption>Live counter powered by API Gateway → Lambda (Python) → DynamoDB.</figcaption>
+      </figure>
 
-      <h4>Front End: Static Website</h4>
-      <ul class="metrics-list">
-        <li>HTML, CSS, and JavaScript served from <strong>S3</strong> and distributed via <strong>CloudFront</strong>.</li>
-        <li>HTTPS via <strong>ACM</strong> certificate; custom domain <code>reubenmulholland.com</code> on <strong>Route 53</strong>.</li>
-        <li>Landing page includes a live visitor counter calling the backend API.</li>
-      </ul>
-      <p><em>[TEXT PLACEHOLDER: snippet of <code>index.html</code> or <code>style.css</code>]</em></p>
+      <h2>Architecture at a glance</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Front end</h3>
+          <ul class="checklist">
+            <li>Static site (HTML/CSS/JS) in <strong>S3</strong>, distributed by <strong>CloudFront</strong>.</li>
+            <li>HTTPS via <strong>ACM</strong>; custom domain <code>reubenmulholland.com</code> on <strong>Route 53</strong>.</li>
+            <li>Visitor counter calls a backend API endpoint.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Back end</h3>
+          <ul class="checklist">
+            <li><strong>API Gateway</strong> REST endpoints for the counter.</li>
+            <li><strong>Lambda</strong> (Python + <code>boto3</code>) reads/writes <strong>DynamoDB</strong>.</li>
+            <li>IAM least-privilege and explicit <strong>CORS</strong> to the site domain.</li>
+          </ul>
+        </div>
+      </div>
 
-      <h4>Back End: Serverless API + Database</h4>
-      <ul class="metrics-list">
-        <li><strong>API Gateway</strong> REST endpoints.</li>
-        <li><strong>Lambda</strong> (Python + <code>boto3</code>) business logic.</li>
-        <li><strong>DynamoDB</strong> table for persistent visitor count.</li>
-        <li><strong>IAM</strong> least-privilege roles; explicit <strong>CORS</strong> for my domain.</li>
-      </ul>
-      <p><em>[TEXT PLACEHOLDER: snippet of Lambda Python handler]</em></p>
-      <p><em>[TEXT PLACEHOLDER: screenshot of DynamoDB table]</em></p>
+      <div class="callout">
+        <strong>Everything as code.</strong> The entire stack is defined in <strong>AWS SAM</strong> (CloudFormation) YAML—no console drifting.
+      </div>
 
-      <h4>Infrastructure as Code</h4>
-      <ul class="metrics-list">
-        <li>All resources defined with <strong>AWS SAM</strong> (CloudFormation under the hood).</li>
-        <li>Stacks create S3, CloudFront, API Gateway, Lambda, DynamoDB, Route 53 records.</li>
-        <li>MFA + <strong>AWS Vault</strong> for local role assumption; zero console drift.</li>
-      </ul>
-      <p><em>[TEXT PLACEHOLDER: snippet of <code>template.yaml</code> showing resources]</em></p>
+      <h2>Implementation details</h2>
 
-      <h4>CI/CD Pipeline</h4>
-      <ul class="metrics-list">
-        <li><strong>GitHub Actions</strong> automates build → test → deploy.</li>
-        <li>Tests: <strong>PyTest</strong> (unit), API integration checks, and JS <strong>E2E</strong> against the site.</li>
-        <li>Artifact packaged once; (optionally) promoted across environments with approvals/rollback.</li>
-      </ul>
-      <p><em>[TEXT PLACEHOLDER: screenshot of passing workflow run]</em></p>
-      <p><em>[TEXT PLACEHOLDER: snippet of <code>deploy.yml</code> stages]</em></p>
+      <h3>Static website</h3>
+      <p>
+        The site is a small, accessible HTML/CSS layout with a bit of JS to render the live count.
+        Assets are versioned and cached by CloudFront. Route 53 hosts DNS records for the apex and <code>www</code>.
+      </p>
+      <pre><code>[TEXT PLACEHOLDER: snippet from index.html or style.css]</code></pre>
 
-      <h4>Security</h4>
-      <ul class="metrics-list">
+      <h3>Serverless API + data</h3>
+      <p>
+        The API surface is intentionally tiny: <code>GET /visitor-count</code> (and related verbs). Lambda handlers use
+        <code>boto3</code> to update a DynamoDB item and return the count. IAM policies restrict access to that table only.
+      </p>
+      <pre><code>[TEXT PLACEHOLDER: concise Lambda handler with boto3 put/get + JSON response]</code></pre>
+
+      <figure class="figure">
+        <!-- [ADD IMAGE: DynamoDB table screenshot] -->
+        <img src="PLACEHOLDER-ddb.png" alt="DynamoDB visitor-count table"/>
+        <figcaption>DynamoDB on-demand table storing a single counter item.</figcaption>
+      </figure>
+
+      <h3>Infrastructure as Code (SAM/CloudFormation)</h3>
+      <p>
+        Resources—S3, CloudFront, API Gateway, Lambda, DynamoDB, Route 53—are declared in the SAM template.
+        Parameters/outputs keep the template reusable across environments.
+      </p>
+      <pre><code>[TEXT PLACEHOLDER: excerpt of template.yaml showing DynamoDB + Lambda + API resources]</code></pre>
+
+      <h3>CI/CD pipeline</h3>
+      <p>
+        GitHub Actions runs <em>build → test → deploy</em>. Unit tests (PyTest) cover Lambda logic; integration tests call the API;
+        E2E checks verify the counter on the live site. The pipeline packages SAM, uploads artifacts, then applies the stack.
+        I also experimented with build-once promotion through ENG → TEST → PROD with approvals and rollback.
+      </p>
+      <div class="grid-2">
+        <pre><code>[TEXT PLACEHOLDER: deploy.yml stages for build/test/deploy]</code></pre>
+        <figure class="figure">
+          <!-- [ADD IMAGE: screenshot of passing workflow run] -->
+          <img src="PLACEHOLDER-actions.png" alt="Passing GitHub Actions run"/>
+          <figcaption>CI/CD run: tests pass before the stack updates.</figcaption>
+        </figure>
+      </div>
+
+      <h3>Security</h3>
+      <ul class="checklist">
         <li>Hardened IAM and S3 policies; explicit CORS.</li>
-        <li>No long-lived keys — OIDC from GitHub to AWS; MFA on all accounts.</li>
-        <li>Secrets never committed; local work via <strong>AWS Vault</strong>.</li>
+        <li>No long-lived keys: GitHub → AWS via <strong>OIDC</strong>; MFA on all accounts.</li>
+        <li>Local auth via <strong>AWS Vault</strong>; nothing sensitive in source control.</li>
       </ul>
-      <p><em>[TEXT PLACEHOLDER: small diagram of OIDC trust (GitHub → AWS)]</em></p>
+      <pre><code>[TEXT PLACEHOLDER: mini diagram/description of OIDC trust GitHub → AWS STS → role]</code></pre>
 
-      <h4>What I Learned</h4>
-      <ul class="metrics-list">
-        <li>How DNS, certificates, CDNs, serverless APIs, and IaC fit together in practice.</li>
-        <li>Why tests + CI/CD are a force multiplier.</li>
-        <li>How multi-account (multi-environment) promotion improves safety and parity.</li>
+      <hr class="soft"/>
+
+      <h2>What I learned</h2>
+      <ul class="checklist">
+        <li>How DNS, certificates, CDNs, APIs, and IaC fit together in practice.</li>
+        <li>Tests + CI/CD create confidence (and make rollbacks trivial).</li>
+        <li>Why multi-account (multi-environment) promotion improves safety and parity.</li>
       </ul>
 
-      <h4>Links</h4>
-      <p class="pdf-actions">
+      <h2>Links</h2>
+      <p class="keylinks">
         <a class="link-chip" href="https://cloudresumechallenge.dev" target="_blank" rel="noopener">Cloud Resume Challenge</a>
         <a class="link-chip" href="https://reubenmulholland.com" target="_blank" rel="noopener">Live Site</a>
         <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
+        <a class="link-chip" href="blog.html">← Back to Blog</a>
       </p>
-
-      <p style="margin-top:1rem;"><a class="link-chip" href="blog.html">← Back to Blog</a></p>
     </section>
   </main>
 

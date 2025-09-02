@@ -253,3 +253,35 @@ body{
 .project-link .badge {
   text-decoration: none;   /* extra safety so pills never get underlined */
 }
+
+/* --- Blog article polish --- */
+.prose { max-width: 72ch; line-height: 1.7; font-size: 1.02rem; }
+.prose h2 { font-size: 1.6rem; margin: 1.6rem 0 .4rem; }
+.prose h3 { font-size: 1.25rem; margin: 1.2rem 0 .25rem; opacity: .95; }
+.prose p { margin: .7rem 0; }
+.prose a { color: #cbd5ff; text-decoration: underline; text-underline-offset: 3px; }
+.prose a:hover { color: #8ab4ff; }
+.prose code { background: rgba(255,255,255,.06); padding: .1rem .35rem; border-radius: .4rem; font-size: .92em; }
+.prose pre { background: rgba(255,255,255,.06); padding: 1rem; border-radius: .75rem; overflow:auto; }
+.callout {
+  border-left: 3px solid rgba(138,180,255,.6);
+  background: rgba(255,255,255,.04);
+  padding: .9rem 1rem; border-radius: .75rem; margin: 1rem 0;
+}
+.figure { margin: 1rem 0; }
+.figure img { width: 100%; border-radius: .75rem; display: block; }
+.figure figcaption { font-size: .9rem; opacity: .8; margin-top: .4rem; }
+
+.grid-2 { display: grid; gap: 1rem; }
+@media (min-width: 900px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+
+.checklist { margin: .6rem 0 1rem 0; padding-left: 0; list-style: none; }
+.checklist li { position: relative; padding-left: 1.6rem; margin: .35rem 0; }
+.checklist li::before {
+  content: "✔";
+  position: absolute; left: 0; top: 0; opacity: .75; font-size: .95rem;
+}
+.keylinks { display:flex; flex-wrap:wrap; gap:.5rem; margin:.5rem 0 1rem; }
+.keylinks .link-chip { padding:.45rem .7rem; }
+
+hr.soft { border:0; height:1px; background: rgba(255,255,255,.08); margin: 1.4rem 0; }
