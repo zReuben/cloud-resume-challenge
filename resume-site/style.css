@@ -241,3 +241,15 @@ body{
   color: #8ab4ff;                 /* brighter on hover/focus */
   text-decoration: underline;
 }
+
+/* Remove underlines from project tags */
+.projects a,
+.projects a:visited {
+  text-decoration: none;
+  color: inherit;       /* keep text color consistent */
+}
+
+.projects a:hover {
+  text-decoration: none;
+  color: #8ab4ff;       /* optional: change color on hover */
+}
