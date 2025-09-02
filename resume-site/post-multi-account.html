@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Multi-Account + CI/CD Promotion Pipeline</title>
-  <meta name="description" content="ENG→TEST→PROD promotion using a single artifact, approvals, OIDC to AWS, and SSM-driven config."/>
+  <meta name="description" content="ENG→TEST→PROD promotion using a single immutable artifact, environment approvals, OIDC to AWS, SSM-driven config, and one-minute targeted rollbacks."/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css"/>
 </head>
@@ -13,38 +13,104 @@
 
   <header class="shell">
     <nav class="topnav" aria-label="Primary">
-      <a href="index.html" class="home-link" title="Home">
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M12 3.172 3 10v10a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10l-9-6.828zM12 1l11 8v11a3 3 0 0 1-3 3h-7v-6H11v6H4a3 3 0 0 1-3-3V9L12 1z"/></svg>
-        <span>Home</span><em class="pill">API demo</em>
-      </a>
-      <a href="resume.html"><svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7h5l-5-5v5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg><span>View Resume</span></a>
-      <a href="blog.html"><svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M6 2h11a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h1V4H6zm3 0v16h8V4H9zm2 3h4v2h-4V7zm0 4h4v2h-4v-2zm0 4h3v2h-3v-2z"/></svg><span>Read Blogs</span></a>
-      <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M20.45 20.45h-3.57v-5.6c0-1.34-.02-3.06-1.87-3.06-1.88 0-2.17 1.47-2.17 2.97v5.69H9.28V9.5h3.42v1.49h.05c.48-.9 1.66-1.85 3.42-1.85 3.66 0 4.34 2.41 4.34 5.55v5.76zM5.34 8.01a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9.5h3.56v10.95z"/></svg><span>LinkedIn</span></a>
-      <a href="https://github.com/zReuben" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.11.79-.25.79-.55v-2.06c-3.19.7-3.86-1.37-3.86-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.26 3.39.96.11-.76.41-1.26.74-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.4 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.26 5.7.42.37.8 1.1.8 2.23v3.3c0 .3.21.67.8.55A11.5 11.5 0 0 0 12 .5z"/></svg><span>GitHub</span></a>
+      <a href="index.html" class="home-link"><span>Home</span></a>
+      <a href="resume.html"><span>View Resume</span></a>
+      <a href="blog.html"><span>Read Blogs</span></a>
+      <a href="https://www.linkedin.com/in/reuben-mulholland/" target="_blank" rel="noopener"><span>LinkedIn</span></a>
+      <a href="https://github.com/zReuben" target="_blank" rel="noopener"><span>GitHub</span></a>
     </nav>
   </header>
 
   <main class="shell">
-    <section class="section">
+    <section class="section card">
       <h3 class="kicker">Multi-Account + CI/CD Promotion Pipeline</h3>
+      <h2>Build once, promote safely across ENG → TEST → PROD</h2>
+
       <p>
-        Extended the build into a <strong>multi-account</strong> AWS setup (<em>mgmt / eng / test / prod</em>) under
-        <strong>AWS Organizations</strong>, with role assumption via AWS Vault and <strong>MFA</strong>.
-        CI/CD runs in <strong>GitHub Actions</strong> (OIDC, no long-lived keys). The pipeline <strong>builds once</strong>
-        (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> through environments with
-        approvals. Config is centralized in <strong>SSM Parameter Store</strong> (AWS <strong>Systems Manager</strong>) to keep
-        parameters consistent across stages. Supporting glue handled via lightweight <strong>shell scripts</strong>.
+        This post covers how I extended the <a class="softlink" href="post-crc.html">Cloud Resume Challenge</a> into a
+        <strong>multi-account (multi-environment)</strong> AWS setup with immutable artifacts, SSM-driven configuration,
+        approvals at every stage, and one-minute targeted rollbacks.
       </p>
-      <p class="note">
-        This mirrors common SaaS multi-account setups: <strong>ENG</strong> for rapid iteration,
-        <strong>TEST</strong> as controlled pre-prod with human approvals and integration checks,
-        and <strong>PROD</strong> gated by promotion of the exact, immutable artifact.
+
+      <figure class="figure">
+        <!-- [ADD IMAGE: diagram of ENG→TEST→PROD with single artifact + approvals] -->
+        <img src="PLACEHOLDER-promo-arch.png" alt="Promotion pipeline architecture diagram"/>
+        <figcaption>ENG build → TEST gate → PROD promotion using the same artifact.</figcaption>
+      </figure>
+
+      <h2>Migration & setup</h2>
+      <ul class="checklist">
+        <li>Migrated from single IAM user in <code>reuben-root</code> to AWS Organizations with <strong>mgmt</strong>, <strong>eng</strong>, <strong>test</strong>, <strong>prod</strong>.</li>
+        <li><strong>MFA + AWS Vault</strong> secure all accounts; no long-lived keys.</li>
+        <li>Shell scripts (e.g., <code>assume-eng.sh</code>) streamline role assumption:
+          <pre><code>source assume-eng.sh && make deploy-infra</code></pre>
+        </li>
+      </ul>
+
+      <h2>Pipeline design</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Build workflow</h3>
+          <ul class="checklist">
+            <li>Triggered on PRs + pushes to <code>main</code>.</li>
+            <li>Runs unit + integration tests (no AWS access yet).</li>
+            <li>Packages artifacts (<code>packaged.yaml</code>, frontend bundle) into a promotion bucket.</li>
+            <li>No role assumption or OIDC needed here.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Deploy workflow</h3>
+          <ul class="checklist">
+            <li>Triggered only if build succeeds.</li>
+            <li>Deploys the <strong>same artifact</strong> to <strong>eng → test → prod</strong>.</li>
+            <li><strong>Approvals</strong> required for TEST and PROD stages.</li>
+            <li>Config resolved via <strong>SSM Parameter Store</strong> + stack outputs.</li>
+          </ul>
+        </div>
+      </div>
+
+      <pre><code>[TEXT PLACEHOLDER: snippet from deploy.yml showing ENG build → TEST approval → PROD approval]</code></pre>
+
+      <figure class="figure">
+        <!-- [ADD IMAGE: screenshot of GitHub Actions workflow run] -->
+        <img src="PLACEHOLDER-actions-promo.png" alt="GitHub Actions multi-env pipeline run"/>
+        <figcaption>GitHub Actions: ENG build → TEST deploy with approval → PROD deploy with approval.</figcaption>
+      </figure>
+
+      <h2>Rollback</h2>
+      <p>
+        Rollbacks are targeted by <strong>environment</strong> and <strong>commit SHA</strong>. I specify env (eng/test/prod)
+        and a short/long SHA; the workflow redeploys that artifact, optionally restores the site snapshot, and invalidates
+        CloudFront. The whole process takes about <strong>one minute</strong>.
       </p>
-      <p><a class="link-chip" href="blog.html">← Back to Blog</a></p>
+
+      <pre><code>[TEXT PLACEHOLDER: excerpt from rollback.yml showing env+sha inputs → CF deploy → optional site restore]</code></pre>
+
+      <h2>Operational notes</h2>
+      <ul class="checklist">
+        <li><strong>Loop time:</strong> full ENG → PROD pipeline runs in ~10–15 minutes, often under 10.</li>
+        <li><strong>Safety:</strong> TEST acts as a pre-prod dress rehearsal—clean account, manual review, catch surprises.</li>
+        <li><strong>SEO & DNS:</strong> CloudFront redirect consolidates <code>www</code> traffic into root domain for ranking + consistency.</li>
+        <li><strong>Security:</strong> IAM scoped to least privilege, Vault-managed secrets, GitHub OIDC trust (no static creds).</li>
+      </ul>
+
+      <h2>What I learned</h2>
+      <ul class="checklist">
+        <li>Why splitting <strong>build vs deploy workflows</strong> clarifies promotion and improves control.</li>
+        <li>How shell scripts + Vault simplify secure role assumption across multiple AWS accounts.</li>
+        <li>That <strong>immutable artifacts</strong> + approvals give confidence and reproducibility.</li>
+        <li>Targeted rollbacks reduce mean time to recovery from hours to minutes.</li>
+      </ul>
+
+      <p class="keylinks">
+        <a class="link-chip" href="blog.html">← Back to Blog</a>
+      </p>
     </section>
   </main>
 
-  <footer class="shell footer"><p>&copy; <span id="y"></span> Reuben Mulholland</p></footer>
+  <footer class="shell footer">
+    <p>&copy; <span id="y"></span> Reuben Mulholland</p>
+  </footer>
   <script>document.getElementById('y').textContent=new Date().getFullYear();</script>
 </body>
 </html>
