@@ -193,6 +193,15 @@ body{
 .about-facts{ margin: 0; padding-left: 1.1rem; line-height: 1.55; }
 .about-facts li{ margin: .16rem 0; }
 
+.about a {
+  color: #ddd; /* muted gray like your nav text */
+  text-decoration: underline dotted; /* optional subtle underline */
+}
+.about a:hover {
+  color: #4ea1f3; /* LinkedIn-like blue */
+  text-decoration: underline;
+}
+
 /* nav icon + pill styling */
 .topnav { gap: 10px; }
 .topnav a { display: inline-flex; align-items: center; gap: 8px; }
@@ -216,47 +225,6 @@ body{
 }
 .topnav .home-link .pill--subtle {
   margin-left: .5rem;
-}
-
-
-/* Metrics bubble */
-/* spacing above/below the Impact & Metrics row */
-.cards.metrics-row { 
-  margin: 36px 0 18px;   /* more air above; a little space below */
-}
-
-/* 2×2 metrics layout (collapses to 1 col on small screens) */
-.metrics-grid {
-  display: grid;
-  grid-template-columns: 1fr;   /* mobile */
-  gap: 14px;
-}
-@media (min-width: 640px) {
-  .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-/* metric “pill” — same tone as other cards/pills */
-.metric {
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.035);
-  padding: 12px 14px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;      /* number and label on one line */
-  gap: 10px;
-}
-
-/* number is bold but not oversized */
-.metric .num {
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.2;
-}
-
-/* label same size as number for a single-line look */
-.metric .label {
-  font-size: 1rem;
-  opacity: 0.95;
 }
 
 /* make card header spacing consistent with other cards */
