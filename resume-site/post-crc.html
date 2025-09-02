@@ -51,9 +51,9 @@
       </div>
 
       <p>
-        The <a href="https://cloudresumechallenge.dev" target="_blank" rel="noopener">Cloud Resume Challenge</a> is a hands-on spec
-        for proving cloud fundamentals end-to-end. I implemented the baseline and then pushed it further with infrastructure-as-code,
-        automated testing, and a promotion pipeline.
+        The <a class="softlink" href="https://cloudresumechallenge.dev" target="_blank" rel="noopener" class="softlink">Cloud Resume Challenge</a> 
+        is a hands-on spec for proving cloud fundamentals end-to-end. I implemented it as a **full-stack build**: 
+        a static frontend, a RESTful API backend, and a database—defined with Infrastructure as Code and deployed via CI/CD pipelines.
       </p>
 
       <figure class="figure">
@@ -67,84 +67,91 @@
         <div>
           <h3>Front end</h3>
           <ul class="checklist">
-            <li>Static site (HTML/CSS/JS) in <strong>S3</strong>, distributed by <strong>CloudFront</strong>.</li>
-            <li>HTTPS via <strong>ACM</strong>; custom domain <code>reubenmulholland.com</code> on <strong>Route 53</strong>.</li>
-            <li>Visitor counter calls a backend API endpoint.</li>
+            <li>Static site (HTML/CSS/JS) hosted in <strong>S3</strong>, distributed via <strong>CloudFront</strong>.</li>
+            <li>HTTPS with <strong>ACM</strong>; custom domain <code>reubenmulholland.com</code> on <strong>Route 53</strong>.</li>
+            <li>Redirects from <code>www → apex</code> for SEO, consistent SSL, and simpler CORS rules.</li>
+            <li>Visitor counter displayed dynamically with JavaScript calling the API.</li>
           </ul>
         </div>
         <div>
-          <h3>Back end</h3>
+          <h3>Back end (RESTful API)</h3>
           <ul class="checklist">
-            <li><strong>API Gateway</strong> REST endpoints for the counter.</li>
-            <li><strong>Lambda</strong> (Python + <code>boto3</code>) reads/writes <strong>DynamoDB</strong>.</li>
-            <li>IAM least-privilege and explicit <strong>CORS</strong> to the site domain.</li>
+            <li><strong>API Gateway</strong> exposes RESTful endpoints (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>).</li>
+            <li><strong>Lambda</strong> (Python + <code>boto3</code>) implements handlers and returns JSON responses with proper HTTP codes.</li>
+            <li><strong>DynamoDB</strong> table persists the count (on-demand capacity, no over-provisioning).</li>
+            <li><strong>CORS</strong> scoped only to my domain; IAM least-privilege enforced.</li>
           </ul>
         </div>
       </div>
 
       <div class="callout">
-        <strong>Everything as code.</strong> The entire stack is defined in <strong>AWS SAM</strong> (CloudFormation) YAML—no console drifting.
+        <strong>Everything as code.</strong> All infrastructure is declared in <strong>AWS SAM</strong> (CloudFormation) YAML templates. 
+        No console clicks—reproducible builds only.
       </div>
 
       <h2>Implementation details</h2>
 
       <h3>Static website</h3>
       <p>
-        The site is a small, accessible HTML/CSS layout with a bit of JS to render the live count.
-        Assets are versioned and cached by CloudFront. Route 53 hosts DNS records for the apex and <code>www</code>.
+        Built as a clean HTML/CSS layout with lightweight JS for the counter. CloudFront handles caching; versioned JS avoids stale browser caches.
       </p>
-      <pre><code>[TEXT PLACEHOLDER: snippet from index.html or style.css]</code></pre>
+      <pre><code>[TEXT PLACEHOLDER: short excerpt from index.html or style.css]</code></pre>
 
       <h3>Serverless API + data</h3>
       <p>
-        The API surface is intentionally tiny: <code>GET /visitor-count</code> (and related verbs). Lambda handlers use
-        <code>boto3</code> to update a DynamoDB item and return the count. IAM policies restrict access to that table only.
+        The API is RESTful and resource-oriented. Lambda handlers are single-purpose functions 
+        (better than monolithic design for long-term maintainability), using <code>boto3</code> for DynamoDB reads/writes.
       </p>
-      <pre><code>[TEXT PLACEHOLDER: concise Lambda handler with boto3 put/get + JSON response]</code></pre>
+      <pre><code>[TEXT PLACEHOLDER: concise Lambda handler showing GET/POST or PUT]</code></pre>
 
       <figure class="figure">
         <!-- [ADD IMAGE: DynamoDB table screenshot] -->
         <img src="PLACEHOLDER-ddb.png" alt="DynamoDB visitor-count table"/>
-        <figcaption>DynamoDB on-demand table storing a single counter item.</figcaption>
+        <figcaption>DynamoDB on-demand table storing the counter.</figcaption>
       </figure>
 
-      <h3>Infrastructure as Code (SAM/CloudFormation)</h3>
-      <p>
-        Resources—S3, CloudFront, API Gateway, Lambda, DynamoDB, Route 53—are declared in the SAM template.
-        Parameters/outputs keep the template reusable across environments.
-      </p>
-      <pre><code>[TEXT PLACEHOLDER: excerpt of template.yaml showing DynamoDB + Lambda + API resources]</code></pre>
+      <h3>Infrastructure as Code</h3>
+      <ul class="checklist">
+        <li>Stacks defined in <code>template.yaml</code> using AWS SAM.</li>
+        <li>No hardcoded S3 buckets/DynamoDB names → portable across environments.</li>
+        <li>Separate folders for frontend, serverless infra, and certificates in ACM.</li>
+        <li>Deployed exclusively in <strong>us-east-1</strong> for ACM/CloudFront compatibility.</li>
+      </ul>
+      <pre><code>[TEXT PLACEHOLDER: excerpt of template.yaml for API + DynamoDB]</code></pre>
 
       <h3>CI/CD pipeline</h3>
       <p>
-        GitHub Actions runs <em>build → test → deploy</em>. Unit tests (PyTest) cover Lambda logic; integration tests call the API;
-        E2E checks verify the counter on the live site. The pipeline packages SAM, uploads artifacts, then applies the stack.
-        I also experimented with build-once promotion through ENG → TEST → PROD with approvals and rollback.
+        <strong>GitHub Actions</strong> runs <em>build → test → deploy</em>. 
+        Unit tests (PyTest) validate Lambda logic, integration tests hit the API directly, and E2E tests confirm 
+        the visitor counter works live. Local <code>venv</code> setup mirrors GitHub’s clean environment for parity.
       </p>
       <div class="grid-2">
         <pre><code>[TEXT PLACEHOLDER: deploy.yml stages for build/test/deploy]</code></pre>
         <figure class="figure">
           <!-- [ADD IMAGE: screenshot of passing workflow run] -->
           <img src="PLACEHOLDER-actions.png" alt="Passing GitHub Actions run"/>
-          <figcaption>CI/CD run: tests pass before the stack updates.</figcaption>
+          <figcaption>CI/CD run: all tests pass before deployment.</figcaption>
         </figure>
       </div>
 
-      <h3>Security</h3>
+      <h3>Security & practices</h3>
       <ul class="checklist">
-        <li>Hardened IAM and S3 policies; explicit CORS.</li>
-        <li>No long-lived keys: GitHub → AWS via <strong>OIDC</strong>; MFA on all accounts.</li>
-        <li>Local auth via <strong>AWS Vault</strong>; nothing sensitive in source control.</li>
+        <li>MFA on all accounts; local role assumption via <strong>AWS Vault</strong>.</li>
+        <li>Secrets isolated per environment; nothing in source control.</li>
+        <li>Hardened IAM, scoped S3 policies, explicit CORS rules.</li>
+        <li>GitHub → AWS uses OIDC (no long-lived keys).</li>
+        <li>.gitignore prevents credential leaks; repo licensed under MIT.</li>
       </ul>
-      <pre><code>[TEXT PLACEHOLDER: mini diagram/description of OIDC trust GitHub → AWS STS → role]</code></pre>
 
       <hr class="soft"/>
 
       <h2>What I learned</h2>
       <ul class="checklist">
-        <li>How DNS, certificates, CDNs, APIs, and IaC fit together in practice.</li>
-        <li>Tests + CI/CD create confidence (and make rollbacks trivial).</li>
-        <li>Why multi-account (multi-environment) promotion improves safety and parity.</li>
+        <li>How the **full stack** fits together: frontend, RESTful API, database, IaC, CI/CD.</li>
+        <li>Best practices: single-purpose Lambdas, IaC without hardcoded resources, versioned JS for caching.</li>
+        <li>How DNS, ACM, and CloudFront integrate to deliver a production-grade site.</li>
+        <li>Running PyTest locally with virtualenv for parity with CI/CD pipelines.</li>
+        <li>Even small apps benefit from automation, least privilege, and reproducibility.</li>
       </ul>
 
       <h2>Links</h2>
@@ -156,6 +163,7 @@
       </p>
     </section>
   </main>
+
 
   <footer class="shell footer">
     <p>&copy; <span id="y"></span> Reuben Mulholland</p>
