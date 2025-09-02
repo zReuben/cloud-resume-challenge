@@ -193,15 +193,6 @@ body{
 .about-facts{ margin: 0; padding-left: 1.1rem; line-height: 1.55; }
 .about-facts li{ margin: .16rem 0; }
 
-.about a {
-  color: #ddd; /* muted gray like your nav text */
-  text-decoration: underline dotted; /* optional subtle underline */
-}
-.about a:hover {
-  color: #4ea1f3; /* LinkedIn-like blue */
-  text-decoration: underline;
-}
-
 /* nav icon + pill styling */
 .topnav { gap: 10px; }
 .topnav a { display: inline-flex; align-items: center; gap: 8px; }
@@ -237,4 +228,16 @@ body{
   color: var(--text);
   font-weight: 700;
   letter-spacing: .01em;
+}
+
+/* Subtle, readable links for dark cards */
+.softlink {
+  color: #cbd5ff;                 /* light indigo for contrast */
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+}
+.softlink:hover,
+.softlink:focus {
+  color: #8ab4ff;                 /* brighter on hover/focus */
+  text-decoration: underline;
 }
