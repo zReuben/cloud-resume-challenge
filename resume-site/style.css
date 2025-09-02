@@ -242,14 +242,14 @@ body{
   text-decoration: underline;
 }
 
-/* Remove underlines from project tags */
-.projects a,
-.projects a:visited {
-  text-decoration: none;
-  color: inherit;       /* keep text color consistent */
+.project-link {
+  text-decoration: none;   /* kill underlines inside card links */
+  color: inherit;          /* use normal text color */
+  display: block;          /* ensures the link fills the card */
 }
-
-.projects a:hover {
+.project-link:hover {
   text-decoration: none;
-  color: #8ab4ff;       /* optional: change color on hover */
+}
+.project-link .badge {
+  text-decoration: none;   /* extra safety so pills never get underlined */
 }
