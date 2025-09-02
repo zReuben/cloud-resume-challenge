@@ -28,8 +28,17 @@
     <section class="section">
       <h3 class="kicker">Multi-Account + CI/CD Promotion Pipeline</h3>
       <p>
-        Built an <strong>ENG → TEST → PROD</strong> flow that <strong>builds once</strong> and promotes the same artifact with manual approvals.
-        Uses <strong>OIDC</strong> (no long-lived keys), centralizes config in <strong>SSM</strong>, and keeps everything <strong>IaC</strong> to avoid console drift.
+        Extended the build into a <strong>multi-account</strong> AWS setup (<em>mgmt / eng / test / prod</em>) under
+        <strong>AWS Organizations</strong>, with role assumption via AWS Vault and <strong>MFA</strong>.
+        CI/CD runs in <strong>GitHub Actions</strong> (OIDC, no long-lived keys). The pipeline <strong>builds once</strong>
+        (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> through environments with
+        approvals. Config is centralized in <strong>SSM Parameter Store</strong> (AWS <strong>Systems Manager</strong>) to keep
+        parameters consistent across stages. Supporting glue handled via lightweight <strong>shell scripts</strong>.
+      </p>
+      <p class="note">
+        This mirrors common SaaS multi-account setups: <strong>ENG</strong> for rapid iteration,
+        <strong>TEST</strong> as controlled pre-prod with human approvals and integration checks,
+        and <strong>PROD</strong> gated by promotion of the exact, immutable artifact.
       </p>
       <p><a class="link-chip" href="blog.html">← Back to Blog</a></p>
     </section>

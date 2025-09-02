@@ -80,13 +80,19 @@
     <section class="section">
       <h3 class="kicker">About Me</h3>
       <p>
-        I earned the AWS Certified Solutions Architect – Associate before building this site so I had a solid baseline in AWS. The first phase was the Cloud Resume Challenge: CloudFront + S3 with HTTPS, a visitor counter API (API Gateway → Lambda/Python with boto3 → DynamoDB), and all infrastructure defined in SAM/CloudFormation. Every change is validated with unit, integration, and end-to-end tests in GitHub Actions, so nothing ships untested.
+        I’m an AWS-certified cloud builder with a background spanning engineering and product leadership. 
+        My work blends <strong>hands-on technical execution</strong>—IaC, CI/CD pipelines, serverless APIs, 
+        multi-account AWS architectures—with <strong>product ownership experience</strong> leading agile teams in 
+        cybersecurity and aerospace.
       </p>
       <p>
-        I then extended it into a multi-account architecture (mgmt, eng, test, prod) under AWS Organizations with OIDC-based CI/CD. The pipeline builds once and promotes the same artifact through environments with approvals—no console drift, short idea-to-deploy loops, and fast rollback to the last known good. It mirrors how cloud-native teams ship safely.
+        Recent projects include the <strong>Cloud Resume Challenge</strong> and a 
+        <strong>multi-account CI/CD promotion pipeline</strong>, where I implemented artifact-based rollouts, OIDC GitHub 
+        Actions, and fast rollback mechanisms across ENG → TEST → PROD. 
       </p>
       <p>
-        My background spans an M.S. in Computer Engineering from Stony Brook University with an Advanced Certification in Networking & Wireless Communications; Applications Engineer at Data Device Corporation; Product Owner at Owl Cyber Defense (agile, cybersecurity); and Product Line Manager at Power Device Corporation. I’m now channeling that mix of technical depth and product leadership into cloud engineering, DevOps, and solutions architecture.
+        I bring a mix of <strong>cloud engineering depth</strong> and <strong>product management perspective</strong>—enabling 
+        me to design systems that are not only robust and secure, but also aligned to business goals.
       </p>
     </section>
 
@@ -97,18 +103,11 @@
       <div class="cards">
         <!-- Cloud Resume Challenge -->
         <article class="card">
-          <h4>Cloud Resume Challenge</h4>
-          <p>
-            Built a static website (HTML/CSS/JS) on CloudFront + S3 (HTTPS via ACM) with a visitor counter backed by a
-            RESTful API (API Gateway → Lambda in <strong>Python</strong> using <strong>boto3</strong> → DynamoDB <strong>database</strong>).
-            Custom <strong>DNS</strong> is managed in Route 53. All infrastructure is defined as <strong>IaC</strong> with
-            SAM/CloudFormation (<strong>YAML</strong> templates). 
-          </p>
-          <p>
-            As part of the challenge, I added full test coverage with <strong>unit</strong>, <strong>integration</strong>, and 
-            <strong>end-to-end</strong> tests in <strong>GitHub Actions</strong> (PyTest for Lambda, plus JavaScript E2E).
-            That experience gave me my first exposure to validating infrastructure and application behavior in an automated pipeline.
-          </p>
+          <h4>
+            <a href="post-crc.html" class="project-link"> 
+              Cloud Resume Challenge
+            </a>
+          </h4>
           <div class="badges">
             <span class="badge">HTML</span><span class="badge">CSS</span><span class="badge">JavaScript</span>
             <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">DNS</span>
@@ -123,20 +122,11 @@
 
         <!-- Multi-Account + CI/CD -->
         <article class="card">
-          <h4>Multi-Account + CI/CD Promotion</h4>
-          <p>
-            Extended the build into a <strong>multi-account</strong> AWS setup (<em>mgmt / eng / test / prod</em>) under
-            <strong>AWS Organizations</strong>, with role assumption via AWS Vault and <strong>MFA</strong>.
-            CI/CD runs in <strong>GitHub Actions</strong> (OIDC, no long-lived keys). The pipeline <strong>builds once</strong>
-            (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> through environments with
-            approvals. Config is centralized in <strong>SSM Parameter Store</strong> (AWS <strong>Systems Manager</strong>) to keep
-            parameters consistent across stages. Supporting glue handled via lightweight <strong>shell scripts</strong>.
-          </p>
-          <p class="note">
-            This mirrors common SaaS multi-account setups: <strong>ENG</strong> for rapid iteration,
-            <strong>TEST</strong> as controlled pre-prod with human approvals and integration checks,
-            and <strong>PROD</strong> gated by promotion of the exact, immutable artifact.
-          </p>
+          <h4>
+            <a href="post-multi-account.html" class="project-link"> 
+              Multi-Account + CI/CD Promotoin
+            </a>
+          </h4>
           <div class="badges">
             <span class="badge">AWS Organizations</span><span class="badge">MFA</span>
             <span class="badge">GitHub Actions</span><span class="badge">OIDC</span>

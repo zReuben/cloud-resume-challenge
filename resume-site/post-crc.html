@@ -28,11 +28,15 @@
     <section class="section">
       <h3 class="kicker">Cloud Resume Challenge — Deep Dive</h3>
       <p>
-        Static site on <strong>CloudFront/S3</strong> (HTTPS), visitor counter via
-        <strong>API Gateway → Lambda (Python/boto3) → DynamoDB</strong>, all defined in <strong>SAM/CloudFormation</strong>.
+        Built a static website (HTML/CSS/JS) on CloudFront + S3 (HTTPS via ACM) with a visitor counter backed by a
+        RESTful API (API Gateway → Lambda in <strong>Python</strong> using <strong>boto3</strong> → DynamoDB <strong>database</strong>).
+        Custom <strong>DNS</strong> is managed in Route 53. All infrastructure is defined as <strong>IaC</strong> with
+        SAM/CloudFormation (<strong>YAML</strong> templates). 
       </p>
       <p>
-        Frontend calls a small API; the backend updates and returns the count. Deployed via GitHub Actions with unit/integration/E2E checks.
+        As part of the challenge, I added full test coverage with <strong>unit</strong>, <strong>integration</strong>, and 
+        <strong>end-to-end</strong> tests in <strong>GitHub Actions</strong> (PyTest for Lambda, plus JavaScript E2E).
+        That experience gave me my first exposure to validating infrastructure and application behavior in an automated pipeline.
       </p>
       <p><a class="link-chip" href="blog.html">← Back to Blog</a></p>
     </section>
