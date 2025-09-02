@@ -210,6 +210,14 @@ body{
   color: #cfe2ff;
   letter-spacing: .02em;
 }
+.pill--subtle {
+  opacity: .85;
+  font-weight: 600;
+}
+.topnav .home-link .pill--subtle {
+  margin-left: .5rem;
+}
+
 
 /* Metrics bubble */
 /* spacing above/below the Impact & Metrics row */

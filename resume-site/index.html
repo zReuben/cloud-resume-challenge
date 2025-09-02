@@ -34,16 +34,19 @@
           <span class="roles-looking">Bridging technical execution with product leadership</span>
         </p>
         <p class="visitors">Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
+        <p class="muted" style="margin-top:.2rem;font-size:.9rem;opacity:.75;">
+          Live count via API Gateway → Lambda (Python) → DynamoDB
+        </p>
       </div>
     </div>
 
     <nav aria-label="Primary" class="topnav">
-      <a href="index.html" class="home-link" title="Reloads index.html and increments the visitor counter">
-        <!-- Home icon (simple house) -->
+      <a href="index.html" class="home-link" title="Home • Live API proof: the visitor counter updates via API Gateway → Lambda → DynamoDB">
         <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn">
           <path d="M12 3.172 3 10v10a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10l-9-6.828zM12 1l11 8v11a3 3 0 0 1-3 3h-7v-6H11v6H4a3 3 0 0 1-3-3V9L12 1z"/>
         </svg>
-        <span>Home</span><em class="pill">API demo</em>
+        <span>Home</span>
+        <em class="pill pill--subtle" aria-label="Live API: visitor counter updates through API Gateway → Lambda → DynamoDB">Live API</em>
       </a>
       <a href="resume.html">
         <!-- Document icon -->
@@ -80,19 +83,7 @@
     <section class="section">
       <h3 class="kicker">About Me</h3>
       <p>
-        I’m an AWS-certified cloud builder with a background spanning engineering and product leadership. 
-        My work blends <strong>hands-on technical execution</strong>—IaC, CI/CD pipelines, serverless APIs, 
-        multi-account AWS architectures—with <strong>product ownership experience</strong> leading agile teams in 
-        cybersecurity and aerospace.
-      </p>
-      <p>
-        Recent projects include the <strong>Cloud Resume Challenge</strong> and a 
-        <strong>multi-account CI/CD promotion pipeline</strong>, where I implemented artifact-based rollouts, OIDC GitHub 
-        Actions, and fast rollback mechanisms across ENG → TEST → PROD. 
-      </p>
-      <p>
-        I bring a mix of <strong>cloud engineering depth</strong> and <strong>product management perspective</strong>—enabling 
-        me to design systems that are not only robust and secure, but also aligned to business goals.
+        AWS-certified cloud builder with a background in engineering and product leadership. Experienced in IaC, CI/CD pipelines, and multi-account AWS architectures. Blend hands-on execution with product ownership, ensuring systems are robust, secure, and aligned to business goals.
       </p>
     </section>
 
@@ -110,7 +101,7 @@
               <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">DNS</span>
               <span class="badge">Route 53</span><span class="badge">ACM</span>
               <span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">Python</span>
-              <span class="badge">boto3</span><span class="badge">DynamoDB</span><span class="badge">Database</span>
+              <span class="badge">boto3</span><span class="badge">DynamoDB Database</span>
               <span class="badge">SAM</span><span class="badge">CloudFormation</span><span class="badge">YAML</span>
               <span class="badge">PyTest</span><span class="badge">Unit Tests</span>
               <span class="badge">Integration Tests</span><span class="badge">E2E Tests</span>
@@ -124,19 +115,19 @@
             <h4>Multi-Account + CI/CD Promotion</h4>
             <div class="badges">
               <span class="badge">AWS Organizations</span><span class="badge">MFA</span>
-              <span class="badge">GitHub Actions</span><span class="badge">Same artifact pomoted ENG → TEST → PROD</span>
+              <span class="badge">GitHub Actions</span><span class="badge">Immutable Artifact Promotion</span>
               <span class="badge">Environments</span><span class="badge">Approvals</span>
               <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
               <span class="badge">SSM Parameter Store</span><span class="badge">Systems Manager</span>
               <span class="badge">IaC</span><span class="badge">YAML</span>
-              <span class="badge">Shell Scripts</span><span class="badge">10-15 min deploy loop via CI/CD</span>
-              <span class="badge">0 long-lived AWS keys (OIDC only)</span><span class="badge">10-15 min idea -> deploy loop via CI/CD</span>
+              <span class="badge">Shell Scripts</span><span class="badge">10-15 min Deploy Loop</span>
+              <span class="badge">0 long-lived AWS keys</span><span class="badge">OIDC</span>
             </div>
           </article>
         </a>
       </div>
 
-      <h4 class="subkicker">Currently Learning</h4>
+      <h4 class="subkicker">Up Next</h4>
       <div class="cards">
         <article class="card">
           <h4>Observability & Access</h4>
