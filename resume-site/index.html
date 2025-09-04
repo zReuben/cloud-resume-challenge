@@ -24,16 +24,22 @@
   <div id="spotlight" aria-hidden="true"></div>
 
   <header class="shell">
-    <div class="intro">
+    <div class="intro top-right">
       <img src="profile.jpg" alt="Reuben Mulholland" class="avatar" />
       <div>
         <h1 class="headline">Reuben Mulholland</h1>
         <p class="roles">
-          <span class="roles-cert">AWS Certified Solutions Architect – Associate (AWS SAA)</span><br>
-          <span class="roles-sub">Experienced: Product Line Manager &nbsp;|&nbsp; Product Owner &nbsp;|&nbsp; Applications Engineer</span><br>
-          <span class="roles-looking">Looking for: Cloud Engineer &nbsp;|&nbsp; DevOps &nbsp;|&nbsp; Solutions Architect</span>
+          <span class="roles-cert">AWS Certified Solutions Architect - Associate (SAA)</span>
+          <span>Interested in working together? Connect with me on LinkedIn</span>
+
+          <!-- pill goes on its own line because of the CSS above -->
+          <a href="post-crc.html" class="project-link">
+            <em class="pill pill--subtle">
+              Live API visitor count: <span id="replaceme"></span>
+              <span id="spinner" class="spinner" style="display:none;"></span>
+            </em>
+          </a>
         </p>
-        <p class="visitors">Visitors: <span id="replaceme"></span><span id="spinner" class="spinner" style="display:none;"></span></p>
       </div>
     </div>
 
@@ -43,21 +49,14 @@
         <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn">
           <path d="M12 3.172 3 10v10a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10l-9-6.828zM12 1l11 8v11a3 3 0 0 1-3 3h-7v-6H11v6H4a3 3 0 0 1-3-3V9L12 1z"/>
         </svg>
-        <span>Home</span><em class="pill">API demo</em>
+        <span>Home</span><em class="pill">Live API</em>
       </a>
       <a href="resume.html">
         <!-- Document icon -->
         <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7h5l-5-5v5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/>
         </svg>
-        <span>Resume</span>
-      </a>
-      <a href="https://github.com/zReuben" target="_blank" rel="noopener noreferrer">
-        <!-- GitHub mark -->
-        <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn">
-          <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.11.79-.25.79-.55v-2.06c-3.19.7-3.86-1.37-3.86-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.26 3.39.96.11-.76.41-1.26.74-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.4.98.01 1.96.14 2.88.4 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.26 5.7.42.37.8 1.1.8 2.23v3.3c0 .3.21.67.8.55A11.5 11.5 0 0 0 12 .5z"/>
-        </svg>
-        <span>GitHub</span>
+        <span>View Resume</span>
       </a>
       <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank" rel="noopener noreferrer">
         <!-- LinkedIn logo -->
@@ -66,95 +65,81 @@
         </svg>
         <span>LinkedIn</span>
       </a>
+      <a href="https://github.com/zReuben" target="_blank" rel="noopener noreferrer">
+        <!-- GitHub mark -->
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn">
+          <path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.11.79-.25.79-.55v-2.06c-3.19.7-3.86-1.37-3.86-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.26 3.39.96.11-.76.41-1.26.74-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.4.98.01 1.96.14 2.88.4 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.26 5.7.42.37.8 1.1.8 2.23v3.3c0 .3.21.67.8.55A11.5 11.5 0 0 0 12 .5z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
     </nav>
   </header>
-
   <main class="shell">
     <section class="section">
       <h3 class="kicker">About Me</h3>
       <p>
-        I earned the AWS Certified Solutions Architect – Associate before building this site so I had a solid baseline in AWS. The first phase was the Cloud Resume Challenge: CloudFront + S3 with HTTPS, a visitor counter API (API Gateway → Lambda/Python with boto3 → DynamoDB), and all infrastructure defined in SAM/CloudFormation. Every change is validated with unit, integration, and end-to-end tests in GitHub Actions, so nothing ships untested.
+        Cloud builder with a background in engineering and product leadership. Experienced in IaC, CI/CD pipelines, and multi-account AWS architectures. Blend hands-on execution with product ownership, ensuring systems are robust, secure, and aligned to business goals.
       </p>
       <p>
-        I then extended it into a multi-account architecture (mgmt, eng, test, prod) under AWS Organizations with OIDC-based CI/CD. The pipeline builds once and promotes the same artifact through environments with approvals—no console drift, short idea-to-deploy loops, and fast rollback to the last known good. It mirrors how cloud-native teams ship safely.
-      </p>
-      <p>
-        My background spans an M.S. in Computer Engineering from Stony Brook University with an Advanced Certification in Networking & Wireless Communications; Applications Engineer at Data Device Corporation; Product Owner at Owl Cyber Defense (agile, cybersecurity); and Product Line Manager at Power Device Corporation. I’m now channeling that mix of technical depth and product leadership into cloud engineering, DevOps, and solutions architecture.
+        Check out my projects and blog posts to see the build details behind the headlines. More updates are on the way.
       </p>
     </section>
 
     <section class="section">
       <h3 class="kicker">Projects</h3>
 
-      <h4 class="subkicker">Completed</h4>
+      <h4 class="subkicker">
+        Completed
+      </h4>
       <div class="cards">
         <!-- Cloud Resume Challenge -->
-        <article class="card">
-          <h4>Cloud Resume Challenge</h4>
-          <p>
-            Built a static website (HTML/CSS/JS) on CloudFront + S3 (HTTPS via ACM) with a visitor counter backed by a
-            RESTful API (API Gateway → Lambda in <strong>Python</strong> using <strong>boto3</strong> → DynamoDB <strong>database</strong>).
-            Custom <strong>DNS</strong> is managed in Route 53. All infrastructure is defined as <strong>IaC</strong> with
-            SAM/CloudFormation (<strong>YAML</strong> templates). 
-          </p>
-          <p>
-            As part of the challenge, I added full test coverage with <strong>unit</strong>, <strong>integration</strong>, and 
-            <strong>end-to-end</strong> tests in <strong>GitHub Actions</strong> (PyTest for Lambda, plus JavaScript E2E).
-            That experience gave me my first exposure to validating infrastructure and application behavior in an automated pipeline.
-          </p>
-          <div class="badges">
-            <span class="badge">HTML</span><span class="badge">CSS</span><span class="badge">JavaScript</span>
-            <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">DNS</span>
-            <span class="badge">Route 53</span><span class="badge">ACM</span>
-            <span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">Python</span>
-            <span class="badge">boto3</span><span class="badge">DynamoDB</span><span class="badge">Database</span>
-            <span class="badge">SAM</span><span class="badge">CloudFormation</span><span class="badge">YAML</span>
-            <span class="badge">PyTest</span><span class="badge">Unit Tests</span>
-            <span class="badge">Integration Tests</span><span class="badge">E2E Tests</span>
-          </div>
-        </article>
+          <article class="card">
+            <h4>Cloud Resume Challenge</h4>
+            <h4>(Webpage & Visitor Count)</h4>
+            <p>
+              I wanted to take the concepts from my AWS Solutions Architect Associate certification
+              and apply them in practice. This project touches almost every part of the cloud stack:
+              <strong>serverless infrastructure, Infrastructure-as-Code, CI/CD automation, and security</strong>.
+              The result is a hands-on proof that ties theory to a live, production-ready system.
+            </p>
+            <p><a class="link-chip" href="post-placeholder.html">Read blog</a></p>
 
-        <!-- Multi-Account + CI/CD -->
-        <article class="card">
-          <h4>Multi-Account + CI/CD Promotion</h4>
-          <p>
-            Extended the build into a <strong>multi-account</strong> AWS setup (<em>mgmt / eng / test / prod</em>) under
-            <strong>AWS Organizations</strong>, with role assumption via AWS Vault and <strong>MFA</strong>.
-            CI/CD runs in <strong>GitHub Actions</strong> (OIDC, no long-lived keys). The pipeline <strong>builds once</strong>
-            (SAM → S3 artifact with checksums) and <strong>promotes the same artifact</strong> through environments with
-            approvals. Config is centralized in <strong>SSM Parameter Store</strong> (AWS <strong>Systems Manager</strong>) to keep
-            parameters consistent across stages. Supporting glue handled via lightweight <strong>shell scripts</strong>.
-          </p>
-          <p class="note">
-            This mirrors common SaaS multi-account setups: <strong>ENG</strong> for rapid iteration,
-            <strong>TEST</strong> as controlled pre-prod with human approvals and integration checks,
-            and <strong>PROD</strong> gated by promotion of the exact, immutable artifact.
-          </p>
-          <div class="badges">
-            <span class="badge">AWS Organizations</span><span class="badge">MFA</span>
-            <span class="badge">GitHub Actions</span><span class="badge">OIDC</span>
-            <span class="badge">Environments</span><span class="badge">Approvals</span>
-            <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
-            <span class="badge">SSM Parameter Store</span><span class="badge">Systems Manager</span>
-            <span class="badge">IaC</span><span class="badge">YAML</span>
-            <span class="badge">Shell Scripts</span>
-          </div>
-        </article>
+            <div class="badges">
+              <span class="badge">HTML</span><span class="badge">CSS</span><span class="badge">JavaScript</span>
+              <span class="badge">CloudFront</span><span class="badge">S3</span><span class="badge">DNS</span>
+              <span class="badge">Route53</span><span class="badge">ACM</span>
+              <span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">Python</span>
+              <span class="badge">boto3</span><span class="badge">DynamoDB</span>
+              <span class="badge">SAM</span><span class="badge">CloudFormation</span><span class="badge">YAML</span>
+              <span class="badge">PyTest</span><span class="badge">Unit Tests</span>
+              <span class="badge">Integration Tests</span><span class="badge">E2E Tests</span>
+              <span class="badge">100% IaC</span>
+            </div>
+          </article>
+          <!-- Multi-Account + CI/CD -->
+          <article class="card">
+            <h4>Multi-Account + CI/CD Promotion Pipeline</h4>
+            <p>
+              After completing the CRC, I wanted to push further into <strong>professional-grade workflows</strong>.
+              This project explores how real companies implement <strong>multi-account / multi-environment deployments</strong>,
+              with GitHub Actions, approvals, OIDC auth, and rollback automation. It also serves as my own “sandbox”
+              to safely experiment without breaking production.
+            </p>
+            <p><a class="link-chip" href="post-placeholder.html">Read blog</a></p>
+            <div class="badges">
+              <span class="badge">AWS Organizations</span><span class="badge">MFA</span>
+              <span class="badge">GitHub Actions</span><span class="badge">Immutable Artifact Promotion</span>
+              <span class="badge">Multi-Environment</span><span class="badge">Approvals</span>
+              <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
+              <span class="badge">SSM Parameter Store</span><span class="badge">Systems Manager</span>
+              <span class="badge">IaC</span><span class="badge">YAML</span>
+              <span class="badge">Shell Scripts</span><span class="badge">10-15 min Deploy Loop</span>
+              <span class="badge">OIDC - no long-lived keys</span>
+            </div>
+          </article>
       </div>
-
-      <div class="cards metrics-row">
-        <article class="card">
-          <h4>Impact &amp; Metrics</h4>
-          <div class="metrics-grid">
-            <div class="metric"><span class="num">0</span><span class="label">manual console changes — 100% IaC</span></div>
-            <div class="metric"><span class="num">10–15 min</span><span class="label">idea → deploy loop via CI/CD</span></div>
-            <div class="metric"><span class="num">0</span><span class="label">long-lived AWS keys (OIDC only)</span></div>
-            <div class="metric"><span class="num">Same artifact</span><span class="label">promoted ENG → TEST → PROD</span></div>
-          </div>
-        </article>
-      </div>
-
-      <h4 class="subkicker">Currently Learning</h4>
+      
+      <h4 class="subkicker"><br>Up Next</h4>
       <div class="cards">
         <article class="card">
           <h4>Observability & Access</h4>
@@ -176,6 +161,8 @@
           </p>
           <div class="badges">
             <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
+            <span class="badge">API Gateway</span><span class="badge">S3</span>
+            <span class="badge">Route53</span>
           </div>
         </article>
 
@@ -183,11 +170,12 @@
           <h4>Containers/Kubernetes</h4>
           <p>
             Extend the promotion model to containerized workloads using Docker + ECR, orchestrated via ECS or EKS with
-            GitHub Actions.
+            GitHub Actions and provisioned using Terraform.
           </p>
           <div class="badges">
             <span class="badge">Docker</span><span class="badge">ECR</span>
             <span class="badge">ECS/EKS</span><span class="badge">CI/CD</span>
+            <span class="badge">Terraform</span><span class="badge">Kubernetes</span>
           </div>
         </article>
       </div>
@@ -219,16 +207,6 @@
       }
     })();
   </script>
-
   <script src="visitorCount.js?v=10"></script>
-  <footer class="shell footer">
-    <p>
-      🚀 Interested in working together? 
-      Connect with me on 
-      <a href="https://www.linkedin.com/in/reubenmulholland" target="_blank">LinkedIn</a> 
-      or explore more on 
-      <a href="https://github.com/zReuben" target="_blank">GitHub</a>.
-    </p>
-  </footer>
 </body>
 </html>

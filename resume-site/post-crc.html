@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Cloud Resume Challenge • Deep Dive</title>
+  <meta name="description" content="End-to-end case study of my Cloud Resume Challenge: static website, serverless API, IaC with SAM/CloudFormation, CI/CD with GitHub Actions, and security hardening."/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="spotlight" aria-hidden="true"></div>
+
+  <header class="shell">
+    <div class="intro top-right">
+      <img src="profile.jpg" alt="Reuben Mulholland" class="avatar" />
+      <div>
+        <h1 class="headline">Reuben Mulholland</h1>
+        <p class="roles">
+          <span class="roles-cert">AWS Certified Solutions Architect - Associate (SAA)</span>
+          <span>Interested in working together? Connect with me on LinkedIn</span>
+
+          <!-- pill goes on its own line because of the CSS above -->
+          <a href="post-crc.html" class="project-link">
+            <em class="pill pill--subtle">
+              Live API visitor count: <span id="resumeCount"></span>
+              <span id="spinner" class="spinner" style="display:none;"></span>
+            </em>
+          </a>
+        </p>
+      </div>
+    </div>
+    <nav class="topnav" aria-label="Primary">
+      <a href="index.html" class="home-link" title="Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn">
+          <path d="M12 3.172 3 10v10a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10l-9-6.828zM12 1l11 8v11a3 3 0 0 1-3 3h-7v-6H11v6H4a3 3 0 0 1-3-3V9L12 1z"/>
+        </svg>
+        <span>Home</span>
+        <em class="pill" aria-label="Live API: visitor counter updates via API Gateway → Lambda → DynamoDB">Live API</em>
+      </a>
+      <a href="resume.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7h5l-5-5v5zM8 13h8v2H8v-2zm0 4h8v2H8v-2z"/></svg>
+        <span>View Resume</span>
+      </a>
+      <a href="https://www.linkedin.com/in/reuben-mulholland/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M20.45 20.45h-3.57v-5.6c0-1.34-.02-3.06-1.87-3.06-1.88 0-2.17 1.47-2.17 2.97v5.69H9.28V9.5h3.42v1.49h.05c.48-.9 1.66-1.85 3.42-1.85 3.66 0 4.34 2.41 4.34 5.55v5.76zM5.34 8.01a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9.5h3.56v10.95z"/></svg>
+        <span>LinkedIn</span>
+      </a>
+      <a href="https://github.com/zReuben" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="nav-icn"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.11.79-.25.79-.55v-2.06c-3.19.7-3.86-1.37-3.86-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.72 1.26 3.39.96.11-.76.41-1.26.74-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.9-.39 2.88-.4 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.26 5.7.42.37.8 1.1.8 2.23v3.3c0 .3.21.67.8.55A11.5 11.5 0 0 0 12 .5z"/></svg>
+        <span>GitHub</span>
+      </a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    <section class="section card">
+      <h3 class="kicker">Cloud Resume Challenge</h3>
+      <h2>How I built a full-stack, serverless, CI/CD-driven resume site on AWS</h2>
+
+      <div class="keylinks">
+        <a class="link-chip" href="https://cloudresumechallenge.dev" target="_blank" rel="noopener">CloudResumeChallenge.dev</a>
+        <a class="link-chip" href="https://reubenmulholland.com" target="_blank" rel="noopener">Live Site</a>
+        <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
+        <a class="link-chip" href="index.html">← Back to home</a>
+      </div>
+
+      <p>
+        The <a class="softlink" href="https://cloudresumechallenge.dev" target="_blank" rel="noopener" class="softlink">Cloud Resume Challenge</a> 
+        is a hands-on spec for proving cloud fundamentals end-to-end. I implemented it as a **full-stack build**: 
+        a static frontend, a RESTful API backend, and a database—defined with Infrastructure as Code and deployed via CI/CD pipelines.
+      </p>
+
+      <figure class="figure">
+        <!-- [ADD IMAGE: hero screenshot showing the site + visitor counter] -->
+        <img src="PLACEHOLDER-hero.png" alt="Live site with visitor counter"/>
+        <figcaption>Live counter powered by API Gateway → Lambda (Python) → DynamoDB.</figcaption>
+      </figure>
+
+      <h2>Architecture at a glance</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Front end</h3>
+          <ul class="checklist">
+            <li>Static site (HTML/CSS/JS) hosted in <strong>S3</strong>, distributed via <strong>CloudFront</strong>.</li>
+            <li>HTTPS with <strong>ACM</strong>; custom domain <code>reubenmulholland.com</code> on <strong>Route 53</strong>.</li>
+            <li>Redirects from <code>www → apex</code> for SEO, consistent SSL, and simpler CORS rules.</li>
+            <li>Visitor counter displayed dynamically with JavaScript calling the API.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Back end (RESTful API)</h3>
+          <ul class="checklist">
+            <li><strong>API Gateway</strong> exposes RESTful endpoints (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>).</li>
+            <li><strong>Lambda</strong> (Python + <code>boto3</code>) implements handlers and returns JSON responses with proper HTTP codes.</li>
+            <li><strong>DynamoDB</strong> table persists the count (on-demand capacity, no over-provisioning).</li>
+            <li><strong>CORS</strong> scoped only to my domain; IAM least-privilege enforced.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>Everything as code.</strong> All infrastructure is declared in <strong>AWS SAM</strong> (CloudFormation) YAML templates. 
+        No console clicks—reproducible builds only.
+      </div>
+
+      <h2>Implementation details</h2>
+
+      <h3>Static website</h3>
+      <p>
+        Built as a clean HTML/CSS layout with lightweight JS for the counter. CloudFront handles caching; versioned JS avoids stale browser caches.
+      </p>
+      <pre><code>[TEXT PLACEHOLDER: short excerpt from index.html or style.css]</code></pre>
+
+      <h3>Serverless API + data</h3>
+      <p>
+        The API is RESTful and resource-oriented. Lambda handlers are single-purpose functions 
+        (better than monolithic design for long-term maintainability), using <code>boto3</code> for DynamoDB reads/writes.
+      </p>
+      <pre><code>[TEXT PLACEHOLDER: concise Lambda handler showing GET/POST or PUT]</code></pre>
+
+      <figure class="figure">
+        <!-- [ADD IMAGE: DynamoDB table screenshot] -->
+        <img src="PLACEHOLDER-ddb.png" alt="DynamoDB visitor-count table"/>
+        <figcaption>DynamoDB on-demand table storing the counter.</figcaption>
+      </figure>
+
+      <h3>Infrastructure as Code</h3>
+      <ul class="checklist">
+        <li>Stacks defined in <code>template.yaml</code> using AWS SAM.</li>
+        <li>No hardcoded S3 buckets/DynamoDB names → portable across environments.</li>
+        <li>Separate folders for frontend, serverless infra, and certificates in ACM.</li>
+        <li>Deployed exclusively in <strong>us-east-1</strong> for ACM/CloudFront compatibility.</li>
+      </ul>
+      <pre><code>[TEXT PLACEHOLDER: excerpt of template.yaml for API + DynamoDB]</code></pre>
+
+      <h3>CI/CD pipeline</h3>
+      <p>
+        <strong>GitHub Actions</strong> runs <em>build → test → deploy</em>. 
+        Unit tests (PyTest) validate Lambda logic, integration tests hit the API directly, and E2E tests confirm 
+        the visitor counter works live. Local <code>venv</code> setup mirrors GitHub’s clean environment for parity.
+      </p>
+      <div class="grid-2">
+        <pre><code>[TEXT PLACEHOLDER: deploy.yml stages for build/test/deploy]</code></pre>
+        <figure class="figure">
+          <!-- [ADD IMAGE: screenshot of passing workflow run] -->
+          <img src="PLACEHOLDER-actions.png" alt="Passing GitHub Actions run"/>
+          <figcaption>CI/CD run: all tests pass before deployment.</figcaption>
+        </figure>
+      </div>
+
+      <h3>Security & practices</h3>
+      <ul class="checklist">
+        <li>MFA on all accounts; local role assumption via <strong>AWS Vault</strong>.</li>
+        <li>Secrets isolated per environment; nothing in source control.</li>
+        <li>Hardened IAM, scoped S3 policies, explicit CORS rules.</li>
+        <li>GitHub → AWS uses OIDC (no long-lived keys).</li>
+        <li>.gitignore prevents credential leaks; repo licensed under MIT.</li>
+      </ul>
+
+      <hr class="soft"/>
+
+      <h2>What I learned</h2>
+      <ul class="checklist">
+        <li>How the **full stack** fits together: frontend, RESTful API, database, IaC, CI/CD.</li>
+        <li>Best practices: single-purpose Lambdas, IaC without hardcoded resources, versioned JS for caching.</li>
+        <li>How DNS, ACM, and CloudFront integrate to deliver a production-grade site.</li>
+        <li>Running PyTest locally with virtualenv for parity with CI/CD pipelines.</li>
+        <li>Even small apps benefit from automation, least privilege, and reproducibility.</li>
+      </ul>
+
+      <h2>Links</h2>
+      <p class="keylinks">
+        <a class="link-chip" href="https://cloudresumechallenge.dev" target="_blank" rel="noopener">Cloud Resume Challenge</a>
+        <a class="link-chip" href="https://reubenmulholland.com" target="_blank" rel="noopener">Live Site</a>
+        <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
+        <a class="link-chip" href="index.html">← Back to home</a>
+      </p>
+    </section>
+  </main>
+  <script src="visitorCountRead.js?v=1"></script>
+</body>
+</html>
