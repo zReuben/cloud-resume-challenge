@@ -275,6 +275,21 @@ body{
   text-decoration: none;
   color: inherit;
 }
+/* Header-only behavior */
+.roles { 
+  display: flex;          /* makes layout consistent across pages */
+  align-items: baseline; 
+  gap: .4rem; 
+  flex-wrap: wrap;
+  min-height: 40px;       /* locks the header height so the nav sits the same */
+}
+
+.roles .project-link { 
+  display: inline-flex;   /* don't expand the line box in the header */
+  align-items: center;
+}
+.roles .pill { margin-left: .25rem; }
+
 
 /* --- Blog article polish --- */
 .prose { max-width: 100%; line-height: 1.7; font-size: 1.02rem; }
