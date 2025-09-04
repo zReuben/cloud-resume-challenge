@@ -269,6 +269,12 @@ body{
 .project-link .badge {
   text-decoration: none;   /* extra safety so pills never get underlined */
 }
+/* Override for the header roles area */
+.roles .project-link {
+  display: inline-block;   /* no block expansion, stays on the same line */
+  text-decoration: none;
+  color: inherit;
+}
 
 /* --- Blog article polish --- */
 .prose { max-width: 100%; line-height: 1.7; font-size: 1.02rem; }
