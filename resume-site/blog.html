@@ -49,17 +49,27 @@
 
   <main class="shell">
     <section class="section">
-      <h3 class="kicker">Blog</h3>
+      <h3 class="kicker">Blogs - click a card to read more</h3>
       <div class="cards">
+        <a href="post-crc.html" class="link-chip">
+          <article class="card">
+            <h4><a href="post-crc.html" style="text-decoration:none;color:inherit;">Cloud Resume Challenge</a></h4>
+            <p>
+            I wanted to take the concepts from my AWS Solutions Architect Associate certification
+            and apply them in practice. This project touches almost every part of the cloud stack:
+            <strong>serverless infrastructure, Infrastructure-as-Code, CI/CD automation, and security</strong>.
+            The result is a hands-on proof that ties theory to a live, production-ready system.
+            </p>
+          </article>
+        </a>
         <article class="card">
-          <h4><a href="post-crc.html" style="text-decoration:none;color:inherit;">Cloud Resume Challenge — Deep Dive</a></h4>
-          <p>Serverless stack (CloudFront/S3, API GW → Lambda/Python → DynamoDB), IaC with SAM, and the JS visitor counter.</p>
-          <p><a class="link-chip" href="post-crc.html">Read</a></p>
-        </article>
-
-        <article class="card">
-          <h4><a href="post-multi-account.html" style="text-decoration:none;color:inherit;">Multi-Account + CI/CD Promotion Pipeline</a></h4>
-          <p>Build once in ENG, promote the same artifact to TEST → PROD with approvals and fast rollback. OIDC, SSM, zero console drift.</p>
+          <h4>Multi-Account + CI/CD Promotion Pipeline</h4>          
+          <p>
+            After completing the CRC, I wanted to push further into <strong>professional-grade workflows</strong>.
+            This project explores how real companies implement <strong>multi-account / multi-environment deployments</strong>,
+            with GitHub Actions, approvals, OIDC auth, and rollback automation. It also serves as my own “sandbox”
+            to safely experiment without breaking production.
+          </p>
           <p><a class="link-chip" href="post-multi-account.html">Read</a></p>
         </article>
       </div>
