@@ -100,6 +100,11 @@
         is visible in about a minute. This gives me a safety net to experiment freely without worrying about breaking my live site.
       </p>
 
+      <figure class="figure">
+        <img src="multi-github-rollback.png" alt="GitHub Actions rollback workflow UI"/>
+        <figcaption>Rollback workflow: select a commit SHA and redeploy directly to ENG, TEST, or PROD.</figcaption>
+      </figure>
+
       <p>
         Finally, I put lifecycle policies on the artifact S3 bucket so it doesn’t grow forever. Older versions are cleared out 
         after 60 days, but the current versions always stay. Combined with GitHub OIDC for short-lived credentials and Vault 
