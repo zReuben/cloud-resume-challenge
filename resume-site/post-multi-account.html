@@ -116,13 +116,22 @@
         for secret handling, the pipeline now feels much closer to how a real company would manage deployments.
       </p>
 
-      <h2>What I learned</h2>
-      <p>
-        This project taught me the importance of <strong>environment separation</strong>, <strong>immutable artifacts</strong>, 
-        and <strong>approval-driven promotions</strong>. It also gave me first-hand experience managing multiple AWS accounts 
-        under Organizations, something that had always felt intimidating until I set it up myself. Now I have a safe, repeatable 
-        way to take changes from development all the way to production — and roll them back if I need to.
-      </p>
+      <h2>Security Practices</h2>
+      <ul class="checklist">
+        <li>Secrets scoped per environment in GitHub Actions (account IDs, ARNs, roles).</li>
+        <li>OIDC from GitHub to AWS — no long-lived keys, MFA enforced.</li>
+        <li>AWS Vault for local CLI with short-lived credentials.</li>
+      </ul>
+
+      <hr class="soft"/>
+
+      <h2>What I Learned</h2>
+      <ul class="checklist">
+        <li>Multi-account / multi-environment setups increase safety and parity.</li>
+        <li>Immutable artifacts make promotion predictable and rollback easy.</li>
+        <li>Approvals and staged deployments add production confidence.</li>
+        <li>GitHub Actions secrets + shell scripts simplify cross-account access.</li>
+      </ul>
 
       <h2>Links</h2>
       <p class="keylinks">
