@@ -102,7 +102,7 @@
               <strong>serverless infrastructure, Infrastructure-as-Code, CI/CD automation, and security</strong>.
               The result is a hands-on proof that ties theory to a live, production-ready system.
             </p>
-            <p><a class="link-chip" href="post-placeholder.html">Read blog</a></p>
+            <p><a class="link-chip" href="post-crc.html">Read blog</a></p>
 
             <div class="badges">
               <span class="badge">HTML</span><span class="badge">CSS</span><span class="badge">JavaScript</span>
@@ -111,8 +111,11 @@
               <span class="badge">API Gateway</span><span class="badge">Lambda</span><span class="badge">Python</span>
               <span class="badge">boto3</span><span class="badge">DynamoDB</span>
               <span class="badge">SAM</span><span class="badge">CloudFormation</span><span class="badge">YAML</span>
+              <span class="badge">GitHub Actions</span><span class="badge">REST API</span>
               <span class="badge">PyTest</span><span class="badge">Unit Tests</span>
               <span class="badge">Integration Tests</span><span class="badge">E2E Tests</span>
+              <span class="badge">OIDC</span><span class="badge">CORS</span>
+              <span class="badge">MFA</span><span class="badge">AWS Vault</span>
               <span class="badge">100% IaC</span>
             </div>
           </article>
@@ -125,16 +128,17 @@
               with GitHub Actions, approvals, OIDC auth, and rollback automation. It also serves as my own “sandbox”
               to safely experiment without breaking production.
             </p>
-            <p><a class="link-chip" href="post-placeholder.html">Read blog</a></p>
+            <p><a class="link-chip" href="post-multi-account.html">Read blog</a></p>
             <div class="badges">
               <span class="badge">AWS Organizations</span><span class="badge">MFA</span>
               <span class="badge">GitHub Actions</span><span class="badge">Immutable Artifact Promotion</span>
-              <span class="badge">Multi-Environment</span><span class="badge">Approvals</span>
-              <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Checksums</span>
-              <span class="badge">SSM Parameter Store</span><span class="badge">Systems Manager</span>
+              <span class="badge">Multi-Environment</span><span class="badge">Staged Deployments</span>
+              <span class="badge">Approvals</span><span class="badge">Rollback</span>
+              <span class="badge">SAM</span><span class="badge">S3 Artifacts</span><span class="badge">Lifecycle Policies</span>
+              <span class="badge">Checksums</span><span class="badge">SSM Parameter Store</span>
               <span class="badge">IaC</span><span class="badge">YAML</span>
-              <span class="badge">Shell Scripts</span><span class="badge">10-15 min Deploy Loop</span>
-              <span class="badge">OIDC - no long-lived keys</span>
+              <span class="badge">Shell Scripts</span><span class="badge">10–15 min Deploy Loop</span>
+              <span class="badge">OIDC – no long-lived keys</span>
             </div>
           </article>
       </div>
@@ -154,15 +158,15 @@
         </article>
 
         <article class="card">
-          <h4>Kill Switch Lambda</h4>
+          <h4>Protection</h4>
           <p>
-            Cost guardrails using <strong>AWS Budgets</strong> + <strong>SNS</strong> + a Kill Switch <strong>Lambda</strong> that can
-            halt deployments when spend crosses thresholds.
+            Kill Switch Lambda: Cost guardrails using <strong>AWS Budgets</strong> + <strong>SNS</strong> + a Kill Switch <strong>Lambda</strong> that can
+            halt deployments when spend crosses thresholds. Web Application Firewall: Basic protection for the CloudFront distribution.
           </p>
           <div class="badges">
             <span class="badge">Budgets</span><span class="badge">SNS</span><span class="badge">Lambda</span>
             <span class="badge">API Gateway</span><span class="badge">S3</span>
-            <span class="badge">Route53</span>
+            <span class="badge">Route53</span><span class="badge">WAF</span>
           </div>
         </article>
 

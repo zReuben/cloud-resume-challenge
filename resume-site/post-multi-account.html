@@ -59,87 +59,78 @@
 
   <main class="shell">
     <section class="section card">
-      <h3 class="kicker">Multi-Account + CI/CD Promotion Pipeline</h3>
-      <h2>Build once, promote safely across ENG → TEST → PROD</h2>
+      <h3 class="kicker">Multi-Account CI/CD Promotion Pipeline</h3>
+      <h2>Expanding beyond the Cloud Resume Challenge</h2>
 
       <div class="keylinks">
-        <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a><a class="link-chip" href="index.html">← Back to home</a>
+        <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
+        <a class="link-chip" href="index.html">← Back to home</a>
       </div>
 
       <p>
-        This post covers how I extended the <a class="softlink" href="post-crc.html">Cloud Resume Challenge</a> into a
-        <strong>multi-account (multi-environment)</strong> AWS setup with immutable artifacts, SSM-driven configuration,
-        approvals at every stage, and one-minute targeted rollbacks.
+        After finishing the <a class="softlink" href="post-crc.html">Cloud Resume Challenge</a>, I realized that constantly 
+        building and testing directly against my live site wasn’t realistic. In the real world, teams build once and promote 
+        through controlled environments with approvals, rollbacks, and guardrails. So I decided to take what I had and expand 
+        it into a true <strong>multi-account, multi-environment CI/CD pipeline</strong>.
       </p>
 
-      <figure class="figure">
-        <!-- [ADD IMAGE: diagram of ENG→TEST→PROD with single artifact + approvals] -->
-        <img src="PLACEHOLDER-promo-arch.png" alt="Promotion pipeline architecture diagram"/>
-        <figcaption>ENG build → TEST gate → PROD promotion using the same artifact.</figcaption>
-      </figure>
-
-      <h2>Migration & setup</h2>
-      <ul class="checklist">
-        <li>Migrated from single IAM user in <code>reuben-root</code> to AWS Organizations with <strong>mgmt</strong>, <strong>eng</strong>, <strong>test</strong>, <strong>prod</strong>.</li>
-        <li><strong>MFA + AWS Vault</strong> secure all accounts; no long-lived keys.</li>
-        <li>Shell scripts (e.g., <code>assume-eng.sh</code>) streamline role assumption:
-          <pre><code>source assume-eng.sh && make deploy-infra</code></pre>
-        </li>
-      </ul>
-
-      <h2>Pipeline design</h2>
-      <div class="grid-2">
-        <div>
-          <h3>Build workflow</h3>
-          <ul class="checklist">
-            <li>Triggered on PRs + pushes to <code>main</code>.</li>
-            <li>Runs unit + integration tests (no AWS access yet).</li>
-            <li>Packages artifacts (<code>packaged.yaml</code>, frontend bundle) into a promotion bucket.</li>
-            <li>No role assumption or OIDC needed here.</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Deploy workflow</h3>
-          <ul class="checklist">
-            <li>Triggered only if build succeeds.</li>
-            <li>Deploys the <strong>same artifact</strong> to <strong>eng → test → prod</strong>.</li>
-            <li><strong>Approvals</strong> required for TEST and PROD stages.</li>
-            <li>Config resolved via <strong>SSM Parameter Store</strong> + stack outputs.</li>
-          </ul>
-        </div>
-      </div>
-
-      <pre><code>[TEXT PLACEHOLDER: snippet from deploy.yml showing ENG build → TEST approval → PROD approval]</code></pre>
-
-      <figure class="figure">
-        <!-- [ADD IMAGE: screenshot of GitHub Actions workflow run] -->
-        <img src="PLACEHOLDER-actions-promo.png" alt="GitHub Actions multi-env pipeline run"/>
-        <figcaption>GitHub Actions: ENG build → TEST deploy with approval → PROD deploy with approval.</figcaption>
-      </figure>
-
-      <h2>Rollback</h2>
       <p>
-        Rollbacks are targeted by <strong>environment</strong> and <strong>commit SHA</strong>. I specify env (eng/test/prod)
-        and a short/long SHA; the workflow redeploys that artifact, optionally restores the site snapshot, and invalidates
-        CloudFront. The whole process takes about <strong>one minute</strong>.
+        The first big step was setting up <strong>AWS Organizations</strong>. Instead of a single developer account, I now 
+        have four: a management account, plus dedicated engineering, test, and production accounts. I wrote shell scripts to 
+        make it easy to jump between them, assuming the right IAM role depending on where I needed to work. This gave me 
+        cleaner isolation and the flexibility to test changes safely before they ever touched production.
       </p>
 
-      <pre><code>[TEXT PLACEHOLDER: excerpt from rollback.yml showing env+sha inputs → CF deploy → optional site restore]</code></pre>
+      <figure class="figure">
+        <img src="multi-github-actions-run.png" alt="GitHub Actions promotion pipeline run"/>
+        <figcaption>GitHub Actions pipeline: artifacts built once in ENG, promoted with approvals to TEST and PROD.</figcaption>
+      </figure>
 
-      <h2>Operational notes</h2>
+      <p>
+        With accounts in place, I turned my attention to the pipeline itself. In the engineering environment, GitHub Actions 
+        runs all unit and integration tests. If the build passes, it packages the backend (SAM + Python Lambdas) and frontend 
+        bundle into a single artifact and uploads it to S3. From there, the exact same artifact is promoted forward — no 
+        rebuilding, no drift. Before anything moves into TEST or PROD, I have to explicitly approve it, which is a simple 
+        GitHub click but adds real accountability.
+      </p>
+
+      <figure class="figure">
+        <img src="multi-github-infra-artifact.png" alt="GitHub Actions infra build with persisted artifact"/>
+        <figcaption>Infrastructure build in ENG: SAM artifact packaged once, reused in every environment.</figcaption>
+      </figure>
+
+      <p>
+        To keep things safe, I also built in <strong>rollback workflows</strong>. By specifying a commit SHA, I can skip the 
+        build phase and immediately redeploy a known-good artifact. CloudFront gets invalidated automatically so the rollback 
+        is visible in about a minute. This gives me a safety net to experiment freely without worrying about breaking my live site.
+      </p>
+
+      <figure class="figure">
+        <img src="multi-github-rollback-ui.png" alt="GitHub Actions rollback workflow UI"/>
+        <figcaption>Rollback workflow: select a commit SHA and redeploy directly to ENG, TEST, or PROD.</figcaption>
+      </figure>
+
+      <p>
+        Finally, I put lifecycle policies on the artifact S3 bucket so it doesn’t grow forever. Older versions are cleared out 
+        after 60 days, but the current versions always stay. Combined with GitHub OIDC for short-lived credentials and Vault 
+        for secret handling, the pipeline now feels much closer to how a real company would manage deployments.
+      </p>
+
+      <h2>Security Practices</h2>
       <ul class="checklist">
-        <li><strong>Loop time:</strong> full ENG → PROD pipeline runs in ~10–15 minutes, often under 10.</li>
-        <li><strong>Safety:</strong> TEST acts as a pre-prod dress rehearsal—clean account, manual review, catch surprises.</li>
-        <li><strong>SEO & DNS:</strong> CloudFront redirect consolidates <code>www</code> traffic into root domain for ranking + consistency.</li>
-        <li><strong>Security:</strong> IAM scoped to least privilege, Vault-managed secrets, GitHub OIDC trust (no static creds).</li>
+        <li>Secrets scoped per environment in GitHub Actions (account IDs, ARNs, roles).</li>
+        <li>OIDC from GitHub to AWS — no long-lived keys, MFA enforced.</li>
+        <li>AWS Vault for local CLI with short-lived credentials.</li>
       </ul>
 
-      <h2>What I learned</h2>
+      <hr class="soft"/>
+
+      <h2>What I Learned</h2>
       <ul class="checklist">
-        <li>Why splitting <strong>build vs deploy workflows</strong> clarifies promotion and improves control.</li>
-        <li>How shell scripts + Vault simplify secure role assumption across multiple AWS accounts.</li>
-        <li>That <strong>immutable artifacts</strong> + approvals give confidence and reproducibility.</li>
-        <li>Targeted rollbacks reduce mean time to recovery from hours to minutes.</li>
+        <li>Multi-account / multi-environment setups increase safety and parity.</li>
+        <li>Immutable artifacts make promotion predictable and rollback easy.</li>
+        <li>Approvals and staged deployments add production confidence.</li>
+        <li>GitHub Actions secrets + shell scripts simplify cross-account access.</li>
       </ul>
 
       <h2>Links</h2>
@@ -147,9 +138,9 @@
         <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
         <a class="link-chip" href="index.html">← Back to home</a>
       </p>
-
     </section>
   </main>
+
   <script src="visitorCountRead.js?v=1"></script>
 </body>
 </html>
