@@ -74,7 +74,7 @@
 
       <figure class="figure">
         <img src="aws-cloud-diagram-2.png" alt="AWS CRC core architecture diagram"/>
-        <figcaption>My architecture sketch showing the core CRC components: static site, API, database, and CI/CD pipelines.</figcaption>
+        <figcaption>My architecture sketch showing the core CRC components: static site, API, database, and CI/CD automation.</figcaption>
       </figure>
 
       <h2>Step 1: Domain and Frontend</h2>
@@ -83,21 +83,23 @@
         With that in place, I created an S3 bucket to host the static site (HTML, CSS, JS) and distributed it via CloudFront. 
         ACM provided HTTPS certificates, and Route 53 handled DNS records for clean routing. 
         This gave me a secure, production-grade foundation for my personal site.
+        For rapid iteration around CloudFront caching, I set TTL to 0 during development.
       </p>
 
       <h2>Step 2: Dynamic Visitor Counter</h2>
       <p>
         To extend the static site, I built a serverless backend. JavaScript in the browser sends requests to API Gateway, 
         which invokes Python Lambda handlers. The Lambdas read and update a DynamoDB table that stores the visitor count, 
-        then return results to the frontend in real time. I kept the handlers single-purpose for clarity and testability, 
-        and secured everything with least-privilege IAM and scoped CORS.
+        then return results to the frontend in real time. I kept the handlers single-purpose after weighing monolithic
+        vs microservice approaches for clarity and testability, and secured everything with least-privilege IAM and scoped CORS.
       </p>
 
       <h2>Step 3: Infrastructure as Code</h2>
       <p>
         All of this was defined in AWS SAM templates, which generate CloudFormation stacks. 
-        No console clicks — everything is repeatable and versioned. Parameter Store provided flexibility 
-        by avoiding hardcoded names or secrets, making the infrastructure portable across environments.
+        No console clicks — everything is repeatable and versioned. 
+        I avoided hardcoding names or secrets by parameterizing values in SAM,
+        which kept the stack portable and avoided hardcoding.
       </p>
 
       <h2>Step 4: CI/CD Automation</h2>
@@ -106,6 +108,7 @@
         Pushes to my repos trigger workflows that run unit, integration, and end-to-end tests before deploying. 
         Successful runs upload frontend files to S3, invalidate CloudFront caches, and use <code>sam deploy</code> 
         to roll out backend updates. This ensures every change is tested and deployed automatically.
+        At this stage I was only deploying to a single production environment.
       </p>
 
       <figure class="figure">
