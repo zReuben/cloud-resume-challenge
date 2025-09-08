@@ -59,79 +59,61 @@
 
   <main class="shell">
     <section class="section card">
-      <h3 class="kicker">Multi-Account + CI/CD Promotion Pipeline</h3>
-      <h2>Build once, promote safely across ENG → TEST → PROD</h2>
-
-      <div class="keylinks">
-        <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
-        <a class="link-chip" href="index.html">← Back to home</a>
-      </div>
+      <h3 class="kicker">Multi-Account CI/CD Promotion Pipeline</h3>
+      <h2>Expanding beyond the Cloud Resume Challenge</h2>
 
       <p>
-        After completing the <a class="softlink" href="post-crc.html">Cloud Resume Challenge</a>, I wanted to expand into a more
-        professional setup. Testing changes directly on my live site felt unrealistic, so I built a 
-        <strong>multi-account, multi-environment CI/CD pipeline</strong>. This approach mirrors how real teams work: 
-        build once, save artifacts, and promote them safely through ENG → TEST → PROD with approvals and fast rollbacks.
+        After finishing the <a class="softlink" href="post-crc.html">Cloud Resume Challenge</a>, I realized that constantly 
+        building and testing directly against my live site wasn’t realistic. In the real world, teams build once and promote 
+        through controlled environments with approvals, rollbacks, and guardrails. So I decided to take what I had and expand 
+        it into a true <strong>multi-account, multi-environment CI/CD pipeline</strong>.
+      </p>
+
+      <p>
+        The first big step was setting up <strong>AWS Organizations</strong>. Instead of a single developer account, I now 
+        have four: a management account, plus dedicated engineering, test, and production accounts. I wrote shell scripts to 
+        make it easy to jump between them, assuming the right IAM role depending on where I needed to work. This gave me 
+        cleaner isolation and the flexibility to test changes safely before they ever touched production.
       </p>
 
       <figure class="figure">
         <img src="multi-github-actions-run.png" alt="GitHub Actions promotion pipeline run"/>
-        <figcaption>GitHub Actions: ENG build → TEST deploy with approval → PROD deploy with approval.</figcaption>
+        <figcaption>GitHub Actions pipeline: artifacts built once in ENG, promoted with approvals to TEST and PROD.</figcaption>
       </figure>
 
-      <h2>Pipeline design</h2>
-      <div class="grid-2">
-        <div>
-          <h3>Build workflow</h3>
-          <ul class="checklist">
-            <li>Triggered on pushes to <code>main</code>.</li>
-            <li>Runs unit and integration tests (no AWS access yet).</li>
-            <li>Packages backend SAM template + frontend bundle into a single artifact.</li>
-            <li>Saves the artifact in S3 for promotion.</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Deploy workflow</h3>
-          <ul class="checklist">
-            <li>Uses the <strong>same artifact</strong> in each environment (ENG → TEST → PROD).</li>
-            <li>Approvals required before promoting to TEST or PROD.</li>
-            <li>Configuration comes from SSM Parameter Store and stack outputs.</li>
-          </ul>
-        </div>
-      </div>
+      <p>
+        With accounts in place, I turned my attention to the pipeline itself. In the engineering environment, GitHub Actions 
+        runs all unit and integration tests. If the build passes, it packages the backend (SAM + Python Lambdas) and frontend 
+        bundle into a single artifact and uploads it to S3. From there, the exact same artifact is promoted forward — no 
+        rebuilding, no drift. Before anything moves into TEST or PROD, I have to explicitly approve it, which is a simple 
+        GitHub click but adds real accountability.
+      </p>
 
       <figure class="figure">
         <img src="multi-github-infra-artifact.png" alt="GitHub Actions infra build with persisted artifact"/>
-        <figcaption>Infrastructure build: artifact packaged and stored once, reused across all environments.</figcaption>
+        <figcaption>Infrastructure build in ENG: SAM artifact packaged once, reused in every environment.</figcaption>
       </figure>
 
-      <h2>Rollback</h2>
       <p>
-        Rollbacks target a specific <strong>environment</strong> and <strong>commit SHA</strong>. The workflow skips rebuilding, 
-        redeploys the saved artifact, restores the site if needed, and invalidates CloudFront. Recovery takes about one minute.
+        To keep things safe, I also built in <strong>rollback workflows</strong>. By specifying a commit SHA, I can skip the 
+        build phase and immediately redeploy a known-good artifact. CloudFront gets invalidated automatically so the rollback 
+        is visible in about a minute. This gives me a safety net to experiment freely without worrying about breaking my live site.
       </p>
 
-      <h2>Operational notes</h2>
-      <ul class="checklist">
-        <li><strong>Speed:</strong> Full ENG → PROD pipeline completes in ~10–15 minutes.</li>
-        <li><strong>Safety:</strong> TEST is a clean dress rehearsal before PROD.</li>
-        <li><strong>Efficiency:</strong> Artifact S3 bucket has a 60-day lifecycle to avoid growth without losing current versions.</li>
-        <li><strong>Security:</strong> GitHub OIDC + IAM roles, no long-lived keys, Vault for secret handling.</li>
-      </ul>
+      <p>
+        Finally, I put lifecycle policies on the artifact S3 bucket so it doesn’t grow forever. Older versions are cleared out 
+        after 60 days, but the current versions always stay. Combined with GitHub OIDC for short-lived credentials and Vault 
+        for secret handling, the pipeline now feels much closer to how a real company would manage deployments.
+      </p>
 
       <h2>What I learned</h2>
-      <ul class="checklist">
-        <li>Splitting <strong>build vs deploy workflows</strong> makes pipelines clearer and safer.</li>
-        <li>Immutable artifacts with approvals are key to reproducibility.</li>
-        <li>Rollback workflows reduce downtime from hours to minutes.</li>
-        <li>Hands-on experience with multi-account AWS setups gave me confidence beyond the basics.</li>
-      </ul>
-
-      <h2>Links</h2>
-      <p class="keylinks">
-        <a class="link-chip" href="https://github.com/zReuben" target="_blank" rel="noopener">GitHub</a>
-        <a class="link-chip" href="index.html">← Back to home</a>
+      <p>
+        This project taught me the importance of <strong>environment separation</strong>, <strong>immutable artifacts</strong>, 
+        and <strong>approval-driven promotions</strong>. It also gave me first-hand experience managing multiple AWS accounts 
+        under Organizations, something that had always felt intimidating until I set it up myself. Now I have a safe, repeatable 
+        way to take changes from development all the way to production — and roll them back if I need to.
       </p>
+
     </section>
   </main>
 
